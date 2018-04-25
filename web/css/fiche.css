@@ -1,0 +1,330 @@
+
+
+.fiche
+{
+    background-color: #fff;
+    border: 2px solid;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px !important;
+    margin-bottom: 8px;
+    padding: 10px 5px 5px 10px;
+    text-align: left;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 1px 2px 1px #ccc;
+}
+
+.fiche.candidature
+{
+    border-color: #F2AE43;
+    /*box-shadow: 1px 2px 1px #F2AE43;*/
+}
+.fiche.relance
+{
+    border-color: #7AC943;
+    /*box-shadow: 1px 2px 1px #7AC943;*/
+}
+.fiche.brouillon
+{
+    border-color: #999999;
+    /*box-shadow: 1px 2px 1px #999;*/
+}
+.fiche.entretien
+{
+    border-color: #00C7FC;
+    /*box-shadow: 1px 2px 1px #00C7FC;*/
+}
+.fiche.expired
+{
+    border-color: #FF2E15 !important;
+}
+
+.cornerRibbon {
+    background-color: #f5f5f5;
+    background-image: url("./pic/star_grey.png");
+    position: absolute;
+    right: -63px;
+    top: 2px;
+    text-align: center;
+    height: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform : rotate(45deg);
+    -o-transform : rotate(45deg);
+    -ms-transform : rotate(45deg);
+    width: 150px;
+    cursor: pointer;
+
+    background-repeat: no-repeat;
+    -webkit-background-size: 14px 14px;
+    background-size: 16px 16px;
+    background-position: center;
+}
+
+.cornerRibbon.favorite {
+    background-color: #67809F;
+    background-image: url("./pic/star_gold.png");
+    -webkit-background-size: 20px 20px;
+    background-size: 20px 20px;
+}
+
+.dragDots {
+    height: 10px;
+    width: 30px;
+    position: absolute;
+    top: 0;
+    left: 45%;
+    cursor: grab;
+    cursor: -webkit-grab;
+    cursor:-moz-grab;
+    background-image: url("./pic/drag_dots.png");
+    -webkit-background-size: 30px 10px;
+    background-size: 30px 10px;
+}
+
+
+.societe,
+.lieu,
+.urlSource a,
+.urlSource a:visited,
+.urlSource i
+{
+    color : #6a6a6a;
+}
+
+.urlSource a,
+.urlSource a:visited
+{
+    font-size: 12px;
+}
+
+.urlSource:hover a
+{
+    text-decoration: underline;
+    color : #32c5d2;
+}
+
+.urlSource:hover img
+{
+    opacity: 0.7;
+}
+
+.urlSource i
+{
+    margin-right: 3px;
+}
+
+.urlSource
+{
+    /*margin-bottom: 20px;*/
+    /*margin-top: 10px;*/
+}
+
+.fa.fa-link.fa-4x
+{
+    margin-bottom: 10px;
+}
+
+.societe
+{
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.dateEntretien
+{
+    color: #000;
+    font-size: 12px;
+    margin-bottom : 5px;
+}
+
+.autreDate
+{
+    font-size: 10px;
+    color: #6a6a6a;
+    margin-bottom: 5px;
+
+}
+
+.lieu
+{
+    font-size: 12px;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    /*margin-bottom: 10px;*/
+}
+
+
+.titreCandidature
+{
+    font-size: 14px;
+    text-align: left;
+    font-weight: bold;
+
+    margin-bottom: 5px;
+    text-decoration: none;
+    cursor:pointer;
+
+    color : #000;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.titreCandidature:hover
+{
+    text-decoration: underline;
+    color : #32c5d2;
+}
+
+
+/*.archives .titreCandidature
+{
+    text-decoration: none;
+    cursor: default;
+}*/
+/*
+.titreCandidature:hover {
+    color: #67809f;
+}*/
+@media screen and (min-width:995px) and (max-width:1310px) {
+	.nextActionTitle {
+		display:none;
+	}
+}
+
+@media screen and (max-width:340px) {
+	.nextActionTitle {
+		display:none;
+	}
+}
+
+.nextActionCol
+{
+    text-align: right;
+    padding-top: 5px !important;
+}
+
+.actionCol
+{
+    padding-top: 5px !important;
+}
+
+.nextAction {
+    color: white;
+    /*font-size: 12px;*/
+    font-weight: bold;
+    /*background-color : rgb(228,63,65);*/
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 0px;
+    text-transform: capitalize;
+    border-radius: 5px !important;
+}
+.nextAction:hover {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.naExpired
+{
+    background : #FF2E15;
+}
+
+.brouillon .nextAction
+{
+    background : #999999;
+}
+
+.candidature .nextAction
+{
+    background : #F2AE43;
+}
+
+.entretien .nextAction
+{
+    background : #00C7FC;
+}
+.relance .nextAction
+{
+    background : #7AC943; 
+}
+
+/*.naSupprimer
+{
+    background : #20314E !important;
+}*/
+.naSupprimer:hover
+{
+    color : #FF2E15 !important;
+}
+
+.btnActions
+{
+    padding: 0px; !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    /*overflow: hidden;*/
+    white-space: nowrap;
+}
+
+.btnAction
+{
+    color : #000;
+    font-size: 12px;
+    font-weight: bold;
+    /*text-decoration: underline;*/
+    margin-right: 15px;
+    /*text-transform: lowercase;*/
+    white-space: nowrap;
+    
+    border-radius: 3px !important;
+    background-color: none;
+    padding-top : 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: black;
+    text-decoration:  none;
+    border: 1px solid #999999;
+    
+}
+
+.btnAction i
+{
+    margin-right: 3px;
+}
+
+.btnAction:active, .btnAction:active:focus, .btnAction:active:hover, .btnAction:focus, .btnAction:hover {
+    border-color: #2f353b;
+    color: #FFF;
+    background-color: #2f353b;
+    text-decoration:  none;
+}
+
+.expiredSource img
+{
+    filter: grayscale(100%);
+    opacity: 0.15;
+}
+a.expiredSource
+{
+    text-decoration: line-through;
+}
+
+#cdNomSociete img
+{
+    max-height: 196px;
+}

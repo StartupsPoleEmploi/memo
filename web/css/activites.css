@@ -1,0 +1,41 @@
+#activitesList .row
+{
+    margin-bottom: 20px;
+}
+
+#activitesList .archived
+{
+    font-style: italic;
+}
+
+.activiteSpinner
+{
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+@media screen and (max-width:515px) {
+
+    .activiteDate
+    {
+        font-size: 12px;
+    }
+    
+    .activiteAction
+    {
+        font-size: 12px;
+        text-align: right;
+    }
+    
+    #activitesList
+    {
+        margin-left: -30px !important;
+    }
+    
+    .activiteCandidature
+    {
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(0,0,0,0.5);
+    }
+}

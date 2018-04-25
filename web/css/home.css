@@ -1,0 +1,407 @@
+.bloc1
+{
+    /*margin-top: 66px;*/
+    background-color : #20314e;
+    background-size : cover;
+    /*background-image : url("pic/image_home.jpg");*/
+    /*height: 500px;*/
+    padding-top: 80px;
+    margin-bottom: 0px;
+}
+
+.bloc1 .startButton
+{
+    /*margin-top: 50px;*/
+}
+
+.blocFSE
+{
+    float: right;
+    min-width: 400px;
+    height: 65px;
+    background-color: #fff;
+    padding: 10px;
+    padding-right: 0px;
+    margin-top: -25px;
+    margin-right: 8px;
+}
+
+.blocFSE img
+{
+    margin-right: 10px;
+    height: 45px;
+}
+
+@media screen and (max-width:767px) {
+    .blocFSE
+    {
+        float: left;
+        width: 100%;
+        background-color: #fff;
+        text-align: center;
+        padding: 10px;
+        padding-right: 0px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .startButton
+    {
+        margin-bottom: 30px !important;
+    }
+
+    .blocFSE img
+    {
+        margin-right: 10px;
+    }
+}
+
+@media screen and (max-width:375px) {
+    .blocFSE
+    {
+        margin-left: -40px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+
+    .blocFSE img
+    {
+        margin-right: 10px;
+        height: 40px;
+    }
+}
+
+
+.logo {
+    color : white;
+    font-weight: bold;
+    margin: auto !important;
+}
+
+@media screen and (max-width:800px) {
+    .logo,
+    .marginFooterHeader
+    {
+        max-width: 550px;
+    }
+
+    .bloc1 {
+        background-image: url("./pic/image_home_800.jpg");
+    }
+}
+
+@media screen and (min-width:801px) and (max-width:1200px) {
+    .logo,
+    .marginFooterHeader
+    {
+        max-width: 850px;
+    }
+
+    .bloc1 {
+        background-image: url("./pic/image_home_1200.jpg");
+    }
+    /*.jumbotron
+    {
+        width: 98vw;
+    }*/
+
+    /*.bloc1{
+        padding-top: 180px;
+    }*/
+
+    /*.downButton{
+        margin-top: 150px;
+    }*/
+}
+
+@media screen and (min-width:1201px) {
+    .logo,
+    .marginFooterHeader
+    {
+        max-width: 1050px;
+    }
+
+    .bloc1 {
+        background-image: url("./pic/image_home.jpg");
+    }
+
+    /*
+    _:-ms-fullscreen, :root .jumbotron
+    {
+        width: 99vw;
+    }*/
+
+    /*.jumbotron
+    {
+        width: 99vw;
+    }*/
+
+    /*.bloc1{
+        padding-top: 180px;
+    }*/
+
+    /*.downButton{
+        margin-top: 150px;
+    }*/
+}
+
+
+.jumbotron h1
+{
+    font-weight: bold;
+    font-family: Verdana, Arial, sans-serif;
+}
+
+.jumbotron h3{
+    font-family: Verdana, Arial, sans-serif;
+}
+
+.bloc2 {
+    background: transparent;
+    color : #20314e;
+    margin-bottom: 0px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.blocTitle 
+{
+    margin-top: 0px;
+    margin-bottom: 35px;
+}
+
+.login
+{
+    background-color: #fff !important;
+}
+
+.bloc3
+{
+    background-color : #20314e;
+    background-size : cover;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin-bottom: 0px;
+    color: #fff;
+}
+
+.bloc3 i
+{
+    margin-top: 10px;
+    margin-right: 40px;
+    color: #32c5d2;
+}
+
+
+@media screen and (max-width:414px) {
+    .youtube
+    {
+        width: 300px;
+        height: 150px;
+    }
+
+    #createAccountForm form,
+    #createAccountForm form h3,
+    #connectionPage form,
+    #connectionPage form h3
+    {
+        margin-top: 0px !important;
+    }
+
+}
+
+@media screen and (min-width:415px) and (max-width:800px) {
+    .youtube
+    {
+        width: 500px;
+        height: 250px;
+    }
+
+    #mdNoCandidatureVideo .modal-dialog
+    {
+        width : 580px;
+    }
+}
+
+
+@media screen and (min-width:768px)  {
+
+    .jumbotron h1 {
+        font-size: 48px;
+    }
+    
+    /*.bloc1 {
+        min-height: 600px;
+    }*/
+}
+
+@media screen and (min-width:801px) and (max-width:1200px) {
+    .youtube
+    {
+        width: 800px;
+        height: 400px;
+    }
+
+    #mdNoCandidatureVideo  .modal-dialog
+    {
+        width : 880px;
+    }
+}
+
+@media screen and (min-width:1201px) {
+    .youtube {
+        width: 1000px;
+        height: 500px;
+    }
+
+    #mdNoCandidatureVideo .modal-dialog {
+        width: 1100px;
+    }
+}
+
+.bloc2 .fa
+{
+    margin-top: 15px;
+}
+
+.bloc2 .fa-eye
+{
+    margin-top: 7px !important;
+}
+
+.bloc2 table
+{
+    margin: auto;
+    max-width: 800px;
+    margin-top: 80px;
+    margin-bottom: 0px;
+}
+
+.bloc2 td
+{
+    vertical-align: top;
+}
+
+.bloc2 h3
+{
+    margin-top: 0px;
+    margin-bottom: 70px;
+    margin-left: 40px;
+    text-align: left;
+}
+
+.bloc2 h4
+{
+    margin-bottom: 70px;
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.startButton
+{
+    margin-bottom: 75px;
+}
+
+.bloc2 .startButton
+{
+    margin-bottom: 50px;
+    margin-top: 0px;
+}
+
+.bloc3 .jumbotron
+{
+    margin-bottom: 0;
+}
+
+/*.jumbotron
+{
+    width: 100vw;
+}*/
+
+.Site
+{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.Site-content {
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+}
+
+.Site-footer {
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+}
+
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
+{ @media {
+    .Site
+    {
+        display: block;
+    }
+}}
+
+
+body
+{
+    background: #fff;
+    font-family: Verdana, Arial;
+}
+
+body.loggedIn
+{
+    background: #e6e6e6;
+}
+
+body.archives
+{
+    background: #6b787f !important;
+}
+
+.youtubeBg
+{
+    background-image: url("./pic/bg_youtube.png");
+	background-size:100% auto !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow:hidden;
+    background-repeat: no-repeat;
+    cursor:pointer;
+}
+
+.youtube
+{
+    margin: auto;
+    max-width: 100%;
+}
+
+div.youtube:hover
+{
+    border: 5px solid #32c5d2 !important;
+}
+
+
+.blocAide {
+	margin-top: 15px;
+}
+.titreAide {
+	border-bottom: 2px solid #e6e6e6;
+	font-weight: bold;
+}
+
+#cguCheckDiv{
+    margin-left: 25px;
+}
+
+#cguCheckDiv .openCguButton{
+    font-size: 14px;
+}
+
+#welcomeLogo
+{
+    margin-top: 110px;
+}

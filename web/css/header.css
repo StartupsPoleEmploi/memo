@@ -1,0 +1,443 @@
+.page-header
+{
+    background: #fff;
+    border-bottom: none;
+}
+
+
+.logoPE {
+    float: left;
+    margin-left: 15px;
+    padding-top: 5px;
+
+}
+
+.logoPE img{
+    height: 52px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+.btn-rounded{
+    border-radius: 4px !important;
+}
+
+.headerButtons
+{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.headerButtons > a
+{
+    margin-left: 10px;
+}
+
+.logoSmall {
+    float: left;
+}
+
+.logoSmall img
+{
+    height: 50px;
+    margin-top: 7px;
+}
+
+.logoSmall > div {
+    padding-top : 18px;
+    font-size : 18px;
+    font-weight : bold;
+    color : #000;
+}
+
+
+#logoHomeHeader,
+#logoSmall
+{
+    cursor: pointer;
+}
+
+.marginBeta
+{
+    margin-right: 20px;
+    margin-top: 18px;
+    /*color : #000;*/
+}
+
+.page-header .topbar-actions .btn-group-img .btn {
+    background: #fff none repeat scroll 0 0;
+    color : #000;
+    border-left: 0;
+    border-radius: 0;
+    height: 48px;
+    line-height: normal;
+    padding: 0;
+}
+
+
+/* Quickimport */
+#quickImportDiv {
+    float: left;
+    padding-top: 15px;
+    margin-left: 15px;
+}
+
+#quickImport {
+    height: 32px;
+    font-size: 14px ! important;
+    width: 320px;
+    float: left;
+}
+
+.headerFiller
+{
+    float: left;
+    width: 20%;
+}
+
+
+@media screen  and (max-width:780px) {
+    #quickImportDiv
+    {
+        display: none !important;
+    }
+    
+    #logoHomeHeader
+    {
+        margin-left: -45px;
+    }
+}
+
+@media screen and (min-width:415px) and (max-width:834px) {
+    #quickImport
+    {
+        width: 180px;
+    }
+}
+
+@media screen and (min-width:835px) and (max-width:1200px) {
+    #quickImport
+    {
+        width: 195px;
+    }
+}
+
+@media screen and (min-width:415px) and (max-width:800px) {
+    .headerFiller
+    {
+        width: 0%;
+    }
+}
+
+@media screen and (min-width:801px) and (max-width:1000px) {
+    .headerFiller
+    {
+        width: 2%;
+    }
+}
+
+@media screen and (min-width:1001px) and (max-width:1200px) {
+    .headerFiller
+    {
+        width: 5%;
+    }
+}
+
+@media screen and (min-width:1201px) and (max-width:1400px) {
+    .headerFiller
+    {
+        width: 5%;
+    }
+}
+
+
+
+
+#buttonQuickImport {
+    height: 32px;
+    margin-left: 5px;
+    padding-left: 6px;
+    padding-right : 6px;
+    padding-top : 0px;
+    padding-bottom: 0px;
+}
+
+
+.userLogin{
+    color: #000;
+    border-bottom: 1px solid #000;
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 15px;
+    padding-left: 20px;
+}
+
+.menuBorderTop
+{
+    border-top: 1px solid #000;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+@media screen and (max-width:500px) {
+    .boutonCandidature
+    {
+        display: none;
+    }
+
+    .headerButtons
+    {
+        margin-right: -40px;
+    }
+    .headerButtons > a
+    {
+        margin-left: 5px;
+    }
+}
+
+.boutonCandidature
+{
+    margin-bottom : 10px;
+    border : 1px dashed #e9edef;
+    background : transparent;
+    font-weight: bold;
+    padding:10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.boutonCandidature:hover
+{
+    color : #32c5d2;
+    border-color: #32c5d2 !important;
+}
+
+.boutonCandidature.boutonCandidatureXS/*,
+.boutonTableau,
+.boutonSave,
+.boutonArchiver*/
+{
+    border : 0;
+    margin-bottom : 5px;
+    padding:0px;
+    margin-top: -5px;
+    /*margin-top: 15px;*/
+    float: left;
+}
+
+.boutonCandidature.boutonCandidatureXS div
+{
+    margin-top: -15px;
+}
+
+.marginBeta > a > div
+{
+    margin-top: -5px;
+}
+
+
+.dropdown-menu-v2 > li > a
+{
+    text-transform: none;
+    font-size: 14px;
+}
+
+
+.page-header .boutonCandidature a,
+.page-header .boutonCandidature a:focus,
+.page-header .boutonCandidature a:visited,
+.page-header .boutonCandidature a:active/*,
+.boutonTableau a,
+.boutonTableau a:focus,
+.boutonTableau a:visited,
+.boutonTableau a:active,
+.boutonSave a,
+.boutonSave a:focus,
+.boutonSave a:visited,
+.boutonSave a:active,
+.boutonArchiver a,
+.boutonArchiver a:focus,
+.boutonArchiver a:visited,
+.boutonArchiver a:active*/
+{
+    color: #000;
+    font-size: 32px;
+}
+
+.page-header .boutonCandidature a:hover/*,
+.page-header .boutonTableau a:hover,
+.page-header .boutonSave a:hover,
+.page-header .boutonArchiver a:hover*/
+{
+    color : #32c5d2;
+}
+
+.page-header .boutonCandidatureXS/*,
+.page-header .boutonTableau,
+.page-header .boutonSave,
+.page-header .boutonArchiver*/
+{
+    /*margin-top : 13px;*/
+    margin-left : 15px;
+    margin-bottom: 0px;
+}
+
+.btnHeaderText > div,
+.dropdown-toggle > div
+{
+    padding-top: 10px;
+    font-weight: normal;
+    font-size: 10px;
+}
+
+.page-header .navbar::before
+{
+    border : 0 !important;
+}
+
+#boardPage .page-header {
+    border-bottom : 2px solid #9FA4AF;
+}
+
+
+.dropdown-menu-v2
+{
+    margin-top : 0px !important;
+    margin-right: 0px !important;
+}
+
+.dropdown-menu-v2
+{
+    border: 2px solid #9FA4AF;
+    background: #fff;
+    
+}
+.dropdown-menu-v2 > li > a,
+.dropdown-menu-v2 > li > a:focus,
+.dropdown-menu-v2 > li > a:visited
+{
+    color: #000;
+}
+
+.dropdown-menu-v2 > li > a:hover
+{
+    color: #fff;
+    background: #9FA4AF;
+}
+
+.dropdown-menu-v2:before {
+	border-width: 3px 3px 3px 3px !important;	
+}
+
+.menuDisabled,
+.menuDisabled:hover {
+    color: #fff !important;
+    background: #9FA4AF !important;
+}
+
+/*#ficheButton.menuDisabled,*/
+.menuDisabled2,
+.menuDisabled2:hover
+{
+    color: #666 !important;
+    background: #fff !important;
+}
+
+
+
+
+/*#archives {
+    display: none;
+}
+.archives #archives {
+    color : #000;
+    float: left;
+    padding-top: 7px;
+    font-size : 32px;
+    margin-left : 20px;
+    display : block;
+}*/
+
+#breadcrumb
+{
+    border-top: 2px solid #9FA4AF;
+    background: #20314E;
+    padding: 10px;
+    display: none;
+    height: 43px;
+    font-size: 16px;
+}
+
+#breadcrumb a,
+#breadcrumbLinks
+{
+    color: #fff !important;
+}
+
+
+/*
+ color: white;
+    margin-left: 4px;
+border: 1px solid;
+height: 24px;
+width: 24px;
+padding: 4px;
+border-radius: 3px !important;
+*/
+
+#breadcrumbContent
+{
+    margin: auto;
+    /*max-width: 1000px;*/
+    margin-left: 15px;
+    margin-right: 15px;
+    min-width: 335px;
+    overflow: hidden;
+    -ms-text-overflow: clip;
+    text-overflow: clip;
+    height: 30px;
+    background: #20314E;
+}
+
+.showBreadcrumb  #breadcrumb
+{
+    display: block;
+}
+
+#breadcrumbContent i
+{
+    font-weight: bold;
+}
+
+#breadcrumbContent .fa-caret-right
+{
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.showBreadcrumb #boardPage .page-header
+{
+    border-bottom: 1px solid #9FA4AF;;
+}
+
+@media screen and (max-width: 355px) {
+    #btnHeaderConnect/*,
+    #btnHeaderStart*/
+    {
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width:800px) {
+    #breadcrumbContent
+    {
+        font-size: 13px;
+    }
+}
+
+
+@media screen and (min-width:501px) {
+    .showBreadcrumb .marginTop60
+    {
+        margin-top: 105px;
+    }
+}

@@ -1,0 +1,90 @@
+.cookie-notice
+{
+    z-index: 2000 !important;
+    width: 100%;
+    min-height: 66px;
+    background-color: #20314E;
+    color: #fff;
+    font-size: 16px;
+    font-family: Verdana;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.cookie-notice input
+{
+    margin-left: 15px;
+    height: 40px;
+    text-align: center;
+    background-color: #26a1ab;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    border: 0;
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    border-radius: 5px !important;
+}
+
+.cookie-notice input.light
+{
+    background-color: #fff;
+    color: #26a1ab;
+}
+
+.cookie-notice input:hover
+{
+    background-color: #32c5d2;
+}
+
+.cookie-notice input.light:hover
+{
+    color: #fff;
+}
+
+.cookie-notice a
+{
+    text-decoration: underline;
+    color: #fff;
+}
+.cookie-notice a:hover
+{
+    text-decoration: underline;
+    color: #32c5d2;
+}
+
+.rgpdDeny
+{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rgpdDeny .btn
+{
+    border-radius: 5px !important;
+}
+
+#privacyBadge
+{
+    height:40px;
+    width: 40px;
+    background: red;
+    cursor: pointer;
+}
+
+#privacyBadge.hasConsent
+{
+    background: green;
+}
+
+#mdPrivacyPolicy,
+#mdPrivacyInfo
+{
+    text-align: justify;
+}
+
+#privacyBanner input
+{
+    margin-top: 10px;
+}
