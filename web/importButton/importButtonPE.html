@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enregistrer dans MEMO</title>
+
+    <link rel="shortcut icon" href="../pic/favicon.ico" />
+
+    <style>
+        body{
+            overflow: hidden;
+            background: transparent;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        div.memoButton{
+            width: 34px;
+            height: 34px;
+            overflow: hidden;
+            -webkit-background-size: 34px 34px;
+            background-size: 34px 34px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            color: #000;
+            margin: 0px;
+            padding: 0px;
+            cursor: pointer;
+        }
+
+        .regular div.memoButton{
+            background-image: url('../pic/importButton/memo-btn.svg');
+        }
+
+        .regular div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-hover.svg');
+        }
+
+        .regular.error div.memoButton,
+        .regular.error div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-inactive.svg');
+            cursor: not-allowed;
+        }
+
+        .regular.loading div.memoButton,
+        .regular.loading div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-active.svg');
+            cursor: wait;
+        }
+
+        .success div.memoButton,
+        .success div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-active.svg');
+            cursor: default;
+        }
+
+
+        .detail div.memoButton{
+            width: 21px;
+            height: 21px;
+            background-image: url('../pic/importButton/memo-btn-mini.svg');
+            -webkit-background-size: 18px 18px;
+            background-size: 18px 18px;
+            background-position: 2px 2px;
+        }
+
+        .detail div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-hover-mini.svg');
+        }
+
+        .detail.error div.memoButton,
+        .detail.error div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-inactive-mini.svg');
+        }
+
+        .detail.loading div.memoButton,
+        .detail.loading div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-active-mini.svg');
+        }
+
+        .detail.success div.memoButton,
+        .detail.success div.memoButton:hover
+        {
+            background-image: url('../pic/importButton/memo-btn-active-mini.svg');
+        }
+    </style>
+
+
+</head>
+<body>
+<div class="memoButton">
+
+</div>
+<div id="importContainer" ></div>
+</body>
+
+<script>
+
+    !function(d,s)
+    {
+        var js,
+                fjs= d.getElementsByTagName(s)[0];
+
+            js= d.createElement(s);
+            js.async=true;
+
+            if(window.location.hostname.indexOf('beta')>=0)
+                js.src="https://memo.beta.pole-emploi.fr/js/importButton/buttonQueryPE-min-5.js";
+            else if(window.location.hostname.indexOf('boomerang')>=0) 
+            	js.src="http://boomerang:8080/js/importButton/buttonQueryPE-min-5.js";
+            else 
+                js.src="https://memo.pole-emploi.fr/js/importButton/buttonQueryPE-min-5.js";
+            fjs.parentNode.insertBefore(js,fjs);
+
+    }(document,"script");
+
+
+</script>
+
+
+</html>
