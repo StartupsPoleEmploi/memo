@@ -93,7 +93,7 @@ public class MailTools
 	    String hostExec;
 
 	    try {
-	    	in = MailService.class.getResourceAsStream("/mails.properties");
+	    	in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/mails.properties");
 	    	prop.load(in);
 	    	
 	    	env = prop.getProperty("env");

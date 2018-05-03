@@ -3,7 +3,6 @@ package fr.gouv.motivaction.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -76,7 +75,7 @@ public class CandidatureService {
 
         try
         {
-            in = MailService.class.getResourceAsStream("/secret.properties");
+            in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/secret.properties");
             propSlack.load(in);
 
             lbbSecret = propSlack.getProperty("lbbSecret");

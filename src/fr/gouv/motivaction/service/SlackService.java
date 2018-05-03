@@ -32,7 +32,7 @@ public class SlackService {
 
         try
         {
-            in = SlackService.class.getResourceAsStream("/slack.properties");
+            in = SlackService.class.getResourceAsStream("/fr/gouv/motivaction/properties/slack.properties");
             prop.load(in);
 
             propUrlSlack = prop.getProperty("urlSlack");

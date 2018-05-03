@@ -102,7 +102,7 @@ public class Utils {
 
 		try
 		{
-			in = MailService.class.getResourceAsStream("/reporting.properties");
+			in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/reporting.properties");
 			prop.load(in);
 
 			String env = prop.getProperty("env");

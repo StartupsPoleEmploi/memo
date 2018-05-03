@@ -62,10 +62,10 @@ public class APIService {
 
         try
         {
-            in = MailService.class.getResourceAsStream("/api.properties");
+            in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/api.properties");
             prop.load(in);
 
-			secretIn = MailService.class.getResourceAsStream("/secret.properties");
+			secretIn = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/secret.properties");
 			secretProp.load(secretIn);
 
             

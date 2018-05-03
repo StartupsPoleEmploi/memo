@@ -6,7 +6,6 @@ import fr.gouv.motivaction.model.Attachment;
 import fr.gouv.motivaction.model.AttachmentFile;
 import fr.gouv.motivaction.utils.Utils;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 /*import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.model.Account;
@@ -48,7 +47,7 @@ public class AttachmentService {
 
         try
         {
-            in = MailService.class.getResourceAsStream("/openstack.properties");
+            in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/openstack.properties");
             prop.load(in);
 
             env = prop.getProperty("env");

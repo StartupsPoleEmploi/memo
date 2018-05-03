@@ -71,7 +71,7 @@ public class UserService {
 
         try
         {
-            in = UserDAO.class.getResourceAsStream("/secret.properties");
+            in = UserDAO.class.getResourceAsStream("/fr/gouv/motivaction/properties/secret.properties");
             prop.load(in);
 
             algo = prop.getProperty("algo");
