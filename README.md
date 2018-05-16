@@ -1,6 +1,6 @@
-```
-MEMO
-```
+
+# MEMO
+
 
 # Présentation du projet
 
@@ -50,26 +50,28 @@ http://localhost and start browsing.
 
 ## Configuration
 
-Modify values in .properties files in /src/fr/gouv/motivaction/properties/*
+Modify mandatory values in .properties files in /src/fr/gouv/motivaction/properties/*
 
-Mandatory : 
+- secret.properties : 
+    salt = a random alphanumeric value 
+    encryptorSecret = a random alphanumeric value
+    pwdSql = a string containing two question mark '?' characters
+   
 
-- 
+- mail.properties :
 
-Optional : 
-
-
-
-
-# Debugging
-
+    email.noReply = your sending email address
+    email.noReplyExt = your sending email address
+    email.personal = your sending email name
+ 
+ 
 ## Accessing your local MySQL
 
 To access your local MySQL in your MySQL GUI :
 
 - new connection / select "SSH" tab
-- MySQL host: `127.0.0.1:3037`
-- Username: `root`
+- MySQL host: 127.0.0.1:3037
+- Username: root
 - Password: leave empty
-- Database: `motivaction`
+- Database: motivaction
 
