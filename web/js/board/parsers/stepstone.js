@@ -61,7 +61,7 @@ ParserStepStone.prototype = {
             // logo
             try
             {
-                v = truc.find(".listing__profile-logo-image")[0].style.backgroundImage;
+                v = debugCont.find(".listing__profile-logo-image")[0].style.backgroundImage;
                 c.logoUrl = "http://www.stepstone.fr"+v.substring(5, v.length-2);
             }catch(err){}
 

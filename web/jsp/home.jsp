@@ -31,7 +31,7 @@
                 <img src="./pic/logo_fse.svg" alt="logo Fond Social Européen" />
                 <img src="./pic/logo_pe.svg" alt="logo Pôle emploi" />
                 <img src="./pic/logo_europe.svg" alt="Drapeau de l'Union Européenne" />
-                <img src="./pic/texte_europe.svg" alt="Texte FSE" />
+                <img src="./pic/texte_europe.svg" alt="Blabla EU" />
             </div>
 
 

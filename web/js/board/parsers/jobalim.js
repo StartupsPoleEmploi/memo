@@ -79,7 +79,7 @@ ParserJobAlim.prototype = {
         }
 
         if (cont.find("#info_entreprise_titre > p").length > (r + 4))
-            v = "<strong>Entreprise :</strong><br />" + $(truc.find("#info_entreprise_titre > p")[r + 3]).html().trim();
+            v = "<strong>Entreprise :</strong><br />" + $(debugCont.find("#info_entreprise_titre > p")[r + 3]).html().trim();
 
         if (addr)
             v += "<br /><br /><strong>Adresse  :</strong><br />" + addr;

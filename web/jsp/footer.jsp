@@ -5,31 +5,33 @@
 
                 <div class="row">
 
-                    <div class="col-md-3 hidden-xs hidden-sm">
-                        <div class="logoSmall pull-left"></div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-6 footerLinks">
-                        <a class="openFaqButton text-center">Aide / Support</a> <span class="hidden-xs hidden-sm">-</span>
-                        <a class="openCguButton text-center"><span class="hidden-xs hidden-sm">Conditions générales d'utilisation</span><span class="visible-xs visible-sm">CGU</span></a>
-                        <span class="hidden-xs hidden-sm"><br /></span>
-                        <a class="openPrivacyButton text-center"><span class="hidden-xs hidden-sm">Politique de confidentialité</span><span class="visible-xs visible-sm">Confidentialité</span></a>
-                        <div class="footerLogoBottom"></div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6">
-                        <div class="footerLogo">
-                            <table><tr>
-                                <td>Un service propulsé par</td>
-                                <td><a href="http://www.pole-emploi.fr" target="_blank"><img src="./pic/logos/pe.png" alt="logo pole emploi"/></a> </td>
-                            </tr></table>
+                    <div class="col-md-4 col-md-push-4 col-xs-12 footerRightBorder">
+                        <div class="footerLinks footerBlock">
+                            <div>
+                                <a class="openFaqButton text-center">Aide et support</a>
+                            </div>
+                            <div>
+                                <a class="openCguButton text-center">Conditions générales d'utilisation</a>
+                            </div>
                         </div>
                     </div>
 
-                </div>
+                    <div class="col-md-4 col-md-push-4 col-xs-12">
+                        <div class="footerLinks footerBlock">
+                            <div>
+                                <a class="openPrivacyButton text-center">Politique de confidentialité</a>
+                            </div>
+                            <div id="privacyBadge" class="hasConsent"></div>
+                        </div>
+                    </div>
 
-                <div class="row">
-                    <div id="privacyBadge" class="hasConsent"></div>
+                    <div class="col-md-4 col-md-pull-8 col-xs-12 footerRightBorder">
+                        <div class="footerLogo footerBlock">
+                            <div class="col-xs-6">Un service propulsé par Pôle Emploi</div>
+                            <div class="col-xs-6"><a href="http://www.pole-emploi.fr" target="_blank"><img src="./pic/logos/pe.png" alt="logo pole emploi"></a></div>
+                        </div>
+                    </div>
+
                 </div>
 
         </div>

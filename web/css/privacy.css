@@ -65,17 +65,23 @@
     border-radius: 5px !important;
 }
 
+.rgpdDeny a
+{
+    font-size: 14px;
+}
+
 #privacyBadge
 {
-    height:40px;
-    width: 40px;
-    background: red;
+    background-image: url("./pic/rgpd_off.png");
     cursor: pointer;
+    height: 45px;
+    width: 115px;
+    margin-left: -4px;
 }
 
 #privacyBadge.hasConsent
 {
-    background: green;
+    background-image: url("./pic/rgpd_on.png");
 }
 
 #mdPrivacyPolicy,
@@ -87,4 +93,50 @@
 #privacyBanner input
 {
     margin-top: 10px;
+}
+
+#privacyBanner a
+{
+    margin-left: 30px;
+}
+
+.mdPrivacyPolicyPrompt
+{
+    font-weight: bold;!important;
+}
+
+#mdPrivacyPolicy .modal-dialog
+{
+    width: 90%;
+    max-width: 1024px;
+}
+
+.privacyArticle {
+    font-size: 12px;
+    margin-top: 10px;
+}
+.privacySummary {
+    margin-top: 10px;
+}
+.col-xs-12.privacyTitle1 {
+}
+.privacyTitle3 {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+}
+.privacyTitle2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 10px;
+}
+.privacyTitle1 {
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: underline;
+}
+.privacyMargin
+{
+    margin-top: 20px;
 }

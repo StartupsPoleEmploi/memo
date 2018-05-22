@@ -35,26 +35,13 @@ Privacy.prototype = {
     initEvents : function()
     {
         // les événements sur les boutons
-        $(".openPrivacyButton").on("click",$.proxy( this.openPrivacyPolicy, this));
-        $("#mdPrivacyInfoConsent").on("click",$.proxy( this.saveConsentAndHideModal, this));
-        $("#mdPrivacyInfoDeny").on("click",$.proxy( this.saveDenyAndHideModal, this));
-        $(".rgpdDeny .btn").on("click",$.proxy( this.showModal, this));
-        $("#privacyBadge").on("click",$.proxy( this.showModal, this));
-    },
-
-    initBannerEvents : function()
-    {
-        //console.log("initBannerEvents");
-        // l'événement sur le window pour fermeture banner  et consentement explicite
-
-        $(document).on("click", $.proxy(this.saveConsentAndHideBanner,this));
-    },
-
-    removeBannerEvents : function()
-    {
-        //console.log("removeBannerEvents");
-        // la suppression des événements banner et window
-        $(document).off("click",$.proxy(this.saveConsentAndHideBanner,this));
+        $(".openPrivacyButton").on("click",$.proxy( this.showPrivacyPolicy, this));
+        $(".mdPrivacyInfoConsent").on("click",$.proxy( this.saveConsentAndHideModal, this));
+        $(".mdPrivacyInfoDeny").on("click",$.proxy( this.saveDenyAndHideModal, this));
+        $(".rgpdDeny .btn").on("click",$.proxy( this.saveConsentAndHideBanner, this));
+        $(".rgpdDeny a").on("click",$.proxy( this.showPrivacyInfo, this));
+        $("#privacyBadge").on("click",$.proxy( this.showPrivacyInfo, this));
+        $("#mdPrivacyInfo a").on("click", $.proxy(this.showPrivacyPolicy,this))
     },
 
     // affiche le bandeau
@@ -89,10 +76,10 @@ Privacy.prototype = {
                 lBR.privacy.hideBanner();
             });
 
-            $('<input type="button" class="light" value="En savoir plus ou s\'opposer"/>').appendTo(div).click(function (evt) {
+            $('<a>En savoir plus ou s\'opposer</a>').appendTo(div).click(function (evt) {
                 //console.log("en savoir plus clicked");
                 evt.stopPropagation();
-                lBR.privacy.showModal();
+                lBR.privacy.showPrivacyInfo();
             });
 
             $('</div>').appendTo(div);
@@ -111,9 +98,15 @@ Privacy.prototype = {
     },
 
     // montre la modale avec le détail
-    showModal : function()
+    showPrivacyInfo : function(h)
     {
-        //console.log("showModal");
+        if (h != 1)
+        {
+            $Hist({id: "privacyInfo"});
+            ga('send', { hitType : 'event', eventCategory : 'Privacy', eventAction : 'showInfo' });
+        }
+
+        //console.log("showPrivacyInfo");
         this.hideBanner();
 
         $("#mdPrivacyInfo").modal({
@@ -159,37 +152,38 @@ Privacy.prototype = {
         this.setFooterBadge();
         this.setConsentDisplay();
 
-        startGoogleAnalytics();
+        ga('send', { hitType : 'event', eventCategory : 'Privacy', eventAction : 'acceptedPolicy' });
     },
 
     saveConsentAndHideBanner : function()
     {
-        //console.log("saveConsentAndHideBanner");
-        if(this.hasConsent!=false)
-            this.saveConsent();
+        this.saveConsent();
         this.hideBanner();
     },
 
     saveConsentAndHideModal : function()
     {
         this.saveConsent();
-        this.hideModal();
+        this.hideModals();
     },
 
     saveDenyAndHideModal : function()
     {
-        this.hideModal();
+        this.hideModals();
         this.disconnectUser();
         this.setNoConsentDisplay();
-        this.stopTrackingAndRemoveCookies();
+        //this.stopTrackingAndRemoveCookies();
         this.hasConsent = false;
         this.setFooterBadge();
         localStorage.setItem("hasConsent",false);
+
+        ga('send', { hitType : 'event', eventCategory : 'Privacy', eventAction : 'deniedPolicy' });
     },
 
-    hideModal : function()
+    hideModals : function()
     {
         $("#mdPrivacyInfo").modal("hide");
+        $("#mdPrivacyPolicy").modal("hide");
     },
 
     disconnectUser : function()
@@ -202,7 +196,7 @@ Privacy.prototype = {
     hideBanner : function()
     {
         //console.log("hideBanner");
-        this.removeBannerEvents();
+        //this.removeBannerEvents();
         $("#privacyBanner").hide("slideUp");
     },
 
@@ -221,47 +215,48 @@ Privacy.prototype = {
             }
         }
 
-        //console.log("checkConsent : ",res,this.hasConsent,this.consentExpire);
-
         return res;
     },
 
     // ouvre la modale avec la politique de confidentialité
-    openPrivacyPolicy : function()
+    showPrivacyPolicy : function(h)
     {
+        if (h != 1)
+        {
+            $Hist({id: "privacyPolicy"});
+            ga('send', { hitType : 'event', eventCategory : 'Privacy', eventAction : 'showPrivacyPolicy' });
+        }
+
+        // prompt d'acceptation des la politique de confidentialité si l'utilisateur n'a pas encore répondu
+        if(this.hasConsent)
+        {
+            $(".mdPrivacyPolicyPrompt").hide();
+            $("#mdPrivacyPolicy .mdPrivacyInfoConsent").hide();
+            $("#mdPrivacyPolicy .mdPrivacyInfoDeny").hide();
+            $(".mdPrivacyPolicyClose").show();
+        }
+        else
+        {
+            $(".mdPrivacyPolicyPrompt").show();
+            $("#mdPrivacyPolicy .mdPrivacyInfoConsent").show();
+            $("#mdPrivacyPolicy .mdPrivacyInfoDeny").show();
+            $(".mdPrivacyPolicyClose").hide();
+        }
+
+        this.hideBanner();
+        $("#mdPrivacyInfo").modal("hide");
         $("#mdPrivacyPolicy").modal("show");
     },
 
-    showPrivacyInfo : function()
+    initPrivacyInfo : function()
     {
-        //$.infoCookie("Les cookies assurent le bon fonctionnement de nos services. En utilisant ces derniers, vous acceptez l'utilisation des cookies. <a href='javascript:lBR.showCGU();'>En savoir plus</a>");
-
-        //console.log("showPrivacyInfo");
-
         if(!this.checkConsent())
         {
             this.seekConsent();
             this.setNoConsentDisplay();
         }
-        else
-            startGoogleAnalytics();
-    },
-
-    stopTrackingAndRemoveCookies : function()
-    {
-         var cks = Cookies.get();
-
-         for(k in cks)
-         {
-             Cookies.remove(k);
-             Cookies.remove(k, { domain: '.pole-emploi.fr' });
-             Cookies.remove(k, { domain: '.memo.beta.pole-emploi.fr' });
-             Cookies.remove(k, { domain: '.memo.pole-emploi.fr' });
-         }
-
-        localStorage.clear();
-
-        window.ga = function(){};
+        /*else
+            startGoogleAnalytics();*/
     }
 }
 

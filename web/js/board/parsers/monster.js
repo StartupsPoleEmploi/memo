@@ -79,7 +79,7 @@ ParserMonster.prototype = {
                 c.nomCandidature = fork.text();
                 c.ville = cont.find("h2.subtitle").text();
 
-                el = truc.find("#JobDescription span p>font, #JobDescription span p b u font, #JobDescription span p>a>font>span:nth(0)");
+                el = debugCont.find("#JobDescription span p>font, #JobDescription span p b u font, #JobDescription span p>a>font>span:nth(0)");
 
                 v = "";
                 for(var i=0, l=el.length; i<l; ++i)

@@ -10,11 +10,13 @@
 			<div class="row boundary"></div>
 
             <div class="row rgpdDeny" style="display:none;">
-                Vous avez refusé l'utilisation de cookies, MEMO est désormais indisponible.
+                Vous n'avez pas accepté la politique de confidentialité.
                 <br /><br />
-                Pour accéder au site, vous devez accepter les cookies.
+                La connexion à MEMO n'est possible que si vous acceptez cette politique de confidentialité.
                 <br /><br />
-                <button type="button" class="btn green">En savoir plus ou Revenir sur ma décision</button>
+                <button type="button" class="btn green">J'ACCEPTE LA POLITIQUE<br class="visible-xs" /> DE CONFIDENTIALITE</button>
+                <br />
+                <a>En savoir plus</a>
                 <br /><br />
             </div>
 

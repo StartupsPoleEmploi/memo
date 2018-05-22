@@ -22,7 +22,7 @@ ParserRegionsJob.prototype = {
 
 
         c.jobBoard = this.name;
-        if (truc.find("#annonce-chartee-detail").length > 0) {
+        if (debugCont.find("#annonce-chartee-detail").length > 0) {
             throw "annonce-chartee-detail";
         }
 

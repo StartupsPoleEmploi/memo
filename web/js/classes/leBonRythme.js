@@ -6,7 +6,7 @@ leBonRythme.prototype = {
                 "mdArchiverCandidature", "mdPostulerCandidature", "mdPreparerEntretien", "mdRelancerCandidature", "mdAcceptationCandidature",
                 "mdRelancerEntretien", "mdShareLink", "mdRemercierEntretien", "mdRemoveCandidatureEvent", "mdRemoveFile", "mdAttachmentManager",
                 "mdEditEvent","mdNoCandidatureVideo","mdCGU","mdSetEntretien", "mdModifierMotDePasse", "mdSupprimerCompte", "mdRenouvelerMotDePasse", 
-                "mdNoInternet", "mdConseilNudgeReseau"],
+                "mdNoInternet", "mdConseilNudgeReseau", "mdPrivacyInfo", "mdPrivacyPolicy"],
     currentPage : "homePage",
     board : null,
     conseils : null,
@@ -27,7 +27,7 @@ leBonRythme.prototype = {
         t.displayImportLandingPage();
 
         t.privacy = new Privacy();
-        t.privacy.showPrivacyInfo();
+        t.privacy.initPrivacyInfo();
 
         t.board = new Board();
         t.conseils = new Conseils(t.board);
@@ -318,6 +318,13 @@ leBonRythme.prototype = {
                             lBR.goToPage("boardPage", 1);
                             lBR.showConseils(1);
                         }
+                    }
+
+                    if (id == "privacyInfo") {
+                        lBR.privacy.showPrivacyInfo(1);
+                    }
+                    else if (id == "privacyPolicy") {
+                        lBR.privacy.showPrivacyPolicy(1);
                     }
                 }
             }
