@@ -328,6 +328,7 @@ TimeLine.prototype = {
                 toastr['error']("Erreur lors de l'enregistrement de l'événément", "Une erreur s'est produite " + errorThrown);
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("saveCandidatureEventQuery ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -352,6 +353,7 @@ TimeLine.prototype = {
                 toastr['warning']("Erreur lors de l'envoi du rendez-vous dans votre calendrier", "Une erreur s'est produite " + errorThrown);
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("sendInterviewCalendar ajax error : ",textStatus,errorThrown);
             }
         });
 
@@ -421,6 +423,7 @@ TimeLine.prototype = {
                     toastr['error']("Erreur lors de l'enregistrement de l'événément", "Une erreur s'est produite " + errorThrown);
                     console.log('/candidature error: ' + textStatus);
                     console.log("traitement erreur candidature");
+                    Raven.captureException("addCandidatureEvent ajax error : ",textStatus,errorThrown);
                 }
             });
 
@@ -613,7 +616,9 @@ TimeLine.prototype = {
             {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature event error: ' + textStatus);
+                Raven.captureException("loadCandidatureEvents ajax error : ",textStatus,errorThrown);
                 lBR.board.hideBoardSpinner();
+                Raven.captureException("loadCandidatureEvents ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -851,6 +856,7 @@ TimeLine.prototype = {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("removeCandidatureEvent ajax error : ",textStatus,errorThrown);
             }
         });
 
@@ -972,6 +978,7 @@ TimeLine.prototype = {
                 toastr['error']("Erreur lors de l'enregistrement de l'événément de rappel", "Une erreur s'est produite " + errorThrown);
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("saveCandidatureEventRappelQuery ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -1043,6 +1050,7 @@ TimeLine.prototype = {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("removeCandidatureEventRappel ajax error : ",textStatus,errorThrown);
             }
         });
 

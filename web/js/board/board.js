@@ -282,6 +282,8 @@ Board.prototype = {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature error: ' + textStatus);
                 lBR.board.hideBoardSpinner();
+
+                Raven.captureException("loadBoard ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -372,6 +374,7 @@ Board.prototype = {
                         // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                         console.log('/candidature error: ' + textStatus);
                         console.log("traitement erreur candidature");
+                        Raven.captureException("loadCandidature ajax error : ",textStatus,errorThrown);
                     },
                     complete: function (data) {
                         lBR.board.hideCandidatureSpinner(c.id);
@@ -408,6 +411,7 @@ Board.prototype = {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("loadAttachments ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -751,6 +755,7 @@ Board.prototype = {
                     // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                     console.log('/candidature error: ' + textStatus);
                     console.log("traitement erreur changement d'état candidature");
+                    Raven.captureException("updateCandidatureState ajax error : ",textStatus,errorThrown);
                 }
             });
         }
@@ -1481,6 +1486,7 @@ Board.prototype = {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("setFavorite ajax error : ",textStatus,errorThrown);
             }
         });
 
@@ -1639,6 +1645,7 @@ Board.prototype = {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 console.log('/candidature error: ' + textStatus);
                 console.log("traitement erreur candidature");
+                Raven.captureException("confirmRemoveCandidature ajax error : ",textStatus,errorThrown);
             }
         });
 
@@ -1781,6 +1788,7 @@ Board.prototype = {
                                 json = JSON.parse(response);
                             }
                             catch (err) {
+                                Raven.captureException(err);
                             }
 
                             if (response == "error" || (json && json.result == "error")) {
@@ -1803,6 +1811,7 @@ Board.prototype = {
                         // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                         console.log('/check offre error: ' + textStatus);
                         console.log("traitement erreur check offre");
+                        Raven.captureException("checkOffre ajax error : ",textStatus,errorThrown);
                     }
                 });
             }

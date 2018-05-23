@@ -191,7 +191,9 @@ function $logErr(msg)
         data: p,
         dataType: "json",
         success: function (response){},
-        error: function (jqXHR, textStatus, errorThrown){}
+        error: function (jqXHR, textStatus, errorThrown){
+            Raven.captureException("$logErr ajax error : ",textStatus,errorThrown);
+        }
     });
 }
 

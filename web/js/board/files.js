@@ -151,6 +151,8 @@ CandidatureFiles.prototype = {
                     lBR.board.fileManager.setFileUploadDone(0);
                     // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                     toastr['error']("Erreur lors de l'enregistrement du fichier", "Une erreur s'est produite " + errorThrown);
+
+                    Raven.captureException("handleReaderLoad ajax error : ",textStatus,errorThrown);
                 }
             });
         }
@@ -338,6 +340,8 @@ CandidatureFiles.prototype = {
             error: function (jqXHR, textStatus, errorThrown) {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                 toastr['error']("Erreur lors de la suppression de la pièce jointe", "Une erreur s'est produite " + errorThrown);
+
+                Raven.captureException("removeFile ajax error : ",textStatus,errorThrown);
             }
         });
 

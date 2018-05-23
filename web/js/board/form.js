@@ -967,6 +967,7 @@ CandidatureForm.prototype = {
                     toastr['error']("Erreur lors de l'enregistrement de la candidature", "Une erreur s'est produite " + errorThrown);
                     console.log('/candidature error: ' + textStatus);
                     console.log("traitement erreur candidature");
+                    Raven.captureException("saveCandidature ajax error : ",textStatus,errorThrown);
                 }
             });
 
@@ -1063,10 +1064,13 @@ CandidatureForm.prototype = {
                 var json,
                     html = $sc(response);
 
-                try {
+                try
+                {
                     json = JSON.parse(response);
                 }
-                catch (err) {
+                catch (err)
+                {
+                    Raven.captureException(err);
                 }
 
                 if (response == "error" || response == "expired" || (json && json.result == "error") || (json && json.result == "expired") )
@@ -1105,6 +1109,8 @@ CandidatureForm.prototype = {
 
                 lBR.board.form.setOffreFieldDisabledState(false);
                 lBR.board.setQuickImportDisabledState(false);
+
+                Raven.captureException("importOffreQuery ajax error : ",textStatus,errorThrown);
             }
         });
     	return cand;

@@ -154,6 +154,7 @@ Parametres.prototype = {
                 toastr['error']("Erreur lors du chargement des abonnements","Une erreur s'est produite "+errorThrown);
                 console.log('/account error: ' + textStatus);
                 console.log("traitement erreur account");
+                Raven.captureException("loadParametres ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -252,6 +253,7 @@ Parametres.prototype = {
 		         },
 		         error: function (jqXHR, textStatus, errorThrown) {
 		             console.log('/account/newPassword: ' + textStatus);
+		             Raven.captureException("modifierMotDePasse ajax error : ",textStatus,errorThrown);
 		         }
 		     });
          } else {
@@ -328,6 +330,7 @@ Parametres.prototype = {
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('/account/newPassword: ' + textStatus);
+                    Raven.captureException("modifierEmail ajax error : ",textStatus,errorThrown);
                 }
             });
         } else {
@@ -369,7 +372,8 @@ Parametres.prototype = {
             error: function (jqXHR, textStatus, errorThrown)
             {
                 toastr['error']("Erreur lors de l'envoi de l'email de suppression de compte","Une erreur s'est produite "+errorThrown);
-                console.log('/account/mailSupprimerCompte error: ' + textStatus); 
+                console.log('/account/mailSupprimerCompte error: ' + textStatus);
+                Raven.captureException("supprimerCompte ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -404,6 +408,7 @@ Parametres.prototype = {
                 toastr['error']("Erreur lors de l'enregistrement des parametres","Une erreur s'est produite "+errorThrown);
                 console.log('/account parametres error: ' + textStatus);
                 console.log("traitement erreur account parametres");
+                Raven.captureException("saveParametres ajax error : ",textStatus,errorThrown);
             }
         });
 
@@ -502,6 +507,7 @@ Parametres.prototype = {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('/account/extractTDB error: ' + textStatus);
+                Raven.captureException("extractTDB ajax error : ",textStatus,errorThrown);
             }
         });
     }

@@ -158,13 +158,16 @@ Parser.prototype = {
         }
         catch(err)
         {
-            console.log(err);
+            //console.log(err);
+            Raven.captureException(err);
 
          	try {
         		if (!isGeneric) {
             		c = this.genericParse(html);
             	} 
         	} catch(ex) {
+
+        	    Raven.captureException(ex);
         		if(this.board)
                     toastr['error']("","Erreur de traitement d'import");
         	}
@@ -219,7 +222,9 @@ Parser.prototype = {
                         lBR.board.form.buildFormLogoUrl(u,"#formLogoSociete,#formLogoSocieteTunnel");
                     }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {}
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Raven.captureException("clearBit logo  ajax error : ",textStatus,errorThrown);
+                }
             });
         }
     },

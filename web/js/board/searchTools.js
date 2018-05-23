@@ -179,6 +179,8 @@ SearchTools.prototype = {
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('/candidature/search error: ' + textStatus);
                     console.log("traitement erreur recherche");
+
+                    Raven.captureException("searchInDescription ajax error : ",textStatus,errorThrown);
                 }
             });
         }

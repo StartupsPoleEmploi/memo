@@ -437,6 +437,7 @@ leBonRythme.prototype = {
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('/login/account error: ' + textStatus);
                     $wST(250);
+                    Raven.captureException("accountLogin ajax error : ",textStatus,errorThrown);
                 },
                 complete: function()
                 {
@@ -476,6 +477,7 @@ leBonRythme.prototype = {
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('/logout error: ' + textStatus);
+                    Raven.captureException("logoutUser ajax error : ",textStatus,errorThrown);
                 }
             });
         }
@@ -697,6 +699,7 @@ leBonRythme.prototype = {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('/login/account error: ' + textStatus);
+                Raven.captureException("facebookLogin ajax error : ",textStatus,errorThrown);
             }
         });
 
@@ -827,6 +830,7 @@ leBonRythme.prototype = {
                     // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                     console.log('/login/account error: ' + textStatus);
                     $wST(230);
+                    Raven.captureException("accountLogin ajax error : ",textStatus,errorThrown);
                 },
                 complete: function()
                 {
@@ -913,6 +917,7 @@ leBonRythme.prototype = {
                     // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                     console.log('/login/account error: ' + textStatus);
                     $wST(230);
+                    Raven.captureException("saveNewPassword ajax error : ",textStatus,errorThrown);
                 },
                 complete: function()
                 {
@@ -1002,6 +1007,8 @@ leBonRythme.prototype = {
                     $("#forgottenPasswordMsg").html("Une erreur interne s'est produite");
                     $('.alert-danger', $('.login-form')).show();
                     $("#buttonGetPassword").show();
+
+                    Raven.captureException("getPassword ajax error : ",textStatus,errorThrown);
                 },
                 complete: function()
                 {
@@ -1106,6 +1113,7 @@ leBonRythme.prototype = {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('/login/account error: ' + textStatus);
+                Raven.captureException("logUserIdIntoGA ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -1255,6 +1263,7 @@ leBonRythme.prototype = {
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('/account/visitorLink error: ' + textStatus);
                 $("#shareLink").val("Une erreur s'est produite !");
+                Raven.captureException("getShareLink ajax error : ",textStatus,errorThrown);
             },
             complete: function()
             {
@@ -1410,6 +1419,7 @@ leBonRythme.prototype = {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('/account/checkPasswordChange error: ' + textStatus);
+                Raven.captureException("checkPasswordChange ajax error : ",textStatus,errorThrown);
             }
         });
     },
@@ -1430,6 +1440,7 @@ leBonRythme.prototype = {
 	        },
 	        error : function(jqXHR, textStatus, errorThrown) {
 	            console.error('getLastUpdateOffreByJobboard error : ' + textStatus);
+	            Raven.captureException("getUrlLastUpdateOffreByJobboard ajax error : ",textStatus,errorThrown);
 	        }
 	    });
 	    return url;
@@ -1467,7 +1478,10 @@ leBonRythme.prototype = {
                 url: this.rootURL + '/account/accountSource',
                 data: p,
                 dataType: "json",
-                success: function (response) {}
+                success: function (response) {},
+                error : function(jqXHR, textStatus, errorThrown) {
+                    Raven.captureException("saveUserSource ajax error : ",textStatus,errorThrown);
+                }
             });
         }
     },
