@@ -3,12 +3,15 @@ package fr.gouv.motivaction.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import fr.gouv.motivaction.model.NbCandidatureReseauValue;
 import org.apache.log4j.Logger;
 
 import fr.gouv.motivaction.Constantes;
@@ -348,28 +351,75 @@ public class StatsDAO {
         return cartesParTypesParMois;
 
     }
- 
-    private static String convertCodeTypeCandInValueFromConstantes(String code) {
-		String result = null;
-		if(code != null) {
-			if(code.equals("1")) {
-				result = "spontanée";
-			} else if(code.equals("2")) {
-				result = "internet";
-			} else if(code.equals("3")) {
-				result = "réseau";
-			} else {
-				result = "autre";
-			} 
-    	}
-    	return result;
-    }    
 
-    /*
-    glissement sur un an des statistiques
-            regroupement des statistiques en un seul appel
-    courbes sur les types de carte
-            zoom sur les cartes réseau avec histogrammes en pourcentage
-    appel différentié des écrans pour éviter un trop plein d'un coup
-    */
+    public static ArrayList getNbCandidatureReseau() throws Exception
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+        ArrayList result = new ArrayList();
+        try
+        {
+            con = DatabaseManager.getConnection();
+            String sql = "CALL getUtilisationCartesReseau()";
+            pStmt = con.prepareStatement(sql);
+            rs = pStmt.executeQuery();
+
+            NbCandidatureReseauValue val = null;
+
+            while(rs.next())
+            {
+                Timestamp ts = rs.getTimestamp(2);
+
+                if(val==null || val.getPeriode().getYear()!=ts.getYear() || val.getPeriode().getMonth()!=ts.getMonth())
+                {
+                    if(val!=null)
+                        result.add(val);
+                    val = new NbCandidatureReseauValue();
+                    val.setPeriode(ts);
+                }
+
+                StatsDAO.initNbCandidatureReseauValueFromResultSet(rs,val);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(logCode+"-012 Error stats getting nb candidatures réseau. error="+e);
+            throw new Exception("DB Error");
+        }
+        finally
+        {
+            DatabaseManager.close(con, pStmt, rs, logCode, "013");
+        }
+
+        return result;
+
+    }
+
+    private static void initNbCandidatureReseauValueFromResultSet(ResultSet rs, NbCandidatureReseauValue val) throws Exception
+    {
+        int nbCarte = rs.getInt("nbCarte");
+        int nbUsers = rs.getInt(3);
+
+        switch (nbCarte)
+        {
+            case 1 : {
+                val.setNbCarte1(nbUsers);
+                break;
+            }
+            case 2 : {
+                val.setNbCarte2_3(nbUsers);
+                break;
+            }
+            case 4 : {
+                val.setNbCarte4_5(nbUsers);
+                break;
+            }
+            case 6 : {
+                val.setNbCarte6(nbUsers);
+                break;
+            }
+        }
+    }
+
 }

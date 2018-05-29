@@ -585,7 +585,7 @@ Stats.prototype = {
         
     },
 
-    setGraphTypeCandidature : function(tabLabels, tabSeries)  
+    setGraphTypeCandidature : function(tabLabels, tabSeries)
     {
     	var tabSeriesPrev, labelMoisCourant, data, options, max;
 
@@ -665,5 +665,72 @@ Stats.prototype = {
                 }
             });
         }
+    },
+
+    getNbCandidatureReseau : function()
+    {
+        var tabLabels, tabSeries;
+
+        $("#chartNbCandidatureReseau").hide();
+        $("#spinnerChartNbCandidatureReseau").show();
+
+        $.ajax({
+            type: 'GET',
+            url: this.rootURL + '/stats/nbCandidatureReseau',
+            dataType: "json",
+
+            success: function (response)
+            {
+                if(response.result=="ok")
+                {
+                    stats.setGraphNbCandidatureReseau(response.values);
+
+                    $("#chartNbCandidatureReseau").show();
+                    $("#spinnerChartNbCandidatureReseau").hide();
+                }
+                else
+                {
+                    toastr['error']("Erreur stats lors du chargement des nombres de candidatures réseau","Une erreur s'est produite "+response.msg);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
+                console.log('/stats error: ' + textStatus);
+
+                $("#chartNbCandidatureReseau").show();
+                $("#spinnerChartNbCandidatureReseau").hide();
+            }
+        });
+
+
+    },
+
+    setGraphNbCandidatureReseau : function(values)
+    {
+            new Chartist.Bar('#chartNbCandidatureReseau', values, {
+              fullWidth: true,
+              stackBars: true,
+              axisY: {
+                labelInterpolationFnc: function(value) {
+                  return (value / 1000) + 'k';
+                }
+              },
+              chartPadding: {
+                  right: 40
+              },
+              plugins: [
+                  Chartist.plugins.tooltip()
+              ]
+
+            }).on('draw', function(data) {
+              if(data.type === 'bar') {
+                data.element.attr({
+                  style: 'stroke-width: 30px'
+                });
+              }
+            });
+
     }
+
 }

@@ -262,6 +262,27 @@ public class StatsAction {
         return res;
     }
 
+    @GET
+    @Path("nbCandidatureReseau")
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String getNbCandidatureReseau(@Context HttpServletRequest servletRequest)
+    {
+        String res;
+        try
+        {
+            String statJsonNbCandidatureReseau = StatsService.getNbCandidatureReseau();
+            res = "{ \"result\" : \"ok\", \"values\" : " + statJsonNbCandidatureReseau + " }";
+        }
+        catch (Exception e)
+        {
+            log.error(logCode + "-008 Error getting application types. error=" + e);
+            res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+        }
+
+        return res;
+    }
+
+
     private String[] prepareJSON(ArrayList<String[]> rawStat) {
         String[] tabResult = null;
 

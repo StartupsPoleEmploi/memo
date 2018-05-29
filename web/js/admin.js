@@ -501,7 +501,7 @@ BackOffice.prototype = {
         });
     },
     
-    getStatsBO : function()
+    getOriginesStats : function()
     {
     	$('#blocUsersIncoming').show();
     	stats.getUsersIncomming();
@@ -511,10 +511,16 @@ BackOffice.prototype = {
     	
     	$('#blocCandidaturesButtonIncoming').show();
     	stats.getCandidaturesButtonIncomming();
-    	
-    	$('#blocTypeCandidature').show();
+    },
+
+    getTypesCandidaturesStats : function()
+    {
+        $('#blocTypeCandidature').show();
         $('#blocCandidatureReseau').show();
-    	stats.getTypeCandidature();
+        stats.getTypeCandidature();
+
+        $('#blocNbCandidatureReseau').show();
+        stats.getNbCandidatureReseau();
     },
     
     hideStatsBO : function()
@@ -524,6 +530,7 @@ BackOffice.prototype = {
     	$('#blocCandidaturesButtonIncoming').hide();
     	$('#blocTypeCandidature').hide();
         $('#blocCandidatureReseau').hide();
+        $('#blocNbCandidatureReseau').hide();
     },
     
     getQuartzInfo : function()

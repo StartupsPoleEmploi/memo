@@ -68,6 +68,7 @@
   
     <!-- STATS + CHARTIST -->
   <link rel="stylesheet" href="../assets/stats/chartist.min.css" type="text/css">
+  <link rel="stylesheet" href="../assets/stats/chartist-tooltip.css" type="text/css">
   <link rel="stylesheet" href="../css/stats.css" type="text/css">
   
   <script src="../js/jquery-2.1.3.min.js"></script>
@@ -77,6 +78,7 @@
 	<script src="../assets/stats/chartist-plugin-barlabels.min.js" type="text/javascript"></script>
 	<script src="../assets/stats/chartist-plugin-pointlabels.min.js" type="text/javascript"></script>
 	<script src="../assets/stats/chartist-plugin-legend.js" type="text/javascript"></script>
+	<script src="../assets/stats/chartist-plugin-tooltip.js" type="text/javascript"></script>
 
   <script>
       var isDemo = <%=isDemo%>;
@@ -297,11 +299,22 @@
        			<div class="portlet-title">
           			<div class="caption caption-md font-red-sunglo">
           				<span class="caption-subject theme-font bold uppercase">Stats : </span>
-          				<a id='lienStats' style='padding-left:50px;font-size:12px;' onclick='javascript:backOffice.getStatsBO();'>Calculer</a>
+
           			</div>
            		</div>
     		</div>
-    		
+
+    		<div class="portlet light tasks-widget">
+                <div class="portlet-title">
+                    <div class="caption caption-md">
+                        <span class="caption-subject theme-font">Origines : </span>
+                        <a id='lienStats' style='padding-left:50px;font-size:12px;' onclick='javascript:backOffice.getOriginesStats();'>Calculer</a>
+                    </div>
+                </div>
+            </div>
+
+
+
 		    <div class="col-md-4" >
 		    	<div id='blocUsersIncoming'>
 					<div id="chartUsersIncoming" class="ct-chartUsersIncoming ct-perfect-fourth"></div>
@@ -366,6 +379,16 @@
 	
 	<div class="row widget-row" style='padding-top:15px;'>
 		<div class="col-md-12">
+
+		    <div class="portlet light tasks-widget">
+                <div class="portlet-title">
+                    <div class="caption caption-md">
+                        <span class="caption-subject theme-font">Types de candidatures : </span>
+                        <a id='lienStats' style='padding-left:50px;font-size:12px;' onclick='javascript:backOffice.getTypesCandidaturesStats();'>Calculer</a>
+                    </div>
+                </div>
+            </div>
+
 		    <div class="col-md-6" >
 		    	<div id='blocTypeCandidature'>
 					<div id="chartTypeCandidature" class="ct-chartTypeCandidature ct-perfect-fourth"></div>
@@ -405,6 +428,26 @@
                 </div>
               </div>
 			</div>
+
+			<div class="col-md-6" >
+              <div id='blocNbCandidatureReseau'>
+                <div id="chartNbCandidatureReseau" class="ct-chartCandidatureReseau ct-perfect-fourth"></div>
+                <p id="spinnerChartNbCandidatureReseau" style='text-align:center; padding-top:30px; padding-bottom:30px; display:none;' >Chargement en cours<i class="fa fa-spinner fa-spin"></i></p>
+                <div class="portlet mt-element-ribbon light portlet-fit bg-grey-steel bordered" style='margin-left:10px;'>
+                  <div class="ribbon ribbon-vertical-right ribbon-shadow ribbon-color-success uppercase">
+                    <div class="ribbon-sub ribbon-bookmark"></div>
+                    <i class="fa fa-star"></i>
+                  </div>
+                  <div class="portlet-title">
+                    <div class="caption">
+                      <i class=" icon-bar-chart font-green"></i>
+                      <span class="caption-subject font-green bold uppercase">Nombre de cartes réseau par utilisateurs</span>
+                    </div>
+                  </div>
+                  <div class="portlet-body">Nombre d'utilisateurs assidus du mois en légende ayant des cartes réseau. Survolez chaque couleur des histogrammes pour connaître le nombre de cartes réseau créées par les utilisateurs.</div>
+                </div>
+              </div>
+            </div>
 			
 			<div class="col-md-4" >
 				
