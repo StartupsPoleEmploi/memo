@@ -381,6 +381,7 @@ public class StatsDAO {
 
                 StatsDAO.initNbCandidatureReseauValueFromResultSet(rs,val);
             }
+            result.add(val);
         }
         catch (Exception e)
         {
