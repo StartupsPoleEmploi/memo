@@ -70,7 +70,7 @@ Modify mandatory values in .properties files in /src/fr/gouv/motivaction/propert
 To access your local MySQL in your MySQL GUI :
 
 - new connection / select "SSH" tab
-- MySQL host: 127.0.0.1:3036
+- MySQL host: 127.0.0.1:3306
 - Username: root
 - Password: leave empty
 - Database: motivaction
