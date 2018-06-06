@@ -67,21 +67,9 @@ public class LastConnectionAlert extends AlertMail {
 	            			+ 				"WHERE DATEDIFF(now(),creationTime) <= 30 " 
 	            			+ 				"GROUP BY userId) m "
 	            			+ "ON u.id = m.userId "
-	            			+ "AND DATEDIFF(NOW(), maxCreationTime)=30 ";
-            
-            // Autre requete équivalente, moins optimisé car recherche sur ensemble plus grand
-            /*sql = "SELECT DISTINCT(u.id), u.login "
-    				+ "FROM users u, userLogs ul "
-    				+ "WHERE u.id = ul.userId "
-        			+ "AND ul.userId NOT IN "
-        			+ 					"(SELECT DISTINCT(userId) "
-        			+ 						"FROM userLogs "
-        			+ 						"WHERE DATEDIFF(now(),creationTime) < 30 " 
-        			+	 				"UNION "
-        			+ 					"SELECT DISTINCT(userId) "
-        			+ 						"FROM userLogs "
-        			+ 						"WHERE DATEDIFF(now(),creationTime) >= 31)";*/
-            
+	            			+ "AND DATEDIFF(NOW(), maxCreationTime)=30 "
+                            + "AND u.receiveNotification = 1 ";
+
             if(userId>0)
                 sql += "AND u.id = "+userId;
 

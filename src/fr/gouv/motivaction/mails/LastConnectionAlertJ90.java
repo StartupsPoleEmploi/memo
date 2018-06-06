@@ -67,7 +67,8 @@ public class LastConnectionAlertJ90 extends AlertMail {
         			+ 				"WHERE DATEDIFF(now(),creationTime) <= 90 " 
         			+ 				"GROUP BY userId) m "
         			+ "ON u.id = m.userId "
-        			+ "AND DATEDIFF(NOW(), maxCreationTime)=90 ";
+        			+ "AND DATEDIFF(NOW(), maxCreationTime)=90 "
+                    + "AND u.receiveNotification = 1 ";
 
             if(userId>0)
                 sql += "AND u.id = "+userId;
