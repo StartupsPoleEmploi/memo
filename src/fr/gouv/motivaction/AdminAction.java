@@ -1,9 +1,12 @@
 package fr.gouv.motivaction;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -35,7 +39,7 @@ public class AdminAction {
     private static final String logCode = "003";
 
     //public static Timer metricAdminActionTimer = Utils.metricRegistry.timer("metricAdminActionTimer");
-    
+
     // retourne le nombre d'utilisateurs total
     @GET
     @Path("userCount")
@@ -152,7 +156,7 @@ public class AdminAction {
             try
             {
                 String cohorte = servletRequest.getParameter("cohorte");
-                long [] counts = AdminService.getCandidatureAndUserCount(d,cohorte);
+                long [] counts = AdminService.getCandidatureAndUserCount(d, cohorte);
 
                 res = "{ \"result\" : \"ok\", \"userCount\" : " + counts[0]+ ", \"candidatureCount\" : "+ counts[1]+" }";
 
@@ -326,10 +330,10 @@ public class AdminAction {
         {
             try
             {
-            	// Mail du weekly report
-            	WeeklyReport weekReport = new WeeklyReport();
-            	weekReport.buildAndSendWeeklyTaskReminder(userId);
-            	// Mail du daily report
+                // Mail du weekly report
+                WeeklyReport weekReport = new WeeklyReport();
+                weekReport.buildAndSendWeeklyTaskReminder(userId);
+                // Mail du daily report
                 DailyAlert dailyAlert = new DailyAlert();
                 dailyAlert.buildAndSendWeeklyTaskReminderNoCandidature(userId);
 
@@ -353,42 +357,34 @@ public class AdminAction {
     // retourne un extract CSV des activités des utilisateurs
     @GET
     @Path("getExtractUserActivities")
-    @Produces({ MediaType.APPLICATION_JSON })
-    public String getExtractUserActivities(@Context HttpServletRequest servletRequest)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getExtractUserActivities(@Context HttpServletRequest servletRequest)
     {
-        String res;
-        boolean isExtract = false;
-        long nbUser = 0;
         long userId = UserService.checkAdminUserAuth(servletRequest);
-        
+
+        byte[] document = null;
+        String fileName="";
+
         if(userId>0)
         {
             try
             {
-            	nbUser = AdminService.getUserCount(null);
-            	isExtract = AdminService.getExtractUserActivities(nbUser);
-            	if (isExtract) {
-	                res = "{ \"result\" : \"ok\" }";
-            	} else {
-            		log.error(logCode + "-017 Error getting user activities.");
-                    res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
-            	}
+                fileName = "extract-userActivities.zip";
+                String aFile = MailTools.pathCSV+fileName;
+                document = Files.readAllBytes(Paths.get(aFile));
             }
             catch (Exception e)
             {
-                log.error(logCode + "-017 Error getting user activities. error=" + e);
-                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+                log.error(logCode + "-017 Error downloading user export. userId="+userId+" error=" + e);
             }
         }
-        else
-        {   // message de reconnexion
-            log.warn(logCode+"-018 Unauthentified trial to access admin page.");
-            res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
-        }
 
-        return res;
+        return Response.ok(document, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+                .build();
+
     }
-    
+
     @GET
     @Path("healthCheck")
     @Produces({ MediaType.APPLICATION_JSON })
@@ -396,53 +392,53 @@ public class AdminAction {
     {
         String res;
         String healthCheck = null;
-        
+
         try {
-        	healthCheck = AdminService.getHealthCheck();
+            healthCheck = AdminService.getHealthCheck();
         } catch(Exception e){
-        	healthCheck = "Service JAVA KO : " + e;
-        	log.error(logCode + "-019 Error Action getting healthCheck. error=" + Utils.getStackTraceIntoString(e));
+            healthCheck = "Service JAVA KO : " + e;
+            log.error(logCode + "-019 Error Action getting healthCheck. error=" + Utils.getStackTraceIntoString(e));
         }
-        
+
         if (healthCheck==null)
-    		res = "{ \"result\" : \"ok\" }";
-    	else {
-    		res = "{ \"result\" : \"error\", \"msg\" : \" " + healthCheck + " \" }";
-    	}
+            res = "{ \"result\" : \"ok\" }";
+        else {
+            res = "{ \"result\" : \"error\", \"msg\" : \" " + healthCheck + " \" }";
+        }
         return res;
     }
-    
+
     @GET
     @Path("reportErrorHealthCheck/{errorMsg}")
     @Produces({ MediaType.APPLICATION_JSON })
     public String reportErrorHealthCheck(@Context HttpServletRequest servletRequest, @PathParam("errorMsg")String errorMsg)
     {
-    	String res;
-    	
-    	try {
-	    	// Notification ds Slack
-			SlackService.sendMsg("HealthCheck KO ! " + errorMsg);
-			// Envoie d'un email d'alerte
-			MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Alerte " + MailTools.env + " - HealthCheck KO", "");
-			res = "{ \"result\" : \"ok\" }";
-    	} catch(Exception e) {
-    		res = "{ \"result\" : \"error\", \"msg\" : \" " + e + " \" }";
-    	}		
-		return res;
+        String res;
+
+        try {
+            // Notification ds Slack
+            SlackService.sendMsg("HealthCheck KO ! " + errorMsg);
+            // Envoie d'un email d'alerte
+            MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Alerte " + MailTools.env + " - HealthCheck KO", "");
+            res = "{ \"result\" : \"ok\" }";
+        } catch(Exception e) {
+            res = "{ \"result\" : \"error\", \"msg\" : \" " + e + " \" }";
+        }
+        return res;
     }
-    
+
     @GET
     @Path("quartz")
     @Produces({ MediaType.APPLICATION_JSON })
     public String getQuartzInfo(@Context HttpServletRequest servletRequest) {
-    	String res;
-    	try {
-        	
-			res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"hostQuartz\" : \"" + MailTools.hostQuartzRun + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\" }";
-    	} catch(Exception e) {
-    		res = "{ \"result\" : \"error\", \"msg\" : \" " + e + " \" }";
-    	}		
-		return res;
+        String res;
+        try {
+
+            res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"hostQuartz\" : \"" + MailTools.hostQuartzRun + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\" }";
+        } catch(Exception e) {
+            res = "{ \"result\" : \"error\", \"msg\" : \" " + e + " \" }";
+        }
+        return res;
     }
 
 }

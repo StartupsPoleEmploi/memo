@@ -3,6 +3,7 @@ package fr.gouv.motivaction.utils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import fr.gouv.motivaction.job.ExportMaintenance;
 import fr.gouv.motivaction.job.SaveUtilisateursAssidusToDB;
 import fr.gouv.motivaction.mails.*;
 import fr.gouv.motivaction.job.AccountRemoval;
@@ -25,14 +26,15 @@ public class Quartz extends HttpServlet {
     public void init() throws ServletException
     {
         try
-        {        	
-            if(MailTools.isMaster) {
-                log.info(logCode + "-001 QUARTZ Quartz started");
+        {
+            log.info(logCode + "-001 QUARTZ Quartz started");
 
-                Scheduler sch = StdSchedulerFactory.getDefaultScheduler();
-                //log.info(logCode+"-002 Quartz already running ? ="+sch.isStarted());
-                //sch.shutdown();
-                sch.start();
+            Scheduler sch = StdSchedulerFactory.getDefaultScheduler();
+            //log.info(logCode+"-002 Quartz already running ? ="+sch.isStarted());
+            //sch.shutdown();
+            sch.start();
+
+            if(MailTools.isMaster) {
 
                 // MESSAGE QUOTIDIEN POUR RELANCER LES VISITEURS SANS ACTIVITE
                 // @RG - EMAIL : la campagne de mail "Avis de relance" s'execute quotidiennement à 7h45
@@ -117,27 +119,34 @@ public class Quartz extends HttpServlet {
                 JobDetail saveUtilisateursAssidusToDB = new JobDetailImpl("Enregistrement des utilisateurs assidus du mois précédent", "Group14", SaveUtilisateursAssidusToDB.class);
                 CronTrigger cronTrigger14 = new CronTriggerImpl("cronTrigger", "Group14", "0 0 4 1 * ?");
                 sch.scheduleJob(saveUtilisateursAssidusToDB, cronTrigger14);
-
             }
             else
-                log.info(logCode + "-003 QUARTZ Server is not master. Quartz dit not need to start");
+                log.info(logCode + "-003 QUARTZ Server is not master. Quartz dit not need to start mailing jobs");
+
+            // NETTOYAGE EXPORTS ET REFRESH LISTE DES UTILISATEURS
+            // @RG - JOB : Nettoyage exports et refresh liste des utilisateurs s'exécute hebdomadairement le samedi à 4h30
+            JobDetail exportMaintenance = new JobDetailImpl("Nettoyage exports et refresh liste des utilisateurs", "Group15", ExportMaintenance.class);
+            CronTrigger cronTrigger15 = new CronTriggerImpl("cronTrigger", "Group15", "0 30 4 ? * SAT");
+            /*CronTrigger cronTrigger15 = new CronTriggerImpl("cronTrigger", "Group15", "0 0/15 * * * ?");*/
+            sch.scheduleJob(exportMaintenance, cronTrigger15);
+
         }
         catch(Exception se)
         {
             log.info(logCode+"-002 QUARTZ Quartz failed. error="+se);
         }
     }
-    
+
     public static boolean isRunning() {
-    	boolean result = false;
-    	try {
-    		Scheduler sch = StdSchedulerFactory.getDefaultScheduler();
-    		result = sch.isStarted();
-    	}
-    	catch(Exception e)
+        boolean result = false;
+        try {
+            Scheduler sch = StdSchedulerFactory.getDefaultScheduler();
+            result = sch.isStarted();
+        }
+        catch(Exception e)
         {
             log.info(logCode+"-003 QUARTZ Quartz isRunning. error="+e);
         }
-    	return result;
+        return result;
     }
 }

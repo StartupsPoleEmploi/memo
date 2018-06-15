@@ -493,13 +493,7 @@ Parametres.prototype = {
 
             success: function (response) {
                 if(response.result=="ok" && response.userId) {
-                	var element = document.createElement('a');
-               	 	element.setAttribute('href', "./tmp/extractTDB-"+response.userId+".csv");
-               	 	element.setAttribute('download', "extractTDB-"+response.userId+".csv");
-               	 	element.style.display = 'none';
-               	 	document.body.appendChild(element);
-               	 	element.click();
-               	 	document.body.removeChild(element);
+                    lBR.parametres.getExportFile();
                 } else {
                 	toastr['error']("Erreur lors du chargement getExtractUserActivities","Une erreur s'est produite "+response.msg);
                 }
@@ -510,5 +504,18 @@ Parametres.prototype = {
                 Raven.captureException("extractTDB ajax error : ",textStatus,errorThrown);
             }
         });
+    },
+
+    getExportFile : function()
+    {
+        var fileUrl = lBR.rootURL + "/account/exportFile",
+            element = document.createElement('a');
+        element.setAttribute('href', fileUrl);
+        element.setAttribute('download', "extractTDB.csv");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+        document.body.removeChild(element);
     }
 }

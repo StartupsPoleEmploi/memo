@@ -9,7 +9,7 @@ BackOffice.prototype = {
     visitorLinks : {},
     userEmails : {},
     stats : null,
-    
+
     init : function()
     {
         var t=this;
@@ -35,11 +35,11 @@ BackOffice.prototype = {
         t.setDisplay();
 
         t.getStats();
-        
+
         stats = new Stats(t.rootURL);
-        
+
         t.hideStatsBO();
-        
+
         t.getQuartzInfo();
     },
 
@@ -66,7 +66,7 @@ BackOffice.prototype = {
     {
         if(isDemo)
         {
-           //cacher les blocs inutiles
+            //cacher les blocs inutiles
             $("#nbFichesParUser").hide();
             $("#nbUser14").hide();
             $("#nbFiches").hide();
@@ -220,7 +220,7 @@ BackOffice.prototype = {
         });
     },
 
-	getSpecificUserActivities : function()
+    getSpecificUserActivities : function()
     {
         this.getUserActivities($("#btSpecificUserEmail").val());
     },
@@ -245,7 +245,7 @@ BackOffice.prototype = {
                 {
                     var a, as = response.activities,
                         h = "<table><tr><th>ID</th><th>EMAIL</th><th>A FAIRE</th><th>CANDIDATURES</th><th>RELANCES</th><th>ENTRETIENS</th>" +
-                        "<th>NB CONNEXIONS</th><th>NB CONNEXIONS FACEBOOK</th><th>DERNIERE ACTIVITE</th><th>ACTIVITES</th><th>EMAIL TEST</th></tr>";
+                            "<th>NB CONNEXIONS</th><th>NB CONNEXIONS FACEBOOK</th><th>DERNIERE ACTIVITE</th><th>ACTIVITES</th><th>EMAIL TEST</th></tr>";
 
                     for(var i=0; i<as.length; ++i)
                     {
@@ -258,9 +258,9 @@ BackOffice.prototype = {
                         h+= a.entretiens+"</td><td>"+ a.conns+"</td><td>"+ a.fbConns+"</td><td>"+ a.lastActivity+"</td>";
                         h+= "<td><a onclick='javascript:backOffice.getActivities("+ a.userId+");'>Voir</a> </td>";
                         if (a.receiveEmail) {
-                        	h+= "<td><a onclick='javascript:backOffice.sendTestEmail("+ a.userId+");'>Envoyer</a> </td></tr>";
+                            h+= "<td><a onclick='javascript:backOffice.sendTestEmail("+ a.userId+");'>Envoyer</a> </td></tr>";
                         } else {
-                        	h+= "<td>Désinscrit</td></tr>";
+                            h+= "<td>Désinscrit</td></tr>";
                         }
                     }
                     h+="</table>";
@@ -279,7 +279,7 @@ BackOffice.prototype = {
             }
         });
     },
-    
+
     sendTestEmail : function(userId)
     {
 
@@ -459,58 +459,33 @@ BackOffice.prototype = {
     openCandidature : function(userId, candidatureId)
     {
         window.open(this.visitorLinks[userId]+"&c="+candidatureId);
-    }, 
-    
+    },
+
     getExtractUserActivities : function()
     {
-    	$("#lienExtractUserActivities").hide();
-    	$("#spinnerExtract").show();
-    	
-    	$.ajax({
-            type: 'GET',
-            url: this.rootURL + '/admin/getExtractUserActivities',
-            dataType: "json",
+        $("#lienExtractUserActivities").hide();
+        $("#spinnerExtract").show();
 
-            success: function (response)
-            {
-                if(response.result=="ok")
-                {                	 
-                	 var element = document.createElement('a');
-                	 element.setAttribute('href', "../tmp/extract-userActivities.zip");
-                	 element.setAttribute('download', "extract-userActivities.zip");
-                	 element.style.display = 'none';
-                	 document.body.appendChild(element);
-                	 element.click();
-                	 document.body.removeChild(element);
-                }
-                else
-                {
-                    toastr['error']("Erreur lors du chargement getExtractUserActivities","Une erreur s'est produite "+response.msg);
-                }
-                
-                $("#lienExtractUserActivities").show();
-            	$("#spinnerExtract").hide();
-            },
-            error: function (jqXHR, textStatus, errorThrown)
-            {
-                console.log('/admin error: ' + textStatus);
-                
-                $("#lienExtractUserActivities").show();
-            	$("#spinnerExtract").hide();
-            }
-        });
+        var fileUrl = this.rootURL + "/admin/getExtractUserActivities",
+            element = document.createElement('a');
+        element.setAttribute('href', fileUrl);
+        element.setAttribute('download', "extract-userActivities.zip");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
     },
-    
+
     getOriginesStats : function()
     {
-    	$('#blocUsersIncoming').show();
-    	stats.getUsersIncomming();
-    	
-    	$('#blocCandidaturesIncoming').show();
-    	stats.getCandidaturesIncomming();    	
-    	
-    	$('#blocCandidaturesButtonIncoming').show();
-    	stats.getCandidaturesButtonIncomming();
+        $('#blocUsersIncoming').show();
+        stats.getUsersIncomming();
+
+        $('#blocCandidaturesIncoming').show();
+        stats.getCandidaturesIncomming();
+
+        $('#blocCandidaturesButtonIncoming').show();
+        stats.getCandidaturesButtonIncomming();
     },
 
     getTypesCandidaturesStats : function()
@@ -522,17 +497,17 @@ BackOffice.prototype = {
         $('#blocNbCandidatureReseau').show();
         stats.getNbCandidatureReseau();
     },
-    
+
     hideStatsBO : function()
     {
-    	$('#blocUsersIncoming').hide();
-    	$('#blocCandidaturesIncoming').hide();
-    	$('#blocCandidaturesButtonIncoming').hide();
-    	$('#blocTypeCandidature').hide();
+        $('#blocUsersIncoming').hide();
+        $('#blocCandidaturesIncoming').hide();
+        $('#blocCandidaturesButtonIncoming').hide();
+        $('#blocTypeCandidature').hide();
         $('#blocCandidatureReseau').hide();
         $('#blocNbCandidatureReseau').hide();
     },
-    
+
     getQuartzInfo : function()
     {
         $.ajax({

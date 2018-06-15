@@ -116,13 +116,13 @@ public class UserService {
     public static void setUserAuthenticationToken(User user, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception
     {
         // génère un tolen d'authentification pour l'utilisateur
-        String a = UserService.getEncryptedToken(user);
-        Cookie cookie = new Cookie("auth", a);
-        cookie.setMaxAge(3600*24*365);
-        //cookie.setHttpOnly(true);         // coupé pour être accessible depuis le bouton chez les partenaires
-        cookie.setSecure(false);
+        String token = UserService.getEncryptedToken(user);
+        Cookie cookie = new Cookie("auth", token);
+        cookie.setMaxAge(3600 * 24 * 365);
 
         cookie.setPath("/");
+
+        cookie.setSecure(servletRequest.isSecure());    // positionnement secure selon la requête pour permettre la connexion directe en http sur les frontaux
 
         cookie.setDomain(servletRequest.getServerName());
 
@@ -133,9 +133,10 @@ public class UserService {
     {
         Cookie cookie = new Cookie("auth","");
         cookie.setMaxAge(0);
-        //cookie.setHttpOnly(true);         // coupé pour être accessible depuis le bouton chez les partenaires
-        cookie.setSecure(false);
+
         cookie.setPath("/");
+
+        cookie.setSecure(servletRequest.isSecure());    // positionnement secure selon la requête pour permettre la connexion directe en http sur les frontaux
 
         cookie.setDomain(servletRequest.getServerName());
 
@@ -250,7 +251,7 @@ public class UserService {
 
             String ck = UserService.decryptToken(encryptedCookie);
 
-            // "randmouuid|2016-04-12T14:53:18.990|5"
+            // "4ed15081-a473-4855-9677-536665a58007|2016-04-12T14:53:18.990|5"
 
             String[] parts = ck.split("\\|");
 
@@ -482,7 +483,7 @@ public class UserService {
                 LocalDateTime now = LocalDateTime.now();
                 LocalDateTime dt = LocalDateTime.parse(token.substring(token.indexOf('|')+1,token.lastIndexOf('|')));
 
-                // @RG - EMAIL : le lien de désinscription (proposé en fin de mail) est valide pendant 7j à compter de la date d'envoie du mail 
+                // @RG - EMAIL : le lien de désinscription (proposé en fin de mail) est valide pendant 7j à compter de la date d'envoie du mail
                 if(dt.until(now, ChronoUnit.DAYS)>7)
                     userId = 0;
             }
@@ -546,11 +547,11 @@ public class UserService {
 
     public static void setUserSubscription(Long userId, int val, String actionLog) throws Exception
     {
-    	User user = new User();
+        User user = new User();
         user.setId(userId);
         user.setReceiveNotification(val);
-        
-    	UserDAO.setUserSubscriptions(user);
+
+        UserDAO.setUserSubscriptions(user);
         Utils.logUserAction(userId, "User", actionLog, 0);
     }
 
@@ -609,7 +610,7 @@ public class UserService {
 
         return userId;
     }
-    
+
     public static String getUpdateCandidatureEmailLinkForUser(long userId)
     {
         String visitorLink = "";
@@ -650,9 +651,9 @@ public class UserService {
 
         return userId;
     }
-    
+
     public static void deleteUser(Long userId) {
-    	try
+        try
         {
             AttachmentService.removeUserAttachments(userId);
 
@@ -681,28 +682,28 @@ public class UserService {
 
         return result;
     }
-    
+
     public static void desactivateNotifications(ArrayList<Long>lstIdUser) throws Exception {
-    	if(lstIdUser!=null && lstIdUser.size()>0) {
-    		for(Long idUser : lstIdUser) {
-    			// On désabonne tous les utilisateurs concernés
-    	        setUserSubscription(idUser, 0, "Désabonnement auto");
-    			// On réinitialise le top d'inactivaction auto des notifs
-    	        UserDAO.setAutoDisableNotification(idUser, 1);
-    		}
-    	}
+        if(lstIdUser!=null && lstIdUser.size()>0) {
+            for(Long idUser : lstIdUser) {
+                // On désabonne tous les utilisateurs concernés
+                setUserSubscription(idUser, 0, "Désabonnement auto");
+                // On réinitialise le top d'inactivaction auto des notifs
+                UserDAO.setAutoDisableNotification(idUser, 1);
+            }
+        }
     }
-    
+
     public static void reactivateNotification(User user) throws Exception {
-	    Long userId = null;
-	    
-    	if (user.getAutoDisableNotification() == 1) {
-    		userId = user.getId();
-    		// On réactive les notifications pour les utilisateurs désactivés automatiquement
-	        setUserSubscription(userId, 1, "Réabonnement auto");
-	        // On réinitialise le top d'inactivaction auto des notifs
-	        UserDAO.setAutoDisableNotification(userId, 0);
-	    }
+        Long userId = null;
+
+        if (user.getAutoDisableNotification() == 1) {
+            userId = user.getId();
+            // On réactive les notifications pour les utilisateurs désactivés automatiquement
+            setUserSubscription(userId, 1, "Réabonnement auto");
+            // On réinitialise le top d'inactivaction auto des notifs
+            UserDAO.setAutoDisableNotification(userId, 0);
+        }
     }
 
     public static User getUserFromPEAMID(String peUserId) throws Exception
@@ -787,8 +788,8 @@ public class UserService {
 
         }
         else  {
-        	//cas 4 : pas d'email -> pas de création utilisateur MEMO
-        	throw new PeConnectException();
+            //cas 4 : pas d'email -> pas de création utilisateur MEMO
+            throw new PeConnectException();
         }
 
         if(user.getPassword()==null)
@@ -850,167 +851,167 @@ public class UserService {
 
         return toUser;
     }
-    
+
     public static UserSummary getUserSummary(long userId) {
-    	UserSummary userSum = UserDAO.loadUserSummary(userId);
-    	return userSum;
+        UserSummary userSum = UserDAO.loadUserSummary(userId);
+        return userSum;
     }
-    
+
     public static String getExtractTDB(long userId) {
-    	String res = null;
-    	Object[] tabCandidatures = null;
-    	if(userId>0) {
-    		try {
-    			tabCandidatures = CandidatureDAO.list(userId, true);
-    			UserService.writeCandidaturesInCSV(tabCandidatures, MailTools.pathCSV+"extractTDB-"+userId+".csv");
-    		} catch(Exception e) {
+        String res = null;
+        Object[] tabCandidatures = null;
+        if(userId>0) {
+            try {
+                tabCandidatures = CandidatureDAO.list(userId, true);
+                UserService.writeCandidaturesInCSV(tabCandidatures, MailTools.pathCSV+"extractTDB-"+userId+".csv");
+            } catch(Exception e) {
                 log.error(logCode+"-012 ACCOUNT Error user extractTDB. userId="+userId+" error="+e);
             }
-    	}
-    	return res;
+        }
+        return res;
     }
-    
-    private static void writeCandidaturesInCSV(Object [] lstCandidatures, String fileName) {
-    	File f = new File (fileName);
-    	Candidature c;
-    	Etat e;
-    	TypeOffre t;
-    	LocalDateTime d;
-    	String s;
-    	Statut st;
-    	
-    	try
-    	{
-    	    FileWriter fw = new FileWriter (f);
-    	    StringBuilder sb = new StringBuilder();
-    	    // @RG-EXTRACT : extraction des champs suivants délimités par des ';' : Statut candidature;Titre candidature;Nom societe;Lieu;Nom contact;Email contact;Telephone contact;Type candidature;Etat candidature;Date creation;Date modification;Url offre;Description;Note
-    	    fw.write("Statut candidature;Titre candidature;Nom societe;Lieu;Nom contact;Email contact;Telephone contact;Type candidature;Etat candidature;Date creation;Date modification;Url offre;Description;Note");
-    	    fw.write("\n");
-    	    for(Object o : lstCandidatures)
-    	    {
-    	    	c = (Candidature) o;
-    	    	// Réinitialise la String
-    	    	sb.delete(0, sb.length());
-    	    	// Statut
-    	    	try {
-    	    		st = Constantes.Statut.values()[c.getArchived()];
-	    	    	if(st!=null)
-	    	    		sb.append(st.getLibelle()+";");
-	    	    	else
-	    	    		sb.append(";");
-    	    	} catch(Exception ex) {
-    	    		log.error(logCode+"-010 UTILS Erreur lors de l'écriture du fichier d'activités (statut de la candidature inconnu)="+c.getArchived()+". error="+ex);
-    	    	}
-    	    	// NomCandidature
-    	    	s = new String(c.getNomCandidature());
-	    		// conversion des caractères spéciaux
-    			s = Utils.replaceSpecialsCharacters(s);
-    	        sb.append(c.getNomCandidature()+";");
-    	        // NomSociete
-    	    	if(c.getNomSociete()!=null) {
-    	    		s = new String(c.getNomSociete());
-    	    		// conversion des caractères spéciaux
-	    			s = Utils.replaceSpecialsCharacters(s);
-    	    		sb.append(s+";");
-    	    	} else
-    	    		sb.append(";");
-    	    	// Lieu
-    	    	if(c.getVille()!=null) {
-    	    		s = new String(c.getVille());
-    	    		// conversion des caractères spéciaux
-	    			s = Utils.replaceSpecialsCharacters(s);
-    	    		sb.append(s+";");
-    	    	} else
-    	    		sb.append(";");
-    	    	// NomContact
-    	    	if(c.getNomContact()!=null) {
-    	    		s = new String(c.getNomContact());
-    	    		// conversion des caractères spéciaux
-	    			s = Utils.replaceSpecialsCharacters(s);
-    	    		sb.append(s+";");
-    	    	} else
-    	    		sb.append(";");
-    	    	// EmailContact
-    	    	if(c.getEmailContact()!=null)
-    	    		sb.append(c.getEmailContact()+";");
-    	    	else
-    	    		sb.append(";");
-    	    	// TelContact
-    	    	if(c.getTelContact()!=null)
-    	    		sb.append("'"+c.getTelContact()+";");
-    	    	else
-    	    		sb.append(";");
-    	    	// Type
-    	    	try {
-	    	    	t = Constantes.TypeOffre.values()[c.getType()];
-	    	    	if(t!=null)
-	    	    		sb.append(t.getLibelle()+";");
-	    	    	else
-	    	    		sb.append(";");
-    	    	} catch(Exception ex) {
-    	    		log.error(logCode+"-009 UTILS Erreur lors de l'écriture du fichier d'activités (type de la candidature inconnu)="+c.getType()+". error="+ex);
-    	    	}
-    	        // Etat
-    	    	try {
-	    	    	e = Constantes.Etat.values()[c.getEtat()];
-	    	    	if(e!=null)
-	    	    		sb.append(e.getLibelle()+";");
-	    	    	else
-	    	    		sb.append(";");
-    	    	} catch(Exception ex) {
-    	    		log.error(logCode+"-008 UTILS Erreur lors de l'écriture du fichier d'activités (etat de la candidature inconnu)="+c.getEtat()+". error="+ex);
-    	    	}
 
-    	    	// CreationDate
-    	    	d = new Timestamp(c.getCreationDate()).toLocalDateTime();
-    	    	if(d!=null)
-    	    		sb.append(d+";");
-    	    	else
-    	    		sb.append(";");   	  
-    	    	// ModificationDate
-    	    	d = new Timestamp(c.getLastUpdate()).toLocalDateTime();
-    	    	if(d!=null)
-    	    		sb.append(d+";");
-    	    	else
-    	    		sb.append(";");
-    	    	// Url
-    	    	if(c.getUrlSource()!=null)
-    	    		sb.append(c.getUrlSource()+";");
-    	    	else
-    	    		sb.append(";");
-    	    	// Description
-    	    	if(c.getDescription()!=null) {
-    	    		s = new String(c.getDescription());
-    	    		// retrait de code HTML
-    	    		s = s.replaceAll("\\<[^>]*>","");
-    	    		// retrait de retour à la ligne
-    	    		s = s.replaceAll("\n","");
-    	    		// conversion des caractères spéciaux
-    	    		s = Utils.replaceSpecialsCharacters(s);
-    	    		sb.append(s+";");
-    	    	} else
-    	    		sb.append(";");
-    	    	// Note
-    	    	if(c.getNote()!=null) {
-    	    		s = new String(c.getNote());
-    	    		// retrait de code HTML
-    	    		s = s.replaceAll("\\<[^>]*>","");
-    	    		// retrait de retour à la ligne
-    	    		s = s.replaceAll("\n","");
-    	    		// conversion des caractères spéciaux
-    	    		s = Utils.replaceSpecialsCharacters(s);
-    	    		sb.append(s+";");
-    	    	} else
-    	    		sb.append(";");
-    	        sb.append("\n");
-    	        fw.write(sb.toString());
-    	    }
-    	    fw.close();
-    	}
-    	catch (IOException exception)
-    	{
-			log.error(logCode+"-007 UTILS Erreur lors de l'écriture du fichier d'activités user. error="+exception);
-    	}
-	}
-    
+    private static void writeCandidaturesInCSV(Object [] lstCandidatures, String fileName) {
+        File f = new File (fileName);
+        Candidature c;
+        Etat e;
+        TypeOffre t;
+        LocalDateTime d;
+        String s;
+        Statut st;
+
+        try
+        {
+            FileWriter fw = new FileWriter (f);
+            StringBuilder sb = new StringBuilder();
+            // @RG-EXTRACT : extraction des champs suivants délimités par des ';' : Statut candidature;Titre candidature;Nom societe;Lieu;Nom contact;Email contact;Telephone contact;Type candidature;Etat candidature;Date creation;Date modification;Url offre;Description;Note
+            fw.write("Statut candidature;Titre candidature;Nom societe;Lieu;Nom contact;Email contact;Telephone contact;Type candidature;Etat candidature;Date creation;Date modification;Url offre;Description;Note");
+            fw.write("\n");
+            for(Object o : lstCandidatures)
+            {
+                c = (Candidature) o;
+                // Réinitialise la String
+                sb.delete(0, sb.length());
+                // Statut
+                try {
+                    st = Constantes.Statut.values()[c.getArchived()];
+                    if(st!=null)
+                        sb.append(st.getLibelle()+";");
+                    else
+                        sb.append(";");
+                } catch(Exception ex) {
+                    log.error(logCode+"-010 UTILS Erreur lors de l'écriture du fichier d'activités (statut de la candidature inconnu)="+c.getArchived()+". error="+ex);
+                }
+                // NomCandidature
+                s = new String(c.getNomCandidature());
+                // conversion des caractères spéciaux
+                s = Utils.replaceSpecialsCharacters(s);
+                sb.append(c.getNomCandidature()+";");
+                // NomSociete
+                if(c.getNomSociete()!=null) {
+                    s = new String(c.getNomSociete());
+                    // conversion des caractères spéciaux
+                    s = Utils.replaceSpecialsCharacters(s);
+                    sb.append(s+";");
+                } else
+                    sb.append(";");
+                // Lieu
+                if(c.getVille()!=null) {
+                    s = new String(c.getVille());
+                    // conversion des caractères spéciaux
+                    s = Utils.replaceSpecialsCharacters(s);
+                    sb.append(s+";");
+                } else
+                    sb.append(";");
+                // NomContact
+                if(c.getNomContact()!=null) {
+                    s = new String(c.getNomContact());
+                    // conversion des caractères spéciaux
+                    s = Utils.replaceSpecialsCharacters(s);
+                    sb.append(s+";");
+                } else
+                    sb.append(";");
+                // EmailContact
+                if(c.getEmailContact()!=null)
+                    sb.append(c.getEmailContact()+";");
+                else
+                    sb.append(";");
+                // TelContact
+                if(c.getTelContact()!=null)
+                    sb.append("'"+c.getTelContact()+";");
+                else
+                    sb.append(";");
+                // Type
+                try {
+                    t = Constantes.TypeOffre.values()[c.getType()];
+                    if(t!=null)
+                        sb.append(t.getLibelle()+";");
+                    else
+                        sb.append(";");
+                } catch(Exception ex) {
+                    log.error(logCode+"-009 UTILS Erreur lors de l'écriture du fichier d'activités (type de la candidature inconnu)="+c.getType()+". error="+ex);
+                }
+                // Etat
+                try {
+                    e = Constantes.Etat.values()[c.getEtat()];
+                    if(e!=null)
+                        sb.append(e.getLibelle()+";");
+                    else
+                        sb.append(";");
+                } catch(Exception ex) {
+                    log.error(logCode+"-008 UTILS Erreur lors de l'écriture du fichier d'activités (etat de la candidature inconnu)="+c.getEtat()+". error="+ex);
+                }
+
+                // CreationDate
+                d = new Timestamp(c.getCreationDate()).toLocalDateTime();
+                if(d!=null)
+                    sb.append(d+";");
+                else
+                    sb.append(";");
+                // ModificationDate
+                d = new Timestamp(c.getLastUpdate()).toLocalDateTime();
+                if(d!=null)
+                    sb.append(d+";");
+                else
+                    sb.append(";");
+                // Url
+                if(c.getUrlSource()!=null)
+                    sb.append(c.getUrlSource()+";");
+                else
+                    sb.append(";");
+                // Description
+                if(c.getDescription()!=null) {
+                    s = new String(c.getDescription());
+                    // retrait de code HTML
+                    s = s.replaceAll("\\<[^>]*>","");
+                    // retrait de retour à la ligne
+                    s = s.replaceAll("\n","");
+                    // conversion des caractères spéciaux
+                    s = Utils.replaceSpecialsCharacters(s);
+                    sb.append(s+";");
+                } else
+                    sb.append(";");
+                // Note
+                if(c.getNote()!=null) {
+                    s = new String(c.getNote());
+                    // retrait de code HTML
+                    s = s.replaceAll("\\<[^>]*>","");
+                    // retrait de retour à la ligne
+                    s = s.replaceAll("\n","");
+                    // conversion des caractères spéciaux
+                    s = Utils.replaceSpecialsCharacters(s);
+                    sb.append(s+";");
+                } else
+                    sb.append(";");
+                sb.append("\n");
+                fw.write(sb.toString());
+            }
+            fw.close();
+        }
+        catch (IOException exception)
+        {
+            log.error(logCode+"-007 UTILS Erreur lors de l'écriture du fichier d'activités user. error="+exception);
+        }
+    }
+
 }
