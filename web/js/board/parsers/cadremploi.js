@@ -24,24 +24,17 @@ ParserCadremploi.prototype = {
 
         c.jobBoard = this.name;
 
-        // récupération du nomCandidature dans h1
-        //f.nomCandidature.setValue(cont.find("[itemprop=title]").text().trim());
-        c.nomCandidature = cont.find("span[itemprop=title]").text().trim();
+        // récupération du nomCandidature dans h1.position
+        c.nomCandidature = cont.find(".position").text().trim();
 
-        // récupération nomSociete dans [itemprop=hiringOrganization]>span
-        //f.nomSociete.setValue(cont.find("span[itemprop=hiringOrganization]").text().trim());
-        tmp = cont.find("[itemprop=hiringOrganization]");
-        if (tmp.length > 0) {
-            // Il arrive que cette propriété apparaissent 2 fois ds le DOM
-            c.nomSociete = tmp[0].textContent.trim();
-        } else {
+        // récupération nomSociete dans <a id="js-offres-entreprise"...
+        tmp = cont.find("#js-offres-entreprise");
+        if (tmp.length > 0)
             c.nomSociete = tmp.text().trim();
-        }
 
-        //f.ville.setValue(cont.find("[itemprop=jobLocation] > a").text().trim());
-        c.ville = cont.find("[itemprop=jobLocation] a").text().trim();
+        c.ville = cont.find("#js-offres-localisation").text().trim();
 
-        el = cont.find(".logo img");
+        el = cont.find("#js-logo-entreprise img");
         if(el.length>0)
             c.logoUrl = el[0].src;
 
@@ -53,6 +46,14 @@ ParserCadremploi.prototype = {
             v+= "\n\nPROFIL : "+$rBR($(tmp[2]).html().trim());
         if($(tmp[0]).html())
             v+= "\n\nENTREPRISE : "+$rBR($(tmp[0]).html().trim());
+
+
+        if(v.indexOf("<p>Localisation")>=0)
+        {
+            tmp = v.substr(0, v.indexOf("<p>Localisation")).trim();
+            tmp += "\n\n"+(v.substr(v.lastIndexOf("</div>")+6)).trim();
+            v = tmp;
+        }
 
         //f.description.val(v);
         c.description = v;
