@@ -1,6 +1,8 @@
 package fr.gouv.motivaction;
 
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -43,7 +46,7 @@ public class AccountAction {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String createAccount(@FormParam("accountLoginEmail") String accountLoginEmail,
-                               @FormParam("accountLoginPassword") String accountLoginPassword,
+                                @FormParam("accountLoginPassword") String accountLoginPassword,
                                 @Context HttpServletResponse servletResponse,
                                 @Context HttpServletRequest servletRequest,
                                 MultivaluedMap<String,String> form)
@@ -72,22 +75,37 @@ public class AccountAction {
             }
             else
             {
-            	// pour les logs
+                // pour les logs
                 userId = user.getId();
-                
+
                 user = UserService.loadUserFromCredentials(accountLoginEmail, accountLoginPassword);
                 if (user != null)
                 {
-                	// Connexion du user si ces id sont OK
-                	UserService.setUserAuthenticationToken(user, servletRequest, servletResponse);
+                    // Connexion du user si ces id sont OK
+                    UserService.setUserAuthenticationToken(user, servletRequest, servletResponse);
                     Utils.logUserAction(user.getId(), "User", "Connexion", 0);
                     String csrf = UserService.getEncryptedToken(user);
                     res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : "+user.toJSON()+", \"csrf\" : \""+csrf+"\" }";
                 }
                 else
                 {
-                	res = "{ \"result\" : \"error\", \"msg\" : \"userExists\" }";
+                    res = "{ \"result\" : \"error\", \"msg\" : \"userExists\" }";
                 }
+                // Dans l'attente d'un système de validation
+                /*if(user.getValidated()==0)
+                {
+                    user.setPassword(accountLoginPassword);
+                    UserService.save(user);
+                    UserService.sendNewAccountNotification(user);
+                    UserService.setUserAuthenticationToken(user, servletRequest, servletResponse);
+                    Utils.logUserAction(user.getId(), "User", "Connexion", 0);
+
+                    res = "{ \"result\" : \"ok\", \"msg\" : \"userRefreshed\" }";
+                }
+                else
+                {*/
+                //res = "{ \"result\" : \"error\", \"msg\" : \"userExists\" }";
+                //}
             }
         }
         catch(Exception e)
@@ -104,13 +122,13 @@ public class AccountAction {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String facebookAuthentication(@FormParam("loginEmail") String loginEmail,
-                                @FormParam("facebookId") Long facebookId,
-                                 @Context HttpServletResponse servletResponse,
-                                 @Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
+                                         @FormParam("facebookId") Long facebookId,
+                                         @Context HttpServletResponse servletResponse,
+                                         @Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
     {
         String res = "";
         long userId = 0;
-        
+
         final Timer.Context context = facebookLoginTimer.time();
 
         try
@@ -123,7 +141,7 @@ public class AccountAction {
                 if(user2!=null)
                 {
                     userId = user2.getId();
-                	// cas où un compte utilisateur existe déjà pour cet email sans facebookId enrgistré. on mets à jour
+                    // cas où un compte utilisateur existe déjà pour cet email sans facebookId enrgistré. on mets à jour
                     if(user2.getFacebookId()==0)
                     {
                         user2.setFacebookId(facebookId);
@@ -152,7 +170,7 @@ public class AccountAction {
             }
             else
             {
-            	userId = user.getId();
+                userId = user.getId();
                 Utils.logUserAction(user.getId(),"User","Connexion Facebook",0);
                 String csrf = UserService.getEncryptedToken(user);
                 res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : "+user.toJSON()+", \"csrf\" : \""+csrf+"\" }";
@@ -178,13 +196,13 @@ public class AccountAction {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String accountAuthentication(@FormParam("loginEmail") String loginEmail,
-                                         @FormParam("loginPassword") String loginPassword,
+                                        @FormParam("loginPassword") String loginPassword,
                                         @Context HttpServletResponse servletResponse,
                                         @Context HttpServletRequest servletRequest)
     {
         String res = "";
         long userId = 0;
-        
+
         final Timer.Context context = userLoginTimer.time();
 
         try
@@ -198,7 +216,7 @@ public class AccountAction {
             }
             else
             {
-            	userId = user.getId();
+                userId = user.getId();
                 UserService.setUserAuthenticationToken(user, servletRequest, servletResponse);
                 Utils.logUserAction(user.getId(), "User", "Connexion", 0);
                 String csrf = UserService.getEncryptedToken(user);
@@ -218,7 +236,7 @@ public class AccountAction {
 
         return res;
     }
-    
+
     @POST
     @Path("logout")
     @Produces(MediaType.TEXT_PLAIN)
@@ -258,18 +276,18 @@ public class AccountAction {
             }
             else
             {
-            	userId = user.getId();
+                userId = user.getId();
                 String token = UserService.getPasswordRefreshLinkForUser(userId);
                 UserService.saveUserRefreshLink(userId,token);
 
                 // Envoi du mail à l'utilisateur
                 isSent = UserAccountMail.sendPasswordRefreshLinkMail(user, token);
-                
+
                 if (isSent)
-                	res = "{ \"result\" : \"ok\" }";
+                    res = "{ \"result\" : \"ok\" }";
                 else
-                	res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
-                
+                    res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+
                 //UserAccountMail
                 log.info(logCode + "-004 ACCOUNT Forgotten password refresh link sent. userId="+userId+" login=" + loginEmail);
             }
@@ -417,7 +435,7 @@ public class AccountAction {
 
         return res;
     }
-    
+
     // récupère les paramètres
     @GET
     @Path("parametres")
@@ -447,7 +465,7 @@ public class AccountAction {
 
         return res;
     }
-    
+
     // enregistre les parametres
     @POST
     @Path("parametres")
@@ -460,10 +478,10 @@ public class AccountAction {
         if(userId>0)
         {
             try {
-            	if(receiveEmail==0)
-            		UserService.setUserSubscription(userId, receiveEmail, "Désabonnement depuis Param");
-            	else
-            		UserService.setUserSubscription(userId, receiveEmail, "Abonnement depuis Param");
+                if(receiveEmail==0)
+                    UserService.setUserSubscription(userId, receiveEmail, "Désabonnement depuis Param");
+                else
+                    UserService.setUserSubscription(userId, receiveEmail, "Abonnement depuis Param");
 
                 res = "{ \"result\" : \"ok\" }";
             }
@@ -480,16 +498,16 @@ public class AccountAction {
 
         return res;
     }
-    
+
     @POST
     @Path("newPassword")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String setNewPassword(@FormParam("login") String login,
-    								@FormParam("lastPassword") String password, 
-    									@FormParam("newPassword") String newPassword,
-                                        	@Context HttpServletResponse servletResponse,
-                                        	@Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
+                                 @FormParam("lastPassword") String password,
+                                 @FormParam("newPassword") String newPassword,
+                                 @Context HttpServletResponse servletResponse,
+                                 @Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
     {
         String res = "";
 
@@ -539,10 +557,10 @@ public class AccountAction {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String setNewEmailLogin(@FormParam("login") String login,
-                                 @FormParam("password") String password,
-                                 @FormParam("newEmail") String newEmail,
-                                 @Context HttpServletResponse servletResponse,
-                                 @Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
+                                   @FormParam("password") String password,
+                                   @FormParam("newEmail") String newEmail,
+                                   @Context HttpServletResponse servletResponse,
+                                   @Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
     {
         String res = "";
 
@@ -607,7 +625,7 @@ public class AccountAction {
 
         return res;
     }
-    
+
     // envoie du mail de suppression de compte
     @DELETE
     @Path("mailSupprimerCompte")
@@ -639,14 +657,14 @@ public class AccountAction {
 
         return res;
     }
-    
+
     // suppression de compte
     @GET
     @Path("supprimerCompte/{userToken}")
     @Produces({ MediaType.TEXT_HTML })
     public String supprimerCompte(@Context HttpServletResponse servletResponse, @Context HttpServletRequest servletRequest, @PathParam("userToken")String userToken)
     {
-    	String res = "<html><head><title>MEMO</title>" +
+        String res = "<html><head><title>MEMO</title>" +
                 "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
                 "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /> " +
                 "<meta http-equiv='X-UA-Compatible' content='IE=edge'>" +
@@ -658,10 +676,10 @@ public class AccountAction {
         if(userId>0)
         {
             try {
-                
-            	UserService.logoutUser(servletResponse,servletRequest);
-            	
-            	UserService.deleteUser(userId);
+
+                UserService.logoutUser(servletResponse,servletRequest);
+
+                UserService.deleteUser(userId);
 
                 Utils.logUserAction(userId, "User", "SuppressionCompte", 0);
 
@@ -680,7 +698,7 @@ public class AccountAction {
             res += "Le lien cliqué ne fonctionne pas, veuillez contacter l'équipe de MEMO.<br/>";
         }
         res+="<br /><br />Vous allez être redirigé sur le site de MEMO</body></html>";
-        
+
         return res;
     }
 
@@ -717,9 +735,16 @@ public class AccountAction {
     // redirection vers la mire PEConnect
     @GET
     @Path("peConnect")
-    public javax.ws.rs.core.Response showPeConnectForm() throws Exception
+    public javax.ws.rs.core.Response showPeConnectForm(@Context HttpServletRequest request) throws Exception
     {
-        URI uri = APIService.getPEConnectFormURI();
+        String noPrompt = request.getParameter("noPrompt");
+
+        boolean noPromptBoolean = false;
+
+        if(noPrompt!=null)
+            noPromptBoolean = true;
+
+        URI uri = APIService.getPEConnectFormURI(noPromptBoolean);
         return javax.ws.rs.core.Response.temporaryRedirect(uri).build();
     }
 
@@ -747,9 +772,9 @@ public class AccountAction {
         catch (Exception e)
         {
             if (e.getClass() == PeConnectException.class)
-            	errorCode="&PEAMError=2"; // cas d'erreur d'un utilisateur sans adresse email valide de PE.FR
+                errorCode="&PEAMError=2"; // cas d'erreur d'un utilisateur sans adresse email valide de PE.FR
             else
-            	errorCode="&PEAMError=1";
+                errorCode="&PEAMError=1";
             log.error(logCode+"-025 ACCOUNT Error connecting user with PEAM ("+errorCode+"). error="+e);
         }
 
@@ -810,16 +835,46 @@ public class AccountAction {
         long userId = UserService.checkUserAuth(servletRequest);
 
         if(userId>0) {
-            try { 
-            	log.info(logCode+"-028 ACCOUNT User extract TDB started. userId="+userId);
-            	UserService.getExtractTDB(userId);
-            	log.info(logCode+"-029 ACCOUNT User extract TDB completed. userId="+userId);
-            	res = "{ \"result\" : \"ok\", \"userId\" : " + userId+ ", \"msg\" : \"extractTDBOk\" }";
+            try {
+                log.info(logCode+"-028 ACCOUNT User extract TDB started. userId="+userId);
+                UserService.getExtractTDB(userId);
+                log.info(logCode+"-029 ACCOUNT User extract TDB completed. userId="+userId);
+                res = "{ \"result\" : \"ok\", \"userId\" : " + userId+ ", \"msg\" : \"extractTDBOk\" }";
             } catch (Exception e) {
-            	log.error(logCode + "-027 ACCOUNT Error saving user source. userId=" + userId + " error=" + e);
+                log.error(logCode + "-027 ACCOUNT Error saving user source. userId=" + userId + " error=" + e);
                 res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
             }
         }
         return res;
     }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("exportFile")
+    public Response getExportFile(@Context HttpServletRequest servletRequest, @Context HttpServletResponse servletResponse)
+    {
+        long userId = UserService.checkUserAuth(servletRequest,true);
+        byte[] document = null;
+        String fileName="";
+
+        if(userId>0)
+        {
+            try
+            {
+                fileName = "extractTDB-"+userId+".csv";
+                String aFile = MailTools.pathCSV+fileName;
+                document = Files.readAllBytes(Paths.get(aFile));
+            }
+            catch (Exception e)
+            {
+                log.error(logCode + "-010 Error downloading user export. userId="+userId+" error=" + e);
+            }
+        }
+
+        return Response.ok(document, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+                .build();
+    }
+
 }

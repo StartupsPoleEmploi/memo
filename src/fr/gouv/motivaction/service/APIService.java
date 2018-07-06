@@ -25,15 +25,15 @@ import org.json.simple.parser.JSONParser;
 
 public class APIService {
 
-    private static final Logger log = Logger.getLogger("ctj");
-    private static final String logCode = "037";  
+	private static final Logger log = Logger.getLogger("ctj");
+	private static final String logCode = "037";
 
-    static Properties prop;
+	static Properties prop;
 	static Properties secretProp;
-    public static String urlOffrePEAPI, urlAccessTokenPEAPI;
-    
-    public static String offreAccessToken = null;
-    public static LocalDateTime timeExpiredAccessToken = null;
+	public static String urlOffrePEAPI, urlAccessTokenPEAPI;
+
+	public static String offreAccessToken = null;
+	public static LocalDateTime timeExpiredAccessToken = null;
 
 	public static Client wsClient = ClientBuilder.newClient();
 
@@ -48,29 +48,29 @@ public class APIService {
 	public static String memoHost = null;
 	public static String memoRedirectEndPoint = null;
 	public static int memoTokenDuration = 60;
-    
-    static {
-        loadProperties();
-    }
-    
-    private static void loadProperties()
-    {
-    	prop = new Properties();
+
+	static {
+		loadProperties();
+	}
+
+	private static void loadProperties()
+	{
+		prop = new Properties();
 		secretProp = new Properties();
-        InputStream in = null;
+		InputStream in = null;
 		InputStream secretIn = null;
 
-        try
-        {
-            in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/api.properties");
-            prop.load(in);
+		try
+		{
+			in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/api.properties");
+			prop.load(in);
 
 			secretIn = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/secret.properties");
 			secretProp.load(secretIn);
 
-            
-            urlOffrePEAPI = prop.getProperty("pe.offres.url");
-            urlAccessTokenPEAPI = prop.getProperty("pe.accessToken.url");
+
+			urlOffrePEAPI = prop.getProperty("pe.offres.url");
+			urlAccessTokenPEAPI = prop.getProperty("pe.accessToken.url");
 
 			PEAMHost = prop.getProperty("PEAMHost");
 			ESDHost = prop.getProperty("ESDHost");
@@ -92,66 +92,66 @@ public class APIService {
 			memoClientId = secretProp.getProperty("memoClientId");
 			memoClientSecret = secretProp.getProperty("memoClientSecret");
 
-            in.close();
+			in.close();
 			secretIn.close();
-        }
-        catch (IOException e)
-        {
-            log.error(logCode + "-001 API Service properties error=" + e);
-        }
-    }
-    
-    // transforme des URL pole emploi en une url avec des données accessibles
-    public static String getIdOffreFromUrlPoleEmploi(String u)
-    {
-        String url = u;
-        String res = u;
-        int tokenRank = 0;
-        // forme attendue : https://candidat.pole-emploi.fr/offres/recherche/detail/1712795
-        // forme alternative 0 : https://candidat.pole-emploi.fr/candidat/rechercheoffres/detail/040JGSS
-        // forme alternative 1 : http://offre.pole-emploi.fr/040JGSS
-        // forme alternative 2 : https://candidat.pole-emploi.fr/candidat/classeuroffres/detailoffre/040JGSS
-        // forme alternative 3 : http://logp6.xiti.com/go.url?xts=475540&xtor=EPR-11-[Abonnement_Offres]&url=http://offre.pole-emploi.fr/040JGSS
-        // forme alternative 4 : https://candidat.pole-emploi.fr/candidat/mespropositions/detailproposition/17454042/050KZKG
+		}
+		catch (IOException e)
+		{
+			log.error(logCode + "-001 API Service properties error=" + e);
+		}
+	}
 
-        if(u.indexOf("xiti")>-1)
-            url = u.substring(u.indexOf("&url=")+5);
+	// transforme des URL pole emploi en une url avec des données accessibles
+	public static String getIdOffreFromUrlPoleEmploi(String u)
+	{
+		String url = u;
+		String res = u;
+		int tokenRank = 0;
+		// forme attendue : https://candidat.pole-emploi.fr/offres/recherche/detail/1712795
+		// forme alternative 0 : https://candidat.pole-emploi.fr/candidat/rechercheoffres/detail/040JGSS
+		// forme alternative 1 : http://offre.pole-emploi.fr/040JGSS
+		// forme alternative 2 : https://candidat.pole-emploi.fr/candidat/classeuroffres/detailoffre/040JGSS
+		// forme alternative 3 : http://logp6.xiti.com/go.url?xts=475540&xtor=EPR-11-[Abonnement_Offres]&url=http://offre.pole-emploi.fr/040JGSS
+		// forme alternative 4 : https://candidat.pole-emploi.fr/candidat/mespropositions/detailproposition/17454042/050KZKG
 
-        if(url.indexOf("offre.")>=0)
-            tokenRank = 3;
-        else if (url.indexOf("classeuroffres")>=0 || url.indexOf("rechercheoffres")>=0 || url.indexOf("/offres/recherche/detail")>=0)
-            tokenRank = 6;
-        else if (url.indexOf("detailproposition")>=0)
-            tokenRank = 7;
+		if(u.indexOf("xiti")>-1)
+			url = u.substring(u.indexOf("&url=")+5);
+
+		if(url.indexOf("offre.")>=0)
+			tokenRank = 3;
+		else if (url.indexOf("classeuroffres")>=0 || url.indexOf("rechercheoffres")>=0 || url.indexOf("/offres/recherche/detail")>=0)
+			tokenRank = 6;
+		else if (url.indexOf("detailproposition")>=0)
+			tokenRank = 7;
 
 
-        if(tokenRank>0) {
-            StringTokenizer st = new StringTokenizer(url, "/");
-            String idx = "";
-            for (int i = 0; i < tokenRank; ++i)
-                idx=  st.nextToken();
+		if(tokenRank>0) {
+			StringTokenizer st = new StringTokenizer(url, "/");
+			String idx = "";
+			for (int i = 0; i < tokenRank; ++i)
+				idx=  st.nextToken();
 
-            res = idx;
-        }
+			res = idx;
+		}
 
-        return res;
-    }
-    
-    public static String getPoleEmploiAPIAccessToken() throws Exception {
-    	Client client = null;
-    	String uri = null;
+		return res;
+	}
+
+	public static String getPoleEmploiAPIAccessToken() throws Exception {
+		Client client = null;
+		String uri = null;
 		WebTarget target = null;
 		Response response = null;
 		JSONParser parser = null;
-		JSONObject json = null;	
+		JSONObject json = null;
 		Long expiresIn = null;
-		LocalDateTime now = LocalDateTime.now();	
-		
-    	if (timeExpiredAccessToken == null || now.isBefore(timeExpiredAccessToken)) {
-    		// L'acces token est périmé
+		LocalDateTime now = LocalDateTime.now();
+
+		if (timeExpiredAccessToken == null || now.isBefore(timeExpiredAccessToken)) {
+			// L'acces token est périmé
 
 			if (wsClient != null) {
-		    	uri = urlAccessTokenPEAPI.replaceAll(" ","%20");
+				uri = urlAccessTokenPEAPI.replaceAll(" ","%20");
 				target = wsClient.target(UriBuilder.fromUri(uri).build());
 				if (target != null) {
 					// Appel de l'API
@@ -159,39 +159,39 @@ public class APIService {
 					if (response.getStatus() == 200) {
 						// Lecture de la réponse
 						parser = new JSONParser();
-						json = (JSONObject) parser.parse((String)response.readEntity(String.class));	   
+						json = (JSONObject) parser.parse((String)response.readEntity(String.class));
 						offreAccessToken = (String)json.get("access_token");
 						expiresIn = (Long)json.get("expires_in");
 						now = LocalDateTime.now();
 						timeExpiredAccessToken = now.plusSeconds(expiresIn);
 					}
 				}
-	    	}
-    	}
+			}
+		}
 		return offreAccessToken;
-    }
-    
-    public static String getPoleEmploiAPIOffres(String idOffre, String accessToken) throws Exception {
+	}
+
+	public static String getPoleEmploiAPIOffres(String idOffre, String accessToken) throws Exception {
 
 		String uri = null;
 		WebTarget target = null;
 		Response response = null;
 		JSONParser parser = null;
-		JSONObject json = null;	
-		String res = null;	
-		
-    	if (accessToken != null) {
+		JSONObject json = null;
+		String res = null;
+
+		if (accessToken != null) {
 			if (wsClient != null) {
-	    		uri = urlOffrePEAPI.concat(idOffre);
-		    	uri = uri.replaceAll(" ","%20");
+				uri = urlOffrePEAPI.concat(idOffre);
+				uri = uri.replaceAll(" ","%20");
 				target = wsClient.target(UriBuilder.fromUri(uri).build());
 				if (target != null) {
 					// Appel de l'API
 					response = target.request(MediaType.APPLICATION_JSON)
-								.header(HttpHeaders.CONTENT_TYPE, "application/json")
-								.header(HttpHeaders.ACCEPT, "application/json")
-								.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-								.get();
+							.header(HttpHeaders.CONTENT_TYPE, "application/json")
+							.header(HttpHeaders.ACCEPT, "application/json")
+							.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+							.get();
 					if (response.getStatus() == 200) {
 						parser = new JSONParser();
 						json = (JSONObject) parser.parse((String)response.readEntity(String.class));
@@ -199,25 +199,26 @@ public class APIService {
 						res = (String)json.get("title");
 					}
 				}
-	    	}
-    	}
+			}
+		}
 		return res;
-    }
+	}
 
-	public static URI getPEConnectFormURI() throws Exception
+	public static URI getPEConnectFormURI(boolean noPrompt) throws Exception
 	{
 		//log.info("memoHost : "+memoHost+memoRedirectEndPoint);
 
 		StringBuilder uri = new StringBuilder(PEAMHost)
-									.append(PEAMauthorizeEndPoint)
-									.append("?")
-									.append("realm=/individu")
-									.append("&response_type=code")
-									.append("&client_id=").append(memoClientId)
-									.append("&redirect_uri=").append(memoHost).append(memoRedirectEndPoint)
-									.append("&nonce=").append(buildNonce())
-									.append("&state=").append(buildState())
-									.append("&scope=").append("application_").append(memoClientId).append("+api_peconnect-individuv1+api_peconnect-coordonneesv1+openid+profile+email+coordonnees");
+				.append(PEAMauthorizeEndPoint)
+				.append("?")
+				.append("realm=/individu")
+				.append("&response_type=code")
+				.append(noPrompt?"&prompt=none":"")
+				.append("&client_id=").append(memoClientId)
+				.append("&redirect_uri=").append(memoHost).append(memoRedirectEndPoint)
+				.append("&nonce=").append(buildNonce())
+				.append("&state=").append(buildState())
+				.append("&scope=").append("application_").append(memoClientId).append("+api_peconnect-individuv1+api_peconnect-coordonneesv1+openid+profile+email+coordonnees");
 
 		return new URI(uri.toString());
 	}
@@ -265,9 +266,9 @@ public class APIService {
 					}
 					catch (Exception e)
 					{
-						if (e.getClass() == PeConnectException.class) 
+						if (e.getClass() == PeConnectException.class)
 							throw new PeConnectException(); // renouvellement de la propagation de l'exception
-						else 
+						else
 							log.error(logCode + "-005 API Error getting user from authorization token. error=" + e);
 					}
 				}

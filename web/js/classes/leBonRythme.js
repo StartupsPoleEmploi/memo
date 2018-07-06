@@ -238,8 +238,26 @@ leBonRythme.prototype = {
             t.showPEAMError();
 
         if(memoVars.resetToken)
-            t.showPasswordResetPage()
+            t.showPasswordResetPage();
 
+        // utilisateur non connecté, ce n'est pas un affichage de tableau de bord d'un tiers, l'utilisateur a un cookie de session PE, cette webapp n'est pas dans un iframe
+        if(!memoVars.uLI && !memoVars.isVisitor && Cookies.get("idutkes") && window.parent === window.self)
+            this.attemptToPeConnectUser();
+
+        // test cas MEMO chargé dans une iframe et connecté via PEAM, on connecte l'utilisateur sur la page parente et on charge son tableau de bord
+        if(window.parent !== window.self)
+        {
+            if(window.self.location.href.indexOf("PEAMConnect=1")>=-1)
+            {
+                parent.memoVars = memoVars;
+
+                if(memoVars.uLI)
+                {
+                    parent.lBR.setCsrf($("#csrf").val());
+                    parent.lBR.initBoard();
+                }
+            }
+        }
     },
 
     // gère la navigation via les boutons back / next du navigateur
@@ -383,7 +401,7 @@ leBonRythme.prototype = {
     	// Si le paramètre async n'est pas renseigné, il est valorisé automatiquement à TRUE
         if (async == undefined)
         	async = true;
-        
+
         document.loginForm.submit();
 
         var t =this,
@@ -412,7 +430,8 @@ leBonRythme.prototype = {
 
                     if(response.result=="ok")
                     {
-                        $("#csrf").val(response.csrf);
+                        lBR.setCsrf(response.csrf);
+                        //$("#csrf").val(response.csrf);
                         memoVars.user = response.user;
                         lBR.initBoard(lE.getValue());
                         lBR.resetLoginForm();
@@ -530,56 +549,38 @@ leBonRythme.prototype = {
 
     refreshMenu : function(lienDisabled, lien2Disabled)
     {
-        $("#ficheButton").off("click");
-        $("#activeButton").off("click");
-        $("#archiveButton").off("click");
-        $("#parametresButton").off("click");
-        $("#prioritesButton").off("click");
-        $("#conseilButton").off("click");
-        $("#activitesButton").off("click");
+        // suppression des effets sur tous les boutons
+        $("#ficheButton, #activeButton, #archiveButton, #parametresButton, #prioritesButton, #conseilButton, #activitesButton")
+            .off("click")
+            .removeClass("menuDisabled")
+            .parent().removeClass("disabled");
 
-    	$("#ficheButton").removeClass("menuDisabled");
         $("#ficheButton").removeClass("menuDisabled2");
-        $("#ficheButton").parent().removeClass("disabled");
+
+        // réactivation des événements de chaque bouton
         $("#ficheButton").on("click", $.proxy(this.board.newCandidature,this.board));
-        
-    	$("#activeButton").removeClass("menuDisabled");
-        $("#activeButton").parent().removeClass("disabled");
         $("#activeButton").on("click", $.proxy(this.showActives,this));
-        
-        $("#archiveButton").removeClass("menuDisabled");
-        $("#archiveButton").parent().removeClass("disabled");
         $("#archiveButton").on("click", $.proxy(this.showArchives,this));
-        
-        $("#parametresButton").removeClass("menuDisabled");
-        $("#parametresButton").parent().removeClass("disabled");
         $("#parametresButton").on("click", $.proxy(this.showParametres,this));
-
-        $("#prioritesButton").removeClass("menuDisabled");
-        $("#prioritesButton").parent().removeClass("disabled");
         $("#prioritesButton").on("click", $.proxy(this.conseils.showPriorites,this));
-        
-        $("#conseilButton").removeClass("menuDisabled");
-        $("#conseilButton").parent().removeClass("disabled");
         $("#conseilButton").on("click", $.proxy(this.showConseils,this));
-
-        $("#activitesButton").removeClass("menuDisabled");
-        $("#activitesButton").parent().removeClass("disabled");
         $("#activitesButton").on("click", $.proxy(this.activites.showActivites,this));
 
-        if (lienDisabled) { // le lien principal est surligné pour indiquer qu'on est dans la section correspondante
+        // le lien principal est surligné pour indiquer qu'on est dans la section correspondante
+        if (lienDisabled) {
             lienDisabled.addClass("menuDisabled");
 	        lienDisabled.parent().addClass("disabled");
 	        lienDisabled.off("click");
         }
-        
-        if (lien2Disabled) { // le lien secondaire est désactivé pour montrer que l'action n'est pas disponible
+
+        // le lien secondaire optionnel est désactivé pour montrer que l'action n'est pas disponible
+        if (lien2Disabled) {
             lien2Disabled.addClass("menuDisabled2");
         	lien2Disabled.parent().addClass("disabled");
         	lien2Disabled.off("click");
         }
     },
-    
+
     showArchives : function(h)
     {
         var b = this.board;
@@ -601,7 +602,7 @@ leBonRythme.prototype = {
                 $Hist({id: "archivedCandidatures"});
 
             $("#noCardWelcomeMsg").hide(); // si le TDB est vide
-            
+
             $("body").addClass("archives");
             this.hideNewCandidatureButtons();
 
@@ -610,11 +611,11 @@ leBonRythme.prototype = {
             this.refreshMenu($("#archiveButton"), $("#ficheButton"));
 
             this.displayInnerPage();
-            
+
             this.board.displayQuickImportButton(0);
 
             b.buildCandidatures();
-   
+
         }
     },
 
@@ -650,7 +651,7 @@ leBonRythme.prototype = {
                 this.hideNewCandidatureButtons();
             }
 
-            // On désactive le lien de visualisation du TDB dans le menu 
+            // On désactive le lien de visualisation du TDB dans le menu
             this.refreshMenu($("#activeButton"));
 
             this.displayInnerPage();
@@ -691,7 +692,8 @@ leBonRythme.prototype = {
                 //$.toaster({ priority : "success", title : "Connnexion", message : "Vous êtes connecté à votre espace via Facebook"});
                 //toastr['success']("Connnexion","Vous êtes connecté à votre espace via Facebook");
 
-                $("#csrf").val(response.csrf);
+                //$("#csrf").val(response.csrf);
+                lBR.setCsrf(response.csrf);
                 lBR.initBoard(fbResponse.email);
 
                 if(response.msg=="userCreated" && source)
@@ -799,7 +801,8 @@ leBonRythme.prototype = {
                 {
                     if(response.result=="ok")
                     {
-                        $("#csrf").val(response.csrf);
+                        //$("#csrf").val(response.csrf);
+                        lBR.setCsrf(response.csrf);
                         lBR.initBoard(aLE.field.val());
                         lBR.resetLoginForm();
 
@@ -988,7 +991,7 @@ leBonRythme.prototype = {
                 dataType: "json",
 
                 success: function (response) {
-              
+
                     if(response.result=="ok")
                         $("#fpResult").html("Un  lien pour renouveler votre mot de passe vous a été envoyé par email à l'adresse "+fpL.getValue()+"<br /><i>note : vérifiez dans vos spams si vous ne trouvez pas cet email dans votre boîte au lettres</i>").show();
                     else
@@ -1244,7 +1247,7 @@ leBonRythme.prototype = {
     getShareLink : function()
     {
     	lBR.logEventToGA('event', 'Utilisateur', 'shareLink', 'partage TDB');
-    	
+
         $.ajax({
             type: 'GET',
             url: this.rootURL + '/account/visitorLink',
@@ -1445,7 +1448,7 @@ leBonRythme.prototype = {
 	    });
 	    return url;
     },
-    
+
     logEventToGA : function(hitType, evtCategory, evtAction, evtLabel) {
     	ga('send', {
             hitType: hitType,
@@ -1462,6 +1465,16 @@ leBonRythme.prototype = {
         lBR.logEventToGA('event', 'Utilisateur', 'PE Connect', 'Open PEAM');
 
         window.location = this.rootURL + '/account/peConnect';
+    },
+
+    // construction d'une iframe cachée contenant la mire PEConnect pour connecter automatiquement un utilisateur sur MEMO s'il a une session PE ouverte
+    attemptToPeConnectUser : function()
+    {
+        var ifr = document.createElement("iframe");
+        ifr.setAttribute("src",this.rootURL + '/account/peConnect');
+        ifr.setAttribute("style","display:none;");
+
+        document.body.appendChild(ifr);
     },
 
     // enregistre la source utilisateur dans le cas de PE Connect si la source n'est pas déjà enregistrée
@@ -1510,6 +1523,11 @@ leBonRythme.prototype = {
         $("#mdErrorMessageBody").html(body);
 
         $("#mdErrorMessage").modal("show");
+    },
+
+    setCsrf : function(csrf)
+    {
+        $("#csrf").val(csrf);
     }
     
 }
