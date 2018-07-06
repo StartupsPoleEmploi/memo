@@ -31,7 +31,7 @@
                 <img src="./pic/logo_fse.svg" alt="logo Fond Social Européen" />
                 <img src="./pic/logo_pe.svg" alt="logo Pôle emploi" />
                 <img src="./pic/logo_europe.svg" alt="Drapeau de l'Union Européenne" />
-                <img src="./pic/texte_europe.svg" alt="Blabla EU" />
+                <img src="./pic/texte_europe.svg" alt="Ce dispositif est cofinancé par le Fonds social européen dans le cadre du Programme opérationnel national Emploi et inclusion 2014-2020" />
             </div>
 
 
