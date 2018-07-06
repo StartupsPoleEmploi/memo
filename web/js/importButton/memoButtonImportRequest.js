@@ -1,5 +1,3 @@
-var ga = function(){};
-
 function MemoButtonImportRequest()
 {
     this.init();
@@ -19,8 +17,6 @@ MemoButtonImportRequest.prototype = {
             this.memoUrl = "https://memo.beta.pole-emploi.fr/";
         else if(window.location.hostname.indexOf('boomerang')>=0)
             this.memoUrl = "http://boomerang:8080/";
-
-        this.manageAnalytics();
 
         this.parser = new Parser();
 
@@ -151,7 +147,7 @@ MemoButtonImportRequest.prototype = {
 
     openMemo : function()
     {
-        var p = "url="+this.url;
+        var p = "url="+this.url+"&utm_campaign=boutonLBB&utm_source=labonneboite.pole-emploi.fr&utm_medium=referral";
 
         if(this.jobTitle)
             p+="&jobTitle="+ Url.encode(this.jobTitle);
@@ -212,10 +208,10 @@ MemoButtonImportRequest.prototype = {
                 nS = nS.substring(0, 128);
                 c.nomSociete = nS;
             }
-            
+
             if (numS)
             {
-            	numS = numS.substring(0, 20);
+                numS = numS.substring(0, 20);
                 c.numSiret = numS;
             }
 
@@ -424,59 +420,18 @@ MemoButtonImportRequest.prototype = {
     {
         var p = {type:"buttonClicked"};
         window.parent.postMessage(p,"*");
-    },
-
-    manageAnalytics : function()
-    {
-        if(this.checkConsent())
-        {
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function () {
-                        (i[r].q = i[r].q || []).push(arguments)
-                    }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-            ga('create', 'UA-77025427-3', 'auto');
-            var pHost = "Générique";
-
-            try
-            {
-                pHost = parent.location.hostname;
-            }
-            catch (err) {}
-
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'ImportButton',
-                eventAction: 'display',
-                eventLabel: pHost
-            });
-        }
-    },
-
-    checkConsent : function()
-    {
-        var res = false;
-        if(localStorage.getItem('hasConsent')==true) {
-            var consentExpire = localStorage.getItem('consentExpire');
-            if(consentExpire)
-                consentExpire = eval(consentExpire);
-
-            var now = new Date();
-            now = now.getTime();
-
-            if(consentExpire>now)
-                res = true;
-        }
-
-        return res;
     }
 }
 
 var memoButtonImportRequest = new MemoButtonImportRequest();
+
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-77025427-3', 'auto');
+var pHost = "Générique";
+try { pHost = parent.location.hostname; } catch(err){}
+ga('send', { hitType : 'event', eventCategory : 'ImportButton', eventAction : 'display', eventLabel : pHost });

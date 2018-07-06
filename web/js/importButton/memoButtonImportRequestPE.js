@@ -1,5 +1,3 @@
-var ga = function(){};
-
 function MemoButtonImportRequest()
 {
     this.init();
@@ -19,8 +17,6 @@ MemoButtonImportRequest.prototype = {
             this.memoUrl = "https://memo.beta.pole-emploi.fr/";
         else if(window.location.hostname.indexOf('boomerang')>=0)
             this.memoUrl = "http://boomerang:8080/";
-
-        this.manageAnalytics();
 
         this.parser = new Parser();
 
@@ -91,7 +87,7 @@ MemoButtonImportRequest.prototype = {
                 if(e.data.id && e.data.id!="null")
                     t.id = $sc(e.data.id);
                 if(e.data.idOffre && e.data.idOffre!="null")
-                	t.idOffre = $sc(e.data.idOffre);
+                    t.idOffre = $sc(e.data.idOffre);
 
                 t.setSize();
                 t.prepareUrl();
@@ -151,11 +147,11 @@ MemoButtonImportRequest.prototype = {
 
     openMemo : function()
     {
-        var p = "url="+this.url;
+        var p = "url="+this.url+"&utm_campaign=boutonPe&utm_source=pole-emploi.fr&utm_medium=referral";
 
         if(this.jobTitle)
             p+="&jobTitle="+ Url.encode(this.jobTitle);
-        
+
         if(this.idOffre)
             p+="&idOffre="+ Url.encode(this.idOffre);
 
@@ -295,9 +291,9 @@ MemoButtonImportRequest.prototype = {
     {
         var t=this,
             p = "url="+ Url.encode(t.url);
-        
+
         if(t.idOffre)
-        	p +="&idOffre="+Url.encode(t.idOffre);
+            p +="&idOffre="+Url.encode(t.idOffre);
 
         t.importActive = 0;
 
@@ -419,46 +415,16 @@ MemoButtonImportRequest.prototype = {
         this.frameId = id;
         var p = {type:"setStyle",styleClass:""};
         window.parent.postMessage(p,"*");
-    },
-
-    manageAnalytics : function()
-    {
-        if(this.checkConsent())
-        {
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function () {
-                        (i[r].q = i[r].q || []).push(arguments)
-                    }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-            ga('create', 'UA-77025427-2', 'auto');
-            ga('send', {hitType: 'event', eventCategory: 'ImportButton', eventAction: 'display', eventLabel: 'Pôle Emploi'});
-        }
-    },
-
-    checkConsent : function()
-    {
-        var res = false;
-        if(localStorage.getItem('hasConsent')==true) {
-            var consentExpire = localStorage.getItem('consentExpire');
-            if(consentExpire)
-                consentExpire = eval(consentExpire);
-
-            var now = new Date();
-            now = now.getTime();
-
-            if(consentExpire>now)
-                res = true;
-        }
-
-        return res;
     }
 }
 
 var memoButtonImportRequest = new MemoButtonImportRequest();
+
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-77025427-2', 'auto');
+ga('send', { hitType : 'event', eventCategory : 'ImportButton', eventAction : 'display', eventLabel : 'Pôle Emploi' });
