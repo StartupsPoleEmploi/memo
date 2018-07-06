@@ -147,12 +147,12 @@
                     <div class="formBloc" id="formBlocDesc">
 
                         <div class="form-group" id="cdDescriptionRow">
-                            <label>Description de la candidature</label>
+                            <label for="cdDescription">Description de la candidature</label>
                             <div id="cdDescription"></div>
                         </div>
 
                         <div class="form-group" id="cdNoteRow">
-                            <label>Notes diverses</label>
+                            <label for="cdNote">Notes diverses</label>
                             <div id="cdNote"></div>
                         </div>
 
@@ -214,18 +214,21 @@
                     <div class="formBloc lastFormBloc">
 
                         <div class="form-group">
-                        <label for="description">Description de la candidature</label>
-                          <div >
+                          <label for="description">Description de la candidature</label>
+                          <div>
+                              <div class="tfErr" id="descriptionError" style="display: none;">La note est trop grande (maximum 65535 caractères)</div>
                               <textarea id="description" placeholder="Description" rows="7" class="form-control"></textarea>
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="description">Notes diverses</label>
-                          <div >
+                          <label for="note">Notes diverses</label>
+                          <div>
+                              <div class="tfErr" id="noteError" style="display: none;">La note est trop grande (maximum 65535 caractères)</div>
                               <textarea id="note" placeholder="Divers" rows="3" class="form-control"></textarea>
                           </div>
                         </div>
+
                     </div>
 
                     <div class="formBloc lastFormBloc" id="formBlocEtat">

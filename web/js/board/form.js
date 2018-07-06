@@ -754,12 +754,18 @@ CandidatureForm.prototype = {
     },
 
     showCandidatureFormFirstStep: function (onStart) {
-        var noC = $("#noCardWelcomeMsg"), newC = $("#newCardMsg");
+        var noC = $("#noCardWelcomeMsg"),
+            newC = $("#newCardMsg"),
+            uN = (memoVars.user.firstName?memoVars.user.firstName:"")+" "+(memoVars.user.lastName?memoVars.user.lastName:"");
         $("#candidatureForm").hide();
 
         lBR.displayInnerPage();
 
         if (onStart) {
+
+            if(uN)
+                $("#noCardWelcomeMsg h1 span").text(uN);
+
             noC.show();
             // On masque le 1er écran du tunnel
             $("#candidatureForm1stStep").hide();
@@ -781,9 +787,12 @@ CandidatureForm.prototype = {
         t.nomCandidature.hideError();
         t.nomSociete.hideError();
         t.ville.hideError();
+        t.numSiret.hideError();
         t.nomContact.hideError();
         t.emailContact.hideError();
         t.telContact.hideError();
+        $("#noteError").hide();
+        $("#descriptionError").hide();
     },
 
     saveCandidatureTunnel: function (evt)        // keepOpen : 0 ou absent, on retourne au tableau, 1 on reste en mode édit, 2 on bascule en mode données de la fiche
@@ -816,14 +825,17 @@ CandidatureForm.prototype = {
             nomC = t.nomContact.getValue(),
             emailC = t.emailContact.getValue(),
             telC = t.telContact.getValue(),
+            desc = t.description.val(),
+            note = t.note.val(),
             v, ok = true,
             evt, candId;
 
         // Si le paramètre async n'est pas renseigné, il est valorisé automatiquement à TRUE
         if (async == undefined)
         	async = true;
-        
+
         t.resetErrorMessage();
+        t.setDescriptionHeight();
 
         $wST(0);
 
@@ -833,34 +845,7 @@ CandidatureForm.prototype = {
             c = new Candidature();
         }
 
-        if (nC.length > 128 || nS.length > 128 || numS.length > 20 || ville.length > 255 || nomC.length > 255 || emailC.length > 128 || telC.length > 24) {
-            ok = false;
-
-            if (nC.length > 128)
-                t.nomCandidature.showError();
-            if (nS.length > 128)
-                t.nomSociete.showError();
-            if (numS.length > 20)
-                t.numSiret.showError();
-            if (ville.length > 255)
-                t.ville.showError();
-            if (nomC.length > 255)
-                t.nomContact.showError();
-            if (emailC.length > 128)
-                t.emailContact.showError();
-            if (telC.length > 24)
-                t.telContact.showError();
-        }
-
-        if (!nC) {
-            ok = false;
-            t.nomCandidature.showError();
-        }
-
-        if (!t.emailContact.check()) {
-            ok = false;
-            t.emailContact.showError();
-        }
+        ok = t.checkFormValues();
 
         if (ok) {
             c.nomCandidature = nC;
@@ -878,16 +863,16 @@ CandidatureForm.prototype = {
 
             c.emailContact = emailC;
             c.telContact = telC;
-            
+
             if(!c.urlSource)
             	c.urlSource = t.urlSource.getValue().trim();
-            
+
             if (c.urlSource && c.urlSource.indexOf("http") != 0)
                 c.urlSource = "http://" + c.urlSource;
-            
+
             if (!c.creationDate)
         		c.creationDate = moment();
-            
+
             c.sourceId = $("#sourceId").val();
             c.jobBoard = $("#jobBoard").val();
 
@@ -1005,7 +990,7 @@ CandidatureForm.prototype = {
         var t = this,
             u = t.urlSource.getValue().trim(),
             p, bt = "f", et = etat || 0, cand = null;
-        
+
         if(evt) {
 	        if (evt.currentTarget.id == "buttonImportCandidature0") {
 	            bt = "t";   // f pour formulaire, t pour tunnel, q pour rapide, f deprecated
@@ -1045,10 +1030,10 @@ CandidatureForm.prototype = {
         }
         return cand;
     },
-    
+
     importOffreQuery: function (p, u, bt, async) {
     	var cand = null;
-    	
+
     	// Si le paramètre async n'est pas renseigné, il est valorisé automatiquement à TRUE
         if (async == undefined)
         	async = true;
@@ -1362,7 +1347,7 @@ CandidatureForm.prototype = {
         this.displayFormStep("candidatureFormStepJob");
     },
 
-    // pour le type AUTRE, on redirige vers le formulaire récap 
+    // pour le type AUTRE, on redirige vers le formulaire récap
     goToStepAutre: function (h) {
         this.tunnelType = CS.TYPES_CANDIDATURE.AUTRE;
 
@@ -1490,7 +1475,7 @@ CandidatureForm.prototype = {
                         form.note.val(noteH);
                     }
                 }
-                // On masque le bouton de sauvegarde  
+                // On masque le bouton de sauvegarde
                 form.hideSaveButton();
                 // En mode tunnel, on masque les boutons de bas de page "Fermer"/"Enregistrer"
                 $("#formButtons").hide();
@@ -1566,27 +1551,20 @@ CandidatureForm.prototype = {
         $("#formTunnelDateEntretienErr").hide();
 
         if (tc) {
-            if (tc == 'form') {
-                if (!nC.check()) {
-                    res = 0;
-                    nC.showError();
-                }
-                if(!eC.check())
-                {
-                    res = 0;
-                    eC.showError();
-                }
-                if(!numST.check())
-                {
-                    res = 0;
-                    numST.showError();
-                }
+            if (tc == 'form')
+            {
+                t.resetErrorMessage();
+                t.setDescriptionHeight();
+
+                res = t.checkFormValues();
 
                 if(!res)
                 {// scrolling vers le haut de page
                     $wST(0);
                 }
-            } else if (tc == 'spont') {
+            }
+            else if (tc == 'spont')
+            {
                 if (!nCT.check()) {
                     res = 0;
                     nCT.showError();
@@ -1620,6 +1598,57 @@ CandidatureForm.prototype = {
                     $("#formTunnelDateEntretienErr").show();
                 }
             }
+        }
+
+        return res;
+    },
+
+    checkFormValues : function()
+    {
+        var res = true,
+            t = this,
+            nC = t.nomCandidature,
+            numS = t.numSiret,
+            eC = t.emailContact,
+            nS = t.nomSociete.getValue(),
+            ville = t.ville.getValue(),
+            nomC = t.nomContact.getValue(),
+            telC = t.telContact.getValue(),
+            desc = t.description.val(),
+            note = t.note.val();
+
+        if (!nC.check()) {
+            res = false;
+            nC.showError();
+        }
+        if(!eC.check())
+        {
+            res = false;
+            eC.showError();
+        }
+        if(!numS.check())
+        {
+            res = false;
+            numS.showError();
+        }
+
+        if (nS.length > 128 || ville.length > 255 || nomC.length > 255 ||
+        telC.length > 24 || note.length>65535 || desc.length > 65535)
+        {
+            res = false;
+
+            if (nS.length > 128)
+                t.nomSociete.showError();
+            if (ville.length > 255)
+                t.ville.showError();
+            if (nomC.length > 255)
+                t.nomContact.showError();
+            if (telC.length > 24)
+                t.telContact.showError();
+            if (note.length > 65535)
+                $("#noteError").show();
+            if (desc.length > 65535)
+                $("#descriptionError").show();
         }
 
         return res;
