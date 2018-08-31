@@ -1,0 +1,923 @@
+
+
+#createCandidatureForm,
+#preferencePage
+{
+    background: #e6e6e6 none repeat scroll 0 0;
+    color: #fff;
+}
+
+.marginTop40
+{
+    margin-top: 40px;
+}
+
+
+.candidatureFormCancel
+{
+    background: #fff;
+    color: #000;
+}
+
+.formTunnelBloc,
+#preferencePageContainer, 
+#parametresPageContainer,
+#prioritesPageContainer,
+#activitesPageContainer,
+#conseilsPageContainer
+{
+    background: #fff none repeat scroll 0 0;
+    color: black;
+    font-size: 16px;
+    margin: auto;
+    max-width: 1000px;
+}
+
+#formLogoSociete table,
+#formLogoSocieteTunnel table
+{
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+#formLogoSociete img,
+#formLogoSocieteTunnel img {
+    max-width: 40px;
+}
+
+#formLogoSociete td,
+#formLogoSocieteTunnel td
+{
+    vertical-align:top;
+}
+#formLogoSociete .fa-remove,
+#formLogoSocieteTunnel .fa-remove
+{
+    color : red;
+    margin-left:15px;
+    cursor: pointer;
+
+}
+
+
+@media screen and (max-width:768px) {
+    
+    .formActions
+    {
+        margin-left: 5px;
+    }
+    
+    #timeLine
+    {
+        padding-left: 50px;
+    }
+    
+    .formTunnelBloc,
+    #preferencePageContainer,
+    #parametresPageContainer,
+    #prioritesPageContainer,
+    #activitesPageContainer,
+    #conseilsPageContainer
+    {
+        padding-bottom: 15px;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 100%;
+    }
+
+    #etat{
+        width: 70%;
+    }
+
+    #candidatureForm
+    {
+        width: 100%;
+    }
+
+    #createCandidatureForm,
+    #preferencePage,
+    #conseilsPage,
+    #activitesPage,
+    #parametresPage,
+    #prioritesPage
+    {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        background-color: white !important;
+    }
+
+    .formBloc {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 50px;
+    }
+
+    #candidatureForm #timeLine .form-horizontal,
+    #pastTimeLine,
+    #futureTimeLine
+    {
+        border-left: 0px;
+    }
+
+    #pastTimeLine, #futureTimeLine
+    {
+        padding-left: 50px;
+    }
+
+    #candidatureForm .row
+    {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+    /*.buttonShowCandidatureForm
+    {
+        margin-right: 0 !important;
+    }*/
+
+}
+
+@media screen and (min-width:769px) {
+
+    .formActions {
+        margin-left: -54px;
+    }
+
+    #timeLine
+    {
+        padding-left: 13px;
+    }
+
+    .formTunnelBloc,
+    #preferencePageContainer,
+    #conseilsPageContainer,
+    #activitesPageContainer,
+    #parametresPageContainer,
+    #prioritesPageContainer  {
+        padding-bottom: 25px;
+        padding-left: 25px;
+        padding-right: 25px;
+        width: 80%;
+    }
+
+    #etat{
+        width: 90%;
+    }
+
+    #candidatureForm
+    {
+        width: 80%;
+    }
+
+    #createCandidatureForm,
+    #preferencePage,
+    #conseilsPage,
+    #activitesPage,
+    #parametresPage,
+    #prioritesPage
+    {
+        padding-bottom: 50px;
+        padding-top: 20px;
+    }
+
+    .formBloc {
+        margin-left: -10px;
+        margin-right: -10px;
+        padding-left: 10px;
+    }
+
+    #candidatureForm #timeLine .form-horizontal,
+    #pastTimeLine,
+    #futureTimeLine
+    {
+        border-left: 2px solid #e6e6e6;
+    }
+
+    #pastTimeLine, #futureTimeLine
+    {
+        padding-left: 10px;
+    }
+
+    #candidatureForm .row
+    {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+}
+
+@media screen and (max-width:1055px) {
+	.spanFormTunnelBloc { display: none;}
+
+    .formTunnelButton
+    {
+        margin: auto;
+        /*margin-bottom: 20px;*/
+        width: 100%;
+        max-width: 315px;
+    }
+
+    /*.formTunnelButton button
+    {
+        width: 100%;
+    }*/
+}
+
+@media screen and (min-width:1055px) {
+	.spanFormTunnelBloc { display: inline;}
+
+    /*.formTunnelButton button
+    {
+        width: 220px;
+    }*/
+}
+
+.buttonShowCandidatureForm
+{
+    /*float: left;*/
+    /*margin-right: 70px;*/
+    margin-bottom: 20px;
+    border-radius: 5px !important;
+    height: 40px;
+    font-size: 16px;
+}
+
+#goToStep1.buttonShowCandidatureForm
+{
+    margin-right: 0px;
+    height: 60px !important;
+    white-space: normal;
+}
+
+#candidatureForm2ndStepWithoutOffre span
+{
+	font-style:italic;
+	font-size:14px;
+}
+ 
+.jobBoardList
+{
+    font-size: 12px;
+}
+
+#candidatureForm
+{
+    max-width: 1400px;
+    margin: auto;
+    background-color: #fff;
+}
+
+#candidatureForm.newCandidatureMode
+{
+    max-width: 800px;
+}
+
+#candidatureForm label
+{
+    color: #000;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+@media print {
+  #candidatureTitle {
+    text-overflow: initial !important; 
+    white-space: normal !important;
+  }
+}
+    
+#candidatureTitle
+{
+    overflow: hidden;
+    padding-left: 30px;
+    padding-right: 30px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#createCandidatureForm .input-group .form-control,
+#quickImportDiv .form-control,
+#quickImportDiv .btn,
+#createCandidatureForm .btn,
+.formButtons .btn,
+.modal .btn
+{
+    border-radius: 5px !important;
+    height: 40px;
+}
+
+#candidatureForm .form-horizontal
+{
+    padding-left: 30px;
+    padding-right: 20px;
+}
+
+#newCardMsg p,
+#noCardWelcomeMsg p
+{
+	font-size: 16px;
+	font-family: Verdana, Arial;
+	padding-left:15px;
+	padding-right:15px;
+}
+
+#preferencePageContainer span,
+#parametresPageContainer span,
+#conseilsPageContainer span,
+#activitesPageContainer span,
+#prioritesPageContainer span,
+#videoFrameForm span
+{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.newCardButtons
+{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#videoFrameForm
+{
+    color: #000;
+    /*margin-top: 50px;*/
+    /*padding-top: 25px;*/
+    /*margin-bottom : -20px;*/
+    text-align: center;
+}
+
+#videoFrameForm .videoBlocTitle
+{
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 30px;
+}
+
+select
+{
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    border-radius: 5px !important;
+    height: 40px !important;
+}
+
+textarea
+{
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    border-radius: 5px !important;
+}
+
+.formButtons
+{
+    text-align: center;
+    max-width: 1300px;
+    width: 100%;
+    margin: auto;
+    margin-top: 0px;
+}
+
+.formBloc {
+    border-bottom: 2px solid #e6e6e6;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding-right: 25px;
+    padding-bottom: 20px;
+}
+
+.formBloc.lastFormBloc
+{
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+#formBlocEtat.formBloc
+{
+    border-top: 2px solid #e6e6e6;
+    padding-top: 30px;
+    margin-top: 35px;
+}
+
+.input-group-addon,
+.has-error .input-group-addon,
+.has-success .input-group-addon
+{
+    background: none;
+    border: none;
+}
+
+#createCandidatureForm #videoFrame
+{
+    margin-top : 50px;
+}
+
+#etat
+{
+    float:left;
+}
+#medaillonEtat
+{
+    width: 40px;
+    height: 40px;
+    float:right;
+    border-radius: 5px !important;
+}
+
+.candidature #medaillonEtat,
+.candidature #cdEtatCandidatureMedaillon
+{
+    background: #F2AE43;
+}
+.relance #medaillonEtat,
+.relance #cdEtatCandidatureMedaillon
+{
+    background: #7AC943;
+}
+.brouillon #medaillonEtat,
+.brouillon #cdEtatCandidatureMedaillon
+{
+    background: #999999;
+}
+.entretien #medaillonEtat,
+.entretien #cdEtatCandidatureMedaillon
+{
+    background: #00C7FC;
+}
+
+
+#candidatureDataColumn,
+#candidatureDataColumn label
+{
+    color: #000;
+    margin-bottom: 0;
+    word-wrap: break-word;
+}
+
+#candidatureDataColumn label i
+{
+    cursor: pointer;
+}
+
+#cdEtatCandidatureMedaillon
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 5px !important;
+    float: right;
+}
+#cdEtatCandidature
+{
+    float: left;
+}
+
+#candidatureDataColumn label > i {
+    font-size: 12px;
+    margin-left: 30px;
+}
+
+#candidatureDataColumn .expiredSource
+{
+    text-decoration: line-through;
+}
+
+#cdUrlSourceRow
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#videoFrameForm #videoFrame
+{
+    border: 2px solid #999999;
+}
+
+textarea:focus,
+input:focus,
+select:focus
+{
+    color: #000;
+    background: #ddd;
+}
+
+
+#urlSourceComment
+{
+    color: #000;
+    margin-bottom: 20px;
+}
+
+
+#urlSource0 .btn.disabled,
+#buttonQuickImport.disabled,
+#titrePosteTunnel .btn.disabled
+{
+    border: 1px solid #999999 !important;
+    background: #999999 !important;
+}
+
+.tfErr
+{
+    color: rgb(169,68,66);
+    font-weight: bold;
+}
+
+.formEdit
+{
+    font-family: Verdana, Arial;
+    text-decoration: none;
+}
+
+.formBloc .fa-edit:hover
+{
+    color: #32c5d2;
+    text-decoration: underline;
+}
+
+@media print {
+  .formActions, .candidatureFormCancel, #buttonSaveCandidature2, #newEventButton, #doorbell-button, .doorbell-button, .beta {
+    display:none;
+  }
+}
+
+.formActions
+{
+    height: 160px;
+    margin-top: 80px;
+    position: fixed;
+    width: 40px;
+    z-index: 5;
+    margin-top: 15px;
+}
+
+.formActions > div
+{
+    background: #26A1AB none repeat scroll 0 0;
+    border-radius: 5px !important;
+    color: #fff;
+    cursor: pointer;
+    font-size: 32px;
+    height: 50px;
+    margin-bottom: 5px;
+    padding: 2px;
+    padding-top: 12px;
+    text-align: center;
+    width: 50px;
+}
+
+.formActions i.fa-calendar-plus-o,
+.formActions i.fa-handshake-o
+{
+    font-size : 26px;
+}
+
+.formActions > div > i
+{
+    margin-left: 2px;
+    display: block !important;
+    margin-top : 0px;
+}
+
+.formActions > div > div
+{
+    font-size: 11px;
+    margin-left: -1px;
+    margin-top: 7px;
+}
+
+.formActions > div:hover
+{
+    background: #32c5d2 none repeat scroll 0 0;
+}
+
+.formActions > div#formActionAccepted
+{
+    /*color : palegreen;*/
+    color : white;
+}
+
+.formActions > div#formActionRefused
+{
+    /*color: brown;*/
+    color : white;
+}
+
+.formActions > div.disabled,
+.formActions > div.disabled:hover
+{
+    color: #fff !important;
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+#candidatureForm .pageTitle
+{
+    padding-left: 50px;
+}
+
+.progress {
+    background-color: #d2d2d2;
+    width: 75%;
+    margin: auto;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 5px !important;
+    height: 10px;
+}
+.progress-bar > div
+{
+    margin-left: 15px;
+}
+
+#createCandidatureForm .progress
+{
+    margin-bottom: 40px;
+}
+
+#candidatureFormStepProgress .buttonShowCandidatureForm
+{
+    font-weight: bold;
+    color: #fff;
+}
+#candidatureFormStepProgress .buttonShowCandidatureForm:hover
+{
+    color: #000;
+}
+
+#candidatureFormStepProgress .buttonShowCandidatureForm[value="0"]
+{
+    background-color: #999999;
+}
+
+#candidatureFormStepProgress .buttonShowCandidatureForm[value="1"]
+{
+    background-color: #F2AE43;
+}
+
+#candidatureFormStepProgress .buttonShowCandidatureForm[value="2"]
+{
+    background-color: #7AC943;
+}
+
+#candidatureFormStepProgress .buttonShowCandidatureForm[value="3"]
+{
+    background-color: #00C7FC;
+}
+
+#candidatureSpinner {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 800px;
+    margin-top: 120px;
+    margin-bottom: 300px;
+    color:#364150;
+    font-size: 20px;
+}
+
+#candidatureSpinner > i {
+    font-size: 48px;
+    margin-top: 50px;
+}
+
+.formTunnelButton2
+{
+    margin: auto;
+    width: 100%;
+    max-width: 280px;
+}
+
+.formTunnelButton2 a,
+.formTunnelButton2 .btn
+{
+    width: 100%;
+}
+
+
+.form-control::-webkit-input-placeholder
+{
+    color: #bbb;
+    font-size: 14px;
+    font-style: italic;
+}
+.form-control::-moz-placeholder
+{
+    color: #bbb;
+    font-size: 14px;
+    font-style: italic;
+}
+.form-control:-ms-input-placeholder
+{
+    color: #bbb;
+    font-size: 14px;
+    font-style: italic;
+}
+.form-control:-moz-placeholder
+{
+    color: #bbb;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.blocAide {
+	margin-top: 15px;
+}
+.formTunnelBloc .blocAide p {
+	font-size: 12px;
+	margin-top:10px;
+	margin-bottom:20px;
+}
+
+.blocAide > p br {
+    margin-bottom: 10px;
+}
+
+.titreAide {
+	border-bottom: 2px solid #e6e6e6;
+}
+.formTunnelBloc .blocAide .titreAide label {
+	font-size:14px;
+	font-weight: bold;
+}
+
+.formTunnelBloc label {
+	font-size:18px;
+	font-weight: bold;
+}
+.formTunnelBloc p {
+	margin:0px;
+}
+#tunnelInstantanement {
+ margin-top: 10px;	
+}
+#tunnelManuellement {
+ margin-top: 10px;	
+}
+.tunnelBlocDisabled {
+	color :#ccc;
+}
+#goToStep1 {
+	margin-top:10px;
+}
+.buttonStep1 {
+	text-align: left;
+}
+.buttonStep1 i {
+	float:left;
+	margin-top: 3px;
+	margin-left: 10px;
+    margin-right: 15px;
+}
+@media screen and (max-width:370px) {
+	.buttonStep1 i {
+		display:none !important;
+	}
+}
+.formWelcomeButton {
+	margin: auto;
+	width: 100%;
+	max-width: 420px;
+    padding-top: 20px;
+}
+
+@media screen and (max-width:1020px) {
+	#createCandidatureForm .mt-element-step {
+		display:none !important;
+	}
+}
+
+#fileList
+{
+    color: black;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-bottom: 20px;
+}
+
+.buttonRemoveFile
+{
+    margin-right: 50px;
+}
+
+#fileList img
+{
+    width: 48px;
+}
+
+#fileList div
+{
+    float: right;
+    width: 60px;
+    height: 65px;
+    margin-right: 15px;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#mdFileList img
+{
+    width : 36px;
+}
+
+#mdFileList div
+{
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+#mdFileList i
+{
+    float: right;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+#fileDropZone
+{
+    border: 3px dashed #aaa;
+    width: 100%;
+    height: 100px;
+    padding-top: 15px;
+    font-size: 25px;
+    color: #aaa;
+    background: #eee;
+    border-radius: 5px !important;
+    cursor: pointer;
+    line-height:30px;
+    text-align: center;
+}
+
+#fileDropZone span
+{
+    font-size: 14px;
+    line-height: 0px;
+}
+
+#fileDropZone .dzDone,
+#fileDropZone .dzSpinner
+{
+    display: none;
+}
+
+#fileDropZone.uploadInProgress .dzSpinner
+{
+    display: block;
+    line-height: 15px;
+}
+
+#fileDropZone.uploadInProgress .dzPrompt,
+#fileDropZone.uploadDone .dzPrompt
+{
+    display: none !important;
+}
+
+#fileDropZone.uploadDone .dzDone
+{
+    display: block;
+}
+
+#fileDropZone.fileDragOver
+{
+    border-color: #00C7FC;
+}
+
+.dzSpinner i
+{
+    font-size: 40px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.hiddenFileInput
+{
+    overflow: hidden;
+    width: 0;
+    height: 0;
+}
+
+#uploadFileOnFormInfo
+{
+    left:50%;
+    transform: translate(-50%,0);
+    top:50px;
+    position: fixed;
+    height: 150px;
+    width: 75%;
+    max-width: 400px;
+    background: #eee;
+    z-index: 10000;
+    border-radius: 5px !important;
+    border: 3px dashed #00C7FC;
+    color: #aaa;
+    font-size: 20px;
+    text-align: center;
+    padding: 20px;
+}
+
+.mdNote
+{
+    font-size: 12px;
+}

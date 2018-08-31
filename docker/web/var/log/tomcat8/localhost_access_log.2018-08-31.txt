@@ -1,0 +1,11 @@
+127.0.0.1 - - [31/Aug/2018:08:59:37 +0200] "GET / HTTP/1.0" 200 165856
+127.0.0.1 - - [31/Aug/2018:08:59:38 +0200] "GET /css/bootstrap/bootstrap-3.3.4.min.css.h20662390.pack HTTP/1.0" 200 19034
+127.0.0.1 - - [31/Aug/2018:08:59:38 +0200] "GET /assets/global/css/plugins.min.css.h2129762479.pack HTTP/1.0" 200 8376
+127.0.0.1 - - [31/Aug/2018:08:59:38 +0200] "GET /combined.css.h-1466452729.pack HTTP/1.0" 200 23818
+127.0.0.1 - - [31/Aug/2018:08:59:38 +0200] "GET /assets/apps/css/todo-2.min.css.h866727652.pack HTTP/1.0" 200 1007
+127.0.0.1 - - [31/Aug/2018:08:59:39 +0200] "GET /combined.js.h744815473.pack HTTP/1.0" 200 136864
+127.0.0.1 - - [31/Aug/2018:09:00:04 +0200] "POST /rest/account HTTP/1.0" 200 200
+127.0.0.1 - - [31/Aug/2018:09:00:04 +0200] "GET /rest/account/userId?_=1535698781251 HTTP/1.0" 200 33
+127.0.0.1 - - [31/Aug/2018:09:00:07 +0200] "GET /rest/candidatures?_=1535698781250 HTTP/1.0" 200 40
+127.0.0.1 - - [31/Aug/2018:09:00:07 +0200] "GET /rest/candidatures/events?_=1535698781252 HTTP/1.0" 200 34
+127.0.0.1 - - [31/Aug/2018:09:00:11 +0200] "GET /css/fonts/glyphicons-halflings-regular.woff2 HTTP/1.0" 200 18028

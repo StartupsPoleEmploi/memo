@@ -1,0 +1,173 @@
+.powered
+{
+    color: #364150;
+    font-size: 16px;
+    float: left;
+}
+
+#footer .logoSmall > div
+{
+    padding-top: 0px;
+}
+
+#footer .logoSmall img
+{
+    margin-top: 3px;
+}
+
+#footer .logoSmall
+{
+    margin-top: -25px;
+}
+
+#footer .logoPE
+{
+    padding-top: 0px;
+    margin-top: -15px;
+    margin-left: 15px;
+    float: right;
+}
+
+.footerLogo div
+{
+    font-size: 10px;
+}
+
+@media screen and (max-width:780px)  {
+
+    .footerLogo{
+        text-align: center;
+        margin-top: auto;
+    }
+    
+    .footerLogo
+    {
+        margin-bottom: 40px;
+    }
+
+}
+
+
+#footer
+{
+    background-color: #fff;
+    padding-top : 20px;
+    border-top: 2px solid #9FA4AF;
+}
+
+#doorbell-button,
+.doorbell-button
+{
+    right : 0px;
+    background-color : #19c158;
+    margin-right: 0px;
+}
+
+#mdCGU .modal-dialog
+{
+    max-width: 900px;
+}
+
+@media screen and (min-width:801px) {
+    #mdCGU .modal-dialog
+    {
+        width: 75%;
+    }
+}
+
+@media screen and (max-width:800px) {
+    #mdCGU .modal-dialog
+    {
+        width: 90%;
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+
+
+.marginFooterHeader{
+    margin: auto;
+    text-align: center;
+}
+
+.openCguButton,
+.openCguButton:hover,
+.openCguButton:focus,
+.openPrivacyButton,
+.openPrivacyButton:hover,
+.openPrivacyButton:focus
+{
+    font-size: 12px;
+    clear: both;
+    color: #000;
+    text-decoration: underline;
+}
+
+.doorbell-button
+{
+    position: fixed;
+    cursor: pointer;
+    bottom: 0;
+    right: 5%;
+    width: auto;
+    color: #fff;
+    border: 0;
+    font-size: 14px;
+    padding: 10px 20px;
+    margin: 0;
+    z-index: 100;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+#doorbell-button
+{
+    display: none !important;
+}
+
+.footerLinks a
+{
+    /*margin-top: -17px;*/
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+}
+
+.footerBlock
+{
+    text-align: left;
+    width: 250px;
+    margin: auto;
+
+}
+
+.footerBlock > div
+{
+    margin-bottom: 20px;
+}
+
+.footerRightBorder
+{
+    border-right: 1px solid lightgrey;
+}
+
+@media screen and (max-width:991px) {
+
+    .footerRightBorder
+    {
+        border-right: none;
+    }
+
+    .footerLogo
+    {
+        margin-top: 20px;
+    }
+    
+    .footerBlock > div
+    {
+        margin-bottom: 5px;
+    }
+}

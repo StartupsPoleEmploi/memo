@@ -1,0 +1,11 @@
+FROM debian:jessie
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && \
+    apt-get -y install mariadb-server && \
+    apt-get -y install vim locate 
+
+CMD chown mysql:mysql /var/log/mysql/ && ./home/database/setAndRunDatabase.sh $DB_NAME $USER_NAME $USER_PASS;\
+    tail -f /dev/null
+

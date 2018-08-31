@@ -1,0 +1,8 @@
+Aug 27 15:18:26 d3eae04a272a postfix/master[81]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 27 18:26:30 9fd7df5674c8 postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 27 18:26:54 9fd7df5674c8 postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 27 18:34:39 9fd7df5674c8 postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 29 10:25:31 9fd7df5674c8 postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 30 12:14:29 9fd7df5674c8 postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 30 12:24:13 9fd7df5674c8 postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix
+Aug 31 08:58:00 fbe931f18cfb postfix/master[84]: daemon started -- version 2.11.3, configuration /etc/postfix

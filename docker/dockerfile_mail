@@ -1,0 +1,72 @@
+FROM debian:jessie
+
+ARG DOMAIN=pole-emploi.fr
+ARG DKIM_SELECTOR=mailstartup4
+ARG DKIM_PRIVATEKEY="-----BEGIN RSA PRIVATE KEY-----\nMIICXQIBAAKBgQC+qBB0Jw5AUSNQGK/IgnFAeLlz+FRE2aveOli41i+idRW6hFLS\nW0iTh+OSD/DeOZkkOU+5rQz33MdFrDc3e4Jh8CKh9i1zd9JHy3kWQFSUWkZUDzll\nVqDuhbAudPvnBYAoKwGpTSt86hKiugnmaeXY3vmxH4JC74rovwu2amvjPQIDAQAB\nAoGAfRZbJTnymbQiTQzFV/JtR3Vth27oKvv9TSJOz4aHXjkfdm4WwLjvVwwS/OPE\njqiPlzqa2iF1nrGVdFrXJ2m7Uk8AkE3Hg/myOjEVw8nv86GWoSsta5HNJUtDybSw\n8uw1fj3ltwYMzI6SIONIzJ4OsnYkI5nJcOMlhu2XyvMLKsECQQD06xfIu7hh2NqP\npDjzqrfhKB5to0wDBiKzjwhKwc+JSf8BDKAnW+Uglu/7b8p9bxK5LTSTWTRNG9I+\ntVG7UNUpAkEAx0hz3FrkxFK73Pz/4XYpSpTyZwWGcJ57IgjUAAjeSVQFrt6Jc+bM\nDY3xm56ZSwB+UQHz7s7dkm2A9brCNnIr9QJALciAsrJ8vjXGbZGaX9pq8zkHryEW\nhX4xIHW9bBQc0qI1fCG7EoB4LYZpqAv2w0nvKxSLPnwvbbakr7o/ZA+xOQJBAJWL\njUZi/yFEZK3lPa/XmAzb0Tv2LXj9tLFJpq2P+h9U6h7b6JINNDtHtXNuhOJ/sEri\nCEfA/Q0RF6FPUMbCzrECQQDgx7L7pwSVs3c54YjbimubId8x9p5Dk+Pjl4Rm8OCG\n3Xvn4Tmlk5E36hqcCgFuFhEjC4tSAgrOC/4JJcHlxk6s\n-----END RSA PRIVATE KEY-----\n"
+# A modifier, comme pr mynetworks plus bas
+ARG NETWORKS=172.0.0.0/24 
+
+ENV DEBIAN_FRONTEND=noninteractive
+#ENV TIMEZONE=Europe/Paris
+
+RUN apt-get update; \
+    apt-get -y install postfix opendkim opendkim-tools vim telnet rsyslog;
+
+#RUN echo "$TIMEZONE" > /etc/timezone; \
+#    dpkg-reconfigure tzdata;
+
+RUN postconf compatibility_level=2; \
+    postconf -e "myorigin=${DOMAIN}"; \
+    postconf -e "myhostname=${DOMAIN}"; \
+    postconf -e "relay_domains=${DOMAIN}"; \
+    postconf -e "mynetworks=127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 ${NETWORKS}";
+
+RUN echo "\n# DKIM" >>/etc/postfix/main.cf; \
+    postconf -e "milter_default_action = accept"; \
+    postconf -e "milter_protocol = 6"; \
+    postconf -e "smtpd_milters = inet:localhost:8891"; \
+    postconf -e "non_smtpd_milters = inet:localhost:8891"; \
+    postconf -F '*/*/chroot = n';
+
+#Ajout de la conf de ralentissement des emails pour certains ISP : master.cf
+RUN postconf -M slow/unix="slow unix - - n - 5 smtp"; \
+    postconf -P "slow/unix/syslog_name=postfix-slow"; \
+    postconf -P "slow/unix/smtp_destination_concurrency_limit=3"; \
+    postconf -P "slow/unix/slow_destination_rate_delay=1";
+RUN postconf -e "transport_maps=hash:/etc/postfix/transport"; \
+    postconf -e "slow_destination_recipient_limit=20"; \
+    postconf -e "slow_destination_concurrency_limit=10"; \
+    postconf -e "default_destination_concurrency_limit=10"; \
+    echo "orange.fr slow:" >>/etc/postfix/transport; \
+    echo "wanadoo.fr slow:" >>/etc/postfix/transport; \
+    echo "infonie.fr slow:" >>/etc/postfix/transport; \
+    echo "aliceadsl.fr slow:" >>/etc/postfix/transport; \
+    echo "free.fr slow:" >>/etc/postfix/transport; \
+    echo "yahoo.fr slow:" >>/etc/postfix/transport; \
+    echo "laposte.net slow:" >>/etc/postfix/transport; \
+    postmap /etc/postfix/transport;
+
+#Configuration OpenDKIM
+RUN echo SOCKET="inet:8891@localhost" >>/etc/default/opendkim; \
+    echo "\nCanonicalization relaxed/relaxed" >>/etc/opendkim.conf; \
+    echo "UserID opendkim:opendkim" >>/etc/opendkim.conf; \
+    echo "LogWhy yes\nMilterDebug 1" >>/etc/opendkim.conf; \
+    echo "KeyTable refile:/etc/dkimkeys/KeyTable" >>/etc/opendkim.conf; \
+    echo "SigningTable refile:/etc/dkimkeys/SigningTable" >>/etc/opendkim.conf; \
+    echo "ExternalIgnoreList refile:/etc/dkimkeys/TrustedHosts" >>/etc/opendkim.conf; \
+    echo "InternalHosts refile:/etc/dkimkeys/TrustedHosts" >>/etc/opendkim.conf;
+RUN mkdir -p /etc/dkimkeys/keys/${DOMAIN}; \
+    echo "${DKIM_SELECTOR}._domainkey.${DOMAIN} ${DOMAIN}:${DKIM_SELECTOR}:/etc/dkimkeys/keys/${DOMAIN}/${DKIM_SELECTOR}.private" >/etc/dkimkeys/KeyTable; \
+    echo "*@${DOMAIN} ${DKIM_SELECTOR}._domainkey.${DOMAIN}" >/etc/dkimkeys/SigningTable; \
+    echo "${DOMAIN}\nlocalhost" > /etc/dkimkeys/TrustedHosts; \
+    echo ${DKIM_PRIVATEKEY} >/etc/dkimkeys/keys/${DOMAIN}/${DKIM_SELECTOR}.private; \
+    chown -R opendkim: /etc/dkimkeys; \
+    chmod -R 700 /etc/dkimkeys/keys; \
+    chmod 400 /etc/dkimkeys/keys/${DOMAIN}/*;
+
+#RUN opendkim-genkey -D /etc/dkimkeys/ -d ${DOMAIN} -s ${DKIM_SELECTOR}
+
+CMD chown -R opendkim: /etc/dkimkeys && \
+    service opendkim start && \
+    service postfix start && \
+    rsyslogd -n

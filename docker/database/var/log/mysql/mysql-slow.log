@@ -1,0 +1,45 @@
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+/usr/sbin/mysqld, Version: 10.0.35-MariaDB-0+deb8u1 ((Debian)). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+# Time: 180831  9:00:00
+# User@Host: memo[memo] @ docker_web_1.docker_memo_network [172.0.0.4]
+# Thread_id: 18  Schema: memo  QC_hit: No
+# Query_time: 0.018088  Lock_time: 0.000070  Rows_sent: 0  Rows_examined: 0
+use memo;
+SET timestamp=1535698800;
+SELECT users.id, users.login, candidatures.nomCandidature, candidatures.nomSociete, candidatureEvents.eventTime FROM users LEFT JOIN candidatures on candidatures.userId = users.id LEFT JOIN candidatureEvents on candidatures.id = candidatureEvents.candidatureId WHERE candidatures.id NOT IN ( SELECT candidatureId FROM candidatureEvents WHERE eventType=10 AND TIMESTAMPDIFF(HOUR, now(),eventTime)>-240  ) AND candidatureEvents.eventType = 3 AND candidatures.archived = 0 AND TIMESTAMPDIFF(HOUR, now(),candidatureEvents.eventTime)>=48 AND TIMESTAMPDIFF(HOUR, now(),candidatureEvents.eventTime)<49 AND users.receiveNotification = 1;
+# User@Host: memo[memo] @ docker_web_1.docker_memo_network [172.0.0.4]
+# Thread_id: 17  Schema: memo  QC_hit: No
+# Query_time: 0.003347  Lock_time: 0.000068  Rows_sent: 0  Rows_examined: 0
+SET timestamp=1535698800;
+SELECT users.id, users.login, candidatures.nomCandidature, candidatures.nomSociete, candidatureEvents.eventTime FROM users LEFT JOIN candidatures on candidatures.userId = users.id LEFT JOIN candidatureEvents on candidatures.id = candidatureEvents.candidatureId WHERE candidatures.id NOT IN ( SELECT candidatureId FROM candidatureEvents WHERE eventType=11 AND DATEDIFF(now(),eventTime)=0  ) AND candidatureEvents.eventType = 7 AND candidatureEvents.eventSubType = 14 AND candidatures.archived = 0 AND DATEDIFF(now(),candidatureEvents.eventTime)=0 AND users.receiveNotification = 1;
+# Time: 180831  9:00:07
+# User@Host: memo[memo] @ docker_web_1.docker_memo_network [172.0.0.4]
+# Thread_id: 17  Schema: memo  QC_hit: No
+# Query_time: 0.000345  Lock_time: 0.000032  Rows_sent: 0  Rows_examined: 0
+SET timestamp=1535698807;
+SELECT * FROM candidatureEvents WHERE candidatureId IN (SELECT id FROM candidatures WHERE userId = 1);

@@ -32,18 +32,17 @@ Clone memo repository:
 
     $ git clone https://github.com/StartupsPoleEmploi/memo.git
 
-Create a mariadb, nginx, tomcat8, postfix environment
+Install docker on your platform (https://docs.docker.com/install/)
 
-TODO: docker
+MEMO application is split in 3 containers : web (nginx,tomcat and clamav), database (mariadb) and email container (postfix).
 
-Start required services 
+Go to the docker directory in the repository to get the setup application. 
 
-TODO: docker
+You can modify name of database, or credentials in docker-compose.yml, see environment variables define in database container
+Then, report it in datasource configuration file of web containers : META-INF/context.xml
+(By default, variables are set with memo)
 
-Create database:
-
-TODO: docker
-
+To run MEMO on your machine, tape : docker-compose up 
 
 The app is available on port `80` on host machine. Open a web browser, load
 http://localhost and start browsing.
@@ -63,6 +62,8 @@ Modify mandatory values in .properties files in /src/fr/gouv/motivaction/propert
     email.noReply = your sending email address
     email.noReplyExt = your sending email address
     email.personal = your sending email name
+    host = name of email container (defined in docker-compose.yml)
+    pathCSV = directory to export dashboard
  
  
 ## Accessing your local MySQL
@@ -71,7 +72,7 @@ To access your local MySQL in your MySQL GUI :
 
 - new connection / select "SSH" tab
 - MySQL host: 127.0.0.1:3306
-- Username: root
-- Password: leave empty
-- Database: motivaction
+- Username: memo (defined in docker-compose.yml as USER_NAME)
+- Password: memo (defined in docker-compose.yml as USER_PASS)
+- Database: memo (defined in docker-compose.yml as DB_NAME)
 

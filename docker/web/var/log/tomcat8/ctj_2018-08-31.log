@@ -1,0 +1,12 @@
+2018-08-31 08:59:18 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2018-08-31 08:59:19 INFO  005-002 QUARTZ Server is master.
+2018-08-31 08:59:32 INFO  004-006 UTILS reporting started. hosts=192.168.4.114:9200 index=memo-prod-metrics frequency=15
+2018-08-31 09:00:00 INFO  045-001 Executing interview preparation reminder
+2018-08-31 09:00:00 INFO  022-001 Executing interview thanks reminder
+2018-08-31 09:00:03 INFO  028-004 ACCOUNT Envoi d'un email de création de compte. userId=1 loginEmail=test@test.fr facebookId=0 peId=null
+2018-08-31 09:02:07 ERROR 018-003 MailService Error sending email. subject=Rapport LOCAL - Avez-vous pensé à remercier après votre entretien ? to=[Ljava.lang.String;@2404d8d9 error=javax.mail.MessagingException: Could not connect to SMTP host: 167.114.255.92, port: 25;
+  nested exception is:
+	java.net.ConnectException: Connection timed out (Connection timed out)
+2018-08-31 09:02:07 ERROR 018-003 MailService Error sending email. subject=Rapport LOCAL - Pour bien préparer votre entretien to=[Ljava.lang.String;@61f79eda error=javax.mail.MessagingException: Could not connect to SMTP host: 167.114.255.92, port: 25;
+  nested exception is:
+	java.net.ConnectException: Connection timed out (Connection timed out)

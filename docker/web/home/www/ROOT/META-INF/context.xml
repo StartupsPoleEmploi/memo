@@ -1,0 +1,31 @@
+<Context>
+
+<!--    RECETTE
+                     username="aleruyet"
+                     password="alan"
+-->
+
+    <!-- PROD -->
+
+    <Resource 	name="jdbc/mariadb"
+                 global="jdbc/mariadb"
+                 factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+                 auth="Container"
+                 type="javax.sql.DataSource"
+                 username="memo"
+                 password="memo"
+                 driverClassName="org.mariadb.jdbc.Driver"
+                 url="jdbc:mysql://database:3306/memo?autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=10"
+                 maxActive="300"
+                 maxIdle="200"
+                 minIdle="100"
+                 timeBetweenEvictionRunsMillis="60000"
+                 minEvictableIdleTimeMillis="60000"
+                 validationQuery="SELECT 1"
+                 validationInterval="60000"
+                 testOnBorrow="true"
+                 removeAbandonned="true"
+                 removeAvandonnedTimeout="60"
+                 defaultAutoCommit="true" />
+
+</Context>

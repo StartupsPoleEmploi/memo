@@ -1,0 +1,198 @@
+Aug 30, 2018 8:54:13 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Server version: Apache Tomcat/8.0.14 (Debian)
+Aug 30, 2018 8:54:13 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Server built:   Jul 29 2018 05:52:42
+Aug 30, 2018 8:54:13 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Server number:  8.0.14.0
+Aug 30, 2018 8:54:13 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: OS Name:        Linux
+Aug 30, 2018 8:54:13 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: OS Version:     4.4.0-133-generic
+Aug 30, 2018 8:54:14 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Architecture:   amd64
+Aug 30, 2018 8:54:14 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: JVM Version:    1.8.0_171-8u171-b11-1~bpo8+1-b11
+Aug 30, 2018 8:54:14 PM org.apache.catalina.startup.VersionLoggerListener log
+INFO: JVM Vendor:     Oracle Corporation
+Aug 30, 2018 8:54:16 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-nio-8080"]
+Aug 30, 2018 8:54:16 PM org.apache.tomcat.util.net.NioSelectorPool getSharedSelector
+INFO: Using a shared selector for servlet write/read
+Aug 30, 2018 8:54:16 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 2704 ms
+Aug 30, 2018 8:54:16 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Aug 30, 2018 8:54:16 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/8.0.14 (Debian)
+Aug 30, 2018 8:54:16 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /var/lib/tomcat8/webapps/ROOT
+Aug 30, 2018 8:54:24 PM org.apache.tomcat.jdbc.pool.ConnectionPool init
+SEVERE: Unable to create initial connections of pool.
+java.sql.SQLNonTransientConnectionException: Could not connect to address=(host=database)(port=3306)(type=master) : Connection refused (Connection refused)
+	at org.mariadb.jdbc.internal.util.ExceptionMapper.get(ExceptionMapper.java:123)
+	at org.mariadb.jdbc.internal.util.ExceptionMapper.throwException(ExceptionMapper.java:69)
+	at org.mariadb.jdbc.Driver.connect(Driver.java:110)
+	at org.apache.tomcat.jdbc.pool.PooledConnection.connectUsingDriver(PooledConnection.java:307)
+	at org.apache.tomcat.jdbc.pool.PooledConnection.connect(PooledConnection.java:200)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.createConnection(ConnectionPool.java:699)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.borrowConnection(ConnectionPool.java:633)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.init(ConnectionPool.java:484)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.<init>(ConnectionPool.java:142)
+	at org.apache.tomcat.jdbc.pool.DataSourceProxy.pCreatePool(DataSourceProxy.java:115)
+	at org.apache.tomcat.jdbc.pool.DataSourceProxy.createPool(DataSourceProxy.java:102)
+	at org.apache.tomcat.jdbc.pool.DataSourceFactory.createDataSource(DataSourceFactory.java:553)
+	at org.apache.tomcat.jdbc.pool.DataSourceFactory.getObjectInstance(DataSourceFactory.java:241)
+	at org.apache.naming.factory.FactoryBase.getObjectInstance(FactoryBase.java:94)
+	at javax.naming.spi.NamingManager.getObjectInstance(NamingManager.java:321)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:841)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:152)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:829)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:166)
+	at org.apache.catalina.core.NamingContextListener.addResource(NamingContextListener.java:1091)
+	at org.apache.catalina.core.NamingContextListener.createNamingContext(NamingContextListener.java:670)
+	at org.apache.catalina.core.NamingContextListener.lifecycleEvent(NamingContextListener.java:258)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:117)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5164)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:724)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:700)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:714)
+	at org.apache.catalina.startup.HostConfig.deployDirectory(HostConfig.java:1071)
+	at org.apache.catalina.startup.HostConfig$DeployDirectory.run(HostConfig.java:1721)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.mariadb.jdbc.internal.util.dao.QueryException: Could not connect to address=(host=database)(port=3306)(type=master) : Connection refused (Connection refused)
+	at org.mariadb.jdbc.internal.protocol.AbstractConnectProtocol.connectWithoutProxy(AbstractConnectProtocol.java:708)
+	at org.mariadb.jdbc.internal.util.Utils.retrieveProxy(Utils.java:471)
+	at org.mariadb.jdbc.Driver.connect(Driver.java:105)
+	... 33 more
+Caused by: java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at java.net.Socket.connect(Socket.java:538)
+	at org.mariadb.jdbc.internal.protocol.AbstractConnectProtocol.connect(AbstractConnectProtocol.java:350)
+	at org.mariadb.jdbc.internal.protocol.AbstractConnectProtocol.connectWithoutProxy(AbstractConnectProtocol.java:703)
+	... 35 more
+
+Aug 30, 2018 8:54:24 PM org.apache.naming.NamingContext lookup
+WARNING: Unexpected exception resolving reference
+java.sql.SQLNonTransientConnectionException: Could not connect to address=(host=database)(port=3306)(type=master) : Connection refused (Connection refused)
+	at org.mariadb.jdbc.internal.util.ExceptionMapper.get(ExceptionMapper.java:123)
+	at org.mariadb.jdbc.internal.util.ExceptionMapper.throwException(ExceptionMapper.java:69)
+	at org.mariadb.jdbc.Driver.connect(Driver.java:110)
+	at org.apache.tomcat.jdbc.pool.PooledConnection.connectUsingDriver(PooledConnection.java:307)
+	at org.apache.tomcat.jdbc.pool.PooledConnection.connect(PooledConnection.java:200)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.createConnection(ConnectionPool.java:699)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.borrowConnection(ConnectionPool.java:633)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.init(ConnectionPool.java:484)
+	at org.apache.tomcat.jdbc.pool.ConnectionPool.<init>(ConnectionPool.java:142)
+	at org.apache.tomcat.jdbc.pool.DataSourceProxy.pCreatePool(DataSourceProxy.java:115)
+	at org.apache.tomcat.jdbc.pool.DataSourceProxy.createPool(DataSourceProxy.java:102)
+	at org.apache.tomcat.jdbc.pool.DataSourceFactory.createDataSource(DataSourceFactory.java:553)
+	at org.apache.tomcat.jdbc.pool.DataSourceFactory.getObjectInstance(DataSourceFactory.java:241)
+	at org.apache.naming.factory.FactoryBase.getObjectInstance(FactoryBase.java:94)
+	at javax.naming.spi.NamingManager.getObjectInstance(NamingManager.java:321)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:841)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:152)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:829)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:166)
+	at org.apache.catalina.core.NamingContextListener.addResource(NamingContextListener.java:1091)
+	at org.apache.catalina.core.NamingContextListener.createNamingContext(NamingContextListener.java:670)
+	at org.apache.catalina.core.NamingContextListener.lifecycleEvent(NamingContextListener.java:258)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:117)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5164)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:724)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:700)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:714)
+	at org.apache.catalina.startup.HostConfig.deployDirectory(HostConfig.java:1071)
+	at org.apache.catalina.startup.HostConfig$DeployDirectory.run(HostConfig.java:1721)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.mariadb.jdbc.internal.util.dao.QueryException: Could not connect to address=(host=database)(port=3306)(type=master) : Connection refused (Connection refused)
+	at org.mariadb.jdbc.internal.protocol.AbstractConnectProtocol.connectWithoutProxy(AbstractConnectProtocol.java:708)
+	at org.mariadb.jdbc.internal.util.Utils.retrieveProxy(Utils.java:471)
+	at org.mariadb.jdbc.Driver.connect(Driver.java:105)
+	... 33 more
+Caused by: java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at java.net.Socket.connect(Socket.java:538)
+	at org.mariadb.jdbc.internal.protocol.AbstractConnectProtocol.connect(AbstractConnectProtocol.java:350)
+	at org.mariadb.jdbc.internal.protocol.AbstractConnectProtocol.connectWithoutProxy(AbstractConnectProtocol.java:703)
+	... 35 more
+
+Aug 30, 2018 8:54:24 PM org.apache.catalina.core.NamingContextListener addResource
+WARNING: Failed to register in JMX: javax.naming.NamingException: Could not connect to address=(host=database)(port=3306)(type=master) : Connection refused (Connection refused)
+log4j:ERROR Could not find value for key log4j.appender.stdout
+log4j:ERROR Could not instantiate appender named "stdout".
+Aug 30, 2018 8:54:31 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deployment of web application directory /var/lib/tomcat8/webapps/ROOT has finished in 14,964 ms
+Aug 30, 2018 8:54:31 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /var/lib/tomcat8/webapps/old_ROOT
+Aug 30, 2018 8:54:32 PM org.apache.jasper.servlet.TldScanner scanJars
+INFO: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+Aug 30, 2018 8:54:32 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deployment of web application directory /var/lib/tomcat8/webapps/old_ROOT has finished in 1,352 ms
+Aug 30, 2018 8:54:32 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-nio-8080"]
+Aug 30, 2018 8:54:32 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 16610 ms
+Aug 31, 2018 8:58:57 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Server version: Apache Tomcat/8.0.14 (Debian)
+Aug 31, 2018 8:58:57 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Server built:   Jul 29 2018 05:52:42
+Aug 31, 2018 8:58:57 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Server number:  8.0.14.0
+Aug 31, 2018 8:58:57 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: OS Name:        Linux
+Aug 31, 2018 8:58:57 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: OS Version:     4.4.0-133-generic
+Aug 31, 2018 8:58:57 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: Architecture:   amd64
+Aug 31, 2018 8:58:58 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: JVM Version:    1.8.0_171-8u171-b11-1~bpo8+1-b11
+Aug 31, 2018 8:58:58 AM org.apache.catalina.startup.VersionLoggerListener log
+INFO: JVM Vendor:     Oracle Corporation
+Aug 31, 2018 8:59:00 AM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-nio-8080"]
+Aug 31, 2018 8:59:00 AM org.apache.tomcat.util.net.NioSelectorPool getSharedSelector
+INFO: Using a shared selector for servlet write/read
+Aug 31, 2018 8:59:00 AM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 2558 ms
+Aug 31, 2018 8:59:00 AM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Aug 31, 2018 8:59:00 AM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/8.0.14 (Debian)
+Aug 31, 2018 8:59:00 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /var/lib/tomcat8/webapps/ROOT
+log4j:ERROR Could not find value for key log4j.appender.stdout
+log4j:ERROR Could not instantiate appender named "stdout".
+Aug 31, 2018 8:59:19 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deployment of web application directory /var/lib/tomcat8/webapps/ROOT has finished in 18,686 ms
+Aug 31, 2018 8:59:19 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /var/lib/tomcat8/webapps/old_ROOT
+Aug 31, 2018 8:59:20 AM org.apache.jasper.servlet.TldScanner scanJars
+INFO: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+Aug 31, 2018 8:59:20 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deployment of web application directory /var/lib/tomcat8/webapps/old_ROOT has finished in 1,633 ms
+Aug 31, 2018 8:59:20 AM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-nio-8080"]
+Aug 31, 2018 8:59:20 AM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 20751 ms

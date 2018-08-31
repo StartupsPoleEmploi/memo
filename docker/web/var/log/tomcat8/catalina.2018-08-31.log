@@ -1,0 +1,20 @@
+31-Aug-2018 08:58:57.961 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version: Apache Tomcat/8.0.14 (Debian)
+31-Aug-2018 08:58:57.983 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:   Jul 29 2018 05:52:42
+31-Aug-2018 08:58:57.985 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server number:  8.0.14.0
+31-Aug-2018 08:58:57.988 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:        Linux
+31-Aug-2018 08:58:57.993 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:     4.4.0-133-generic
+31-Aug-2018 08:58:57.997 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:   amd64
+31-Aug-2018 08:58:58.000 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:    1.8.0_171-8u171-b11-1~bpo8+1-b11
+31-Aug-2018 08:58:58.005 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:     Oracle Corporation
+31-Aug-2018 08:59:00.022 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+31-Aug-2018 08:59:00.146 INFO [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+31-Aug-2018 08:59:00.185 INFO [main] org.apache.catalina.startup.Catalina.load Initialization processed in 2558 ms
+31-Aug-2018 08:59:00.445 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service Catalina
+31-Aug-2018 08:59:00.448 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet Engine: Apache Tomcat/8.0.14 (Debian)
+31-Aug-2018 08:59:00.525 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory /var/lib/tomcat8/webapps/ROOT
+31-Aug-2018 08:59:19.225 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory /var/lib/tomcat8/webapps/ROOT has finished in 18,686 ms
+31-Aug-2018 08:59:19.227 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory /var/lib/tomcat8/webapps/old_ROOT
+31-Aug-2018 08:59:20.853 INFO [localhost-startStop-1] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+31-Aug-2018 08:59:20.861 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory /var/lib/tomcat8/webapps/old_ROOT has finished in 1,633 ms
+31-Aug-2018 08:59:20.888 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+31-Aug-2018 08:59:20.939 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in 20751 ms

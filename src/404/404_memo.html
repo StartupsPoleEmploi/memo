@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="shortcut icon" href="./favicon.ico">
+		<title>MEMO : 404</title>
+		<style type="text/css">
+  			body {
+				background: #fff;
+				font-family: Verdana, Arial, sans-serif;
+			}
+			.logo {
+			}
+			#logoHomeHeader {
+				display: inline;
+				cursor: pointer;
+			}
+			#logoPEHeader {
+				float:right;
+                                cursor: pointer;
+                        }
+			#logoPEHeader img {
+				height: 52px;
+			}
+			h1 {
+ 		   		font-size: 36px;
+			}
+			.bloc_maintenance {
+    				background-size: cover;
+    				background-image: url("http://memo.pole-emploi.fr/404/home_maintenance.jpg");
+    				padding: 80px;
+				color: white;
+			}
+			.maintenance {
+				text-align: center;
+				padding: 15px;
+				font-size: 36px;
+			}			
+		</style>
+	</head>
+	<body> 
+		<div class="logo">
+			<div  id="logoHomeHeader"><img src="http://memo.pole-emploi.fr/404/memo.png" alt="Logo MEMO"></div>
+			<div id="logoPEHeader"><a href="http://www.pole-emploi.fr" target="_blank"><img src="http://memo.pole-emploi.fr/404/pe.png" alt="logo Pôle emploi"></a></div>
+		</div>
+
+		<div class="bloc_maintenance">
+		        <div class="maintenance">
+				<h1>
+					<div>La ressource demandée n'existe pas. Vous allez être redirigé sur la page de MEMO.</div>
+				</h1>
+	        	</div>
+        	</div>
+	</body>
+</html>
+
+<script>
+	setTimeout(function(){ window.location = "http://memo.pole-emploi.fr"; }, 5000);
+</script>
