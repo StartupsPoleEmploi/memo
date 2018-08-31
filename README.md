@@ -34,7 +34,7 @@ Clone memo repository:
 
 Install docker on your platform (https://docs.docker.com/install/)
 
-MEMO application is split in 3 containers : web (nginx,tomcat and clamav), database (mariadb) and email container (postfix).
+MEMO application is splitted in 3 containers : web (nginx,tomcat and clamav), database (mariadb) and email container (postfix).
 
 Go to the docker directory in the repository to get the setup application. 
 
