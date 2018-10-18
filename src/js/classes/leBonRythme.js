@@ -1125,7 +1125,7 @@ leBonRythme.prototype = {
     {
         var href = window.location.href.toLowerCase(), v="", l="";
 
-        v  = "<div>Retrouvez vos candidatures en un clin d'oeil</div>";
+        v  = "<div>Retrouvez vos candidatures en un clin d'œil</div>";
         l = '<img src="./pic/logo_memo.png" alt="Logo MEMO"/>';
         document.title = "MEMO";
 
