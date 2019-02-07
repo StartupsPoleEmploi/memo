@@ -1,7 +1,6 @@
 version: '2'
 services:
   web:
-<<<<<<< HEAD
     privileged: true
     env_file:
      - .env
@@ -111,81 +110,3 @@ networks:
       config:
         - subnet: 172.0.0.0/16
           gateway: 172.0.0.1   
-=======
-    restart: always
-    build:
-      context: .
-      dockerfile: dockerfile_web
-    ports:
-     - "443:443"
-     - "80:80"
-    volumes:
-     #données src du site
-     - "./web/home/www:/home/www"
-     # conf nginx, tomcat8, clamav
-     - "./web/etc/nginx/sites-available:/etc/nginx/sites-available" #memo.conf, memo-maintenance.conf, munin.conf
-     - "./web/etc/nginx/nginx.conf:/etc/nginx/nginx.conf" #nginx.conf
-     - "./web/etc/clamav/clamd.conf:/etc/clamav/clamd.conf"
-     - "./web/usr/share/tomcat8/conf/:/usr/share/tomcat8/conf/"
-     - "./web/usr/share/tomcat8/bin/setenv.sh:/usr/share/tomcat8/bin/setenv.sh"
-     # log nginx, tomcat8 
-     - "./web/var/log/nginx:/var/log/nginx"
-     - "./web/var/log/tomcat8:/var/log/tomcat8"
-     # MAJ heure du conteneur
-     - "/etc/timezone:/etc/timezone:ro"
-     - "/etc/localtime:/etc/localtime:ro"
-    links:
-      - "database:db_memo"
-      - "mail:email"
-    hostname: memo
-    networks:
-      - memo_network
-
-  database:
-    restart: always
-    build:
-      context: .
-      dockerfile: dockerfile_database
-    environment:
-     - DB_NAME=memo
-     - USER_NAME=memo
-     - USER_PASS=memo
-    ports:
-     - "3306:3306"
-    volumes:
-     # données de la bdd
-     - "./database/var/lib/mysql:/var/lib/mysql"
-     # init bdd
-     - "./database/home/database/:/home/database/"
-     # conf 
-     - "./database/etc/mysql/my.cnf:/etc/mysql/my.cnf"
-     - "./database/etc/mysql/conf.d/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf"
-     # log
-     - "./database/var/log/mysql:/var/log/mysql"
-     # MAJ heure du conteneur 
-     - "/etc/timezone:/etc/timezone:ro"
-     - "/etc/localtime:/etc/localtime:ro"
-    networks:
-      - memo_network
-
-  mail:
-    restart: always
-    build:
-      context: .
-      dockerfile: dockerfile_mail
-    volumes:
-      - "./mail/var/log:/var/log/"
-      #MAJ date/heure du conteneur
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-    networks:
-      - memo_network
-
-networks:
-  memo_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.0.0.0/16
-          gateway: 172.0.0.1
->>>>>>> branch 'master' of https://github.com/StartupsPoleEmploi/memo.git
