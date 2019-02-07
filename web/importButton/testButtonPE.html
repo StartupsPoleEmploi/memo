@@ -1,0 +1,139 @@
+<html>
+<head>
+    <title>MEMO, bouton d'import</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta content="noindex" name="robots" />
+
+    <link rel="shortcut icon" href="../pic/favicon.ico" /> </head>
+
+<link rel="stylesheet" href="../css/bootstrap/bootstrap-3.3.4.min.css">
+
+<style>
+    body
+    {
+        padding: 20px;
+    }
+
+    .btn-memo
+    {
+        border: none;
+        margin-left: 50px;
+    }
+
+</style>
+</head>
+<body>
+
+
+    <h1>Configuration du bouton « Importer dans MEMO»</h1>
+
+    <h3>Exemples d'implémentation</h3>
+
+
+    Un premier bouton. Libellé = MONTREUIL, code_postal absent, titre = Boucher-charcutier / Bouchère-charcutière (H/F)
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/067NGMH" data-id-offre="3360149" data-title="Boucher-charcutier / Bouchère-charcutière (H/F)" data-location="44300 NANTES" ></a>
+
+    <br />
+
+    Un deuxième bouton. Libellé = NANTES code_postal=44300
+    <br />
+    <a class="memo-import-button" data-url="https://candidat-r.pe-qvr.fr/offres/recherche/detail/0320020" data-id-offre="0320020" data-location="NANTES" data-zipcode="44300"></a>
+
+    <br />
+
+    Un troisième bouton. Libellé = NANTES code_postal absent
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="NANTES" ></a>
+
+    <br />
+
+    Un quatrième bouton. Libellé = 75000 PARIS code_postal absent
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="75000 PARIS" ></a>
+
+    <br />
+
+    Un Cinquième bouton. Libellé = PARIS code_postal=75001
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="PARIS" data-zipcode="75001"></a>
+
+    <br />
+
+    Un sixième bouton en taille mini. Libellé = 44300 NANTES, code_postal absent
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/2304464" data-location="44300 NANTES" data-size="detail"></a>
+
+    <br />
+
+    7ème bouton. Libellé = PAYS DE LOIRE code_postal=49001
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="PARIS" data-zipcode="49001"></a>
+
+    <br />
+
+    8ème bouton. Libellé = PAYS DE LOIRE code_postal=53001
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="PARIS" data-zipcode="53001"></a>
+
+    <br />
+
+    9ème bouton. Libellé = PAYS DE LOIRE code_postal=72001
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="PARIS" data-zipcode="72001"></a>
+
+    <br />
+
+    10ème bouton. Libellé = PAYS DE LOIRE code_postal=85001
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="PARIS" data-zipcode="85001"></a>
+
+    <br />
+
+    11ème bouton. Libellé = PACA code_postal=06001
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="NICE" data-zipcode="06001"></a>
+
+    <br />
+
+    12ème bouton. Libellé = PACA code_postal=83000
+    <br />
+    <a class="memo-import-button" data-url="https://candidat.pole-emploi.fr/offres/recherche/detail/1405267" data-location="83000 FREJUS" data-zipcode="83000"></a>
+
+    <br />
+
+
+<script src="../js/jquery-2.1.3.min.js"></script>
+<script src="../js/bootstrap/bootstrap-3.3.4.min.js"></script>
+
+    <script>
+
+        !function(d,s,id)
+        {
+            var js,
+                    fjs= d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id))
+            {
+                js= d.createElement(s);
+                js.id=id;
+                js.async=true;
+
+                if(window.location.hostname.indexOf('boomerang')>=0)
+                    js.src="http://boomerang:8080/js/importButton/memoButtonPE-min.js";
+                else if(window.location.hostname.indexOf('beta')>=0)
+                    js.src="https://memo.beta.pole-emploi.fr/js/importButton/memoButtonPE-min.js";
+                else
+                    js.src="https://memo.pole-emploi.fr/js/importButton/memoButtonPE-min.js";
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }(document,"script","memoButton");
+
+
+    </script>
+
+</body>
+
+</html>

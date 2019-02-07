@@ -1,0 +1,48 @@
+.btn-actions-details .btn-memo-on
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn.svg') no-repeat;
+}
+.btn-actions-details .btn-memo-on:hover,
+.btn-actions-details .btn-memo-on:focus
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-hover.svg') no-repeat;
+}
+
+.btn-actions-details .btn-memo-off,
+.btn-actions-details .btn-memo-off:hover
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-inactive.svg') no-repeat;
+    cursor: not-allowed;
+}
+
+.btn-actions-details .btn-memo-loading,
+.btn-actions-details .btn-memo-loading:hover
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-active.svg') no-repeat;
+    cursor: wait;
+}
+
+
+.helpers .btn-memo-on
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-mini.svg') no-repeat;
+}
+.helpers .btn-memo-on:hover,
+.helpers .btn-memo-on:focus
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-hover-mini.svg') no-repeat;
+}
+
+.helpers .btn-memo-off,
+.helpers .btn-memo-off:hover
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-inactive-mini.svg') no-repeat;
+    cursor: not-allowed;
+}
+
+.helpers .btn-memo-loading,
+.helpers .btn-memo-loading:hover
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-active-mini.svg') no-repeat;
+    cursor: wait;
+}

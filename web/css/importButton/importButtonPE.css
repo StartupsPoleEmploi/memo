@@ -1,0 +1,87 @@
+body{
+    overflow: hidden;
+    background: transparent;
+    margin: 0px;
+    padding: 0px;
+}
+
+div.memoButton{
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    -webkit-background-size: 34px 34px;
+    background-size: 34px 34px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    color: #000;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.regular div.memoButton{
+    background-image: url('../../pic/importButton/memo-btn.svg');
+}
+
+.regular div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-hover.svg');
+}
+
+.regular.error div.memoButton,
+.regular.doublon div.memoButton,
+.regular.error div.memoButton:hover,
+.regular.doublon div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-inactive.svg');
+    cursor: not-allowed;
+}
+
+.regular.loading div.memoButton,
+.regular.loading div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-active.svg');
+    cursor: wait;
+}
+
+.success div.memoButton,
+.success div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-active.svg');
+    cursor: default;
+}
+
+
+.detail div.memoButton{
+    width: 21px;
+    height: 21px;
+    background-image: url('../../pic/importButton/memo-btn-mini.svg');
+    -webkit-background-size: 18px 18px;
+    background-size: 18px 18px;
+    background-position: 2px 2px;
+}
+
+.detail div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-hover-mini.svg');
+}
+
+.detail.error div.memoButton,
+.detail.doublon div.memoButton,
+.detail.error div.memoButton:hover,
+.detail.doublon div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-inactive-mini.svg');
+}
+
+.detail.loading div.memoButton,
+.detail.loading div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-active-mini.svg');
+}
+
+.detail.success div.memoButton,
+.detail.success div.memoButton:hover
+{
+    background-image: url('../../pic/importButton/memo-btn-active-mini.svg');
+}

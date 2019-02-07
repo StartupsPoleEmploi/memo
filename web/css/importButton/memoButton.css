@@ -1,0 +1,36 @@
+
+.btn-memo
+{
+    /*border: 1px solid rgb(203, 203, 203);*/
+    border: 0px;
+    cursor: pointer;
+    color: #000;
+    font-family: verdana, arial;
+    font-size: 14px;
+    padding-left: 30px;
+}
+
+
+.btn-memo-on
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn.svg') no-repeat !important;
+}
+.btn-memo-on:hover,
+.btn-memo-on:focus
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-hover.svg') no-repeat !important;;
+}
+
+.btn-memo-off,
+.btn-memo-off:hover
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-inactive.svg') no-repeat !important;;
+    cursor: not-allowed;
+}
+
+.btn-memo-loading,
+.btn-memo-loading:hover
+{
+    background: url('https://memo.pole-emploi.fr/pic/importButton/memo-btn-active.svg') no-repeat !important;;
+    cursor: wait;
+}

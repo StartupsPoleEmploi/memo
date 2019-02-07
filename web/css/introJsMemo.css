@@ -1,0 +1,338 @@
+
+
+/* clone du bouton d'ajout de candidature dans le welcome tour introJs */
+.introjs-helperLayer a.btnHeaderText
+{
+    font-size: 32px;
+    color: #000;
+    padding-top: 10px;
+    padding-left: 15px;
+}
+
+.introjs-helperLayer a.btnHeaderText div {
+    margin-top: -15px;
+}
+
+/* clone du formulaire d'import rapide */
+.introjs-helperLayer .quickImportDiv
+{
+    padding-top: 15px;
+    margin-left: 4px;
+}
+
+.quickImportDiv .form-control,
+.quickImportDiv .btn
+{
+    border-radius: 5px !important;
+    height: 40px !important;
+}
+
+.introjs-helperLayer #quickImport
+{
+    width: 296px;
+    height: 28px !important;
+}
+
+/* clone du burger */
+
+.introjs-helperLayer .menuMargin
+{
+    margin-left: -6px;
+    margin-top: 0px;
+    margin-right: 0px;
+}
+
+.introjs-helperLayer .menuMargin a
+{
+    color: #000;
+}
+
+
+/* flêche */
+
+.introjs-arrow.top,
+.introjs-arrow.top-right,
+.introjs-arrow.top-middle{
+    top: -29px;
+    /*left: 45%;*/
+}
+.introjs-arrow {
+    border: 15px solid transparent;
+}
+
+.introjs-arrow.left{
+    left: -29px;
+}
+
+.introjs-arrow.right{
+    right: -29px;
+}
+
+/* tooltip */
+
+.introjs-tooltip
+{
+    border-radius: 10px !important;
+    padding: 30px;
+    max-width: 1000px;
+    margin-top: 7px;
+}
+
+.introjs-tooltip.introjs-right {
+    margin-left: 6px;
+}
+
+.introjs-tooltip.introjs-left {
+    margin-right: 6px;
+}
+
+.welcomeTourTitle
+{
+    color: #727272;
+    font-size: 28px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 30px;
+}
+
+.welcomeTourText
+{
+    color: #727272;
+    font-size: 22px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.introjs-bullets ul li a {
+    height: 8px;
+    width: 8px;
+    border-radius: 10px !important;
+    background-color: #C7B6FF;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.introjs-bullets ul li a.active{
+    background-color: #432F7F;
+}
+
+.introjs-tooltipbuttons
+{
+    text-align: center;
+}
+
+
+.introjs-button,
+.introjs-button:active,
+.introjs-button:hover,
+.introjs-button:focus
+{
+    margin-right: 10px;
+    margin-left: 10px;
+    font-size: 16px;
+    padding: 10px;
+    color: #fff;
+    background-color: #432F7F;
+    background-image: none;
+    border-radius: 10px !important;
+    text-decoration: none;
+    font-family: verdana, arial;
+    padding-left: 30px;
+    padding-right: 30px;
+    text-shadow: none;
+    border: none;
+    border: 1px solid #432F7F;
+}
+
+a.introjs-button.introjs-prevbutton {
+    color: #432F7F;
+    background: #FFF;
+    border: 1px solid #432F7F;
+}
+
+.introjs-skipbutton
+{
+    display: none;
+}
+
+.introjs-skipbutton.introjs-donebutton
+{
+    display: inline-block;
+}
+
+.introjs-tooltip img
+{
+    width: 100%;;
+}
+
+.introjs-tooltip .youtubeBg {
+    width: 100%;
+    height: 150px;
+    border: 2px solid #432F7F;
+    margin-top: 30px;
+}
+
+div.introImgBoard
+{
+    width: 800px;
+    min-height: 434px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+div.introImgOffice
+{
+    width: 615px;
+    min-height: 404px;
+    margin-right: 150px;
+    margin-left: 150px;
+}
+
+@media screen and (min-width:835px) and (max-width:1200px) {
+    .introjs-helperLayer #quickImport
+    {
+        width: 169px;
+    }
+
+    div.introImgBoard,
+    div.introImgOffice
+    {
+        width: 550px;
+        min-height: 362px;
+    }
+
+    div.introImgBoard
+    {
+        margin-right: 30px;
+        margin-left: 30px;
+    }
+
+    div.introImgOffice
+    {
+        margin-right: 50px;
+        margin-left: 50px;
+    }
+}
+
+@media screen and (min-width:415px) and (max-width:834px) {
+    .introjs-helperLayer #quickImport
+    {
+        width: 154px;
+    }
+
+    div.introImgBoard,
+    div.introImgOffice
+    {
+        width: 320px;
+        min-height: 211px
+    }
+
+    div.introImgBoard
+    {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    div.introImgOffice
+    {
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    .welcomeTourTitle
+    {
+        margin-top: 25px;
+        font-size: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .welcomeTourText
+    {
+        font-size: 16px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .introjs-button,
+    .introjs-button:active,
+    .introjs-button:hover,
+    .introjs-button:focus
+    {
+        margin-right: 10px;
+        margin-left: 10px;
+        font-size: 16px;
+        padding: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+}
+
+@media screen and (max-width:414px) {
+    .introjs-helperLayer #quickImport
+    {
+        display: none;
+    }
+
+    div.introImgBoard,
+    div.introImgOffice
+    {
+        width: 240px;
+        min-height: 158px
+    }
+
+    /*img.importMemoBoard*/
+    div.introImgBoard
+    {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    /*img.importMemoOffice*/
+    div.introImgOffice
+    {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .welcomeTourTitle
+    {
+        margin-top: 20px;
+        font-size: 18px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .welcomeTourText
+    {
+        font-size: 14px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .introjs-button,
+    .introjs-button:active,
+    .introjs-button:hover,
+    .introjs-button:focus
+    {
+        margin-right: 10px;
+        margin-left: 10px;
+        font-size: 14px;
+        padding: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+}
+
+@media screen and (max-width:640px) {
+    .introYouTube,
+    .introjs-tooltip .youtubeBg
+    {
+        display: none;
+    }
+
+}

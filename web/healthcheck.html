@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="fr">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+
+	<head>
+	  <meta charset="utf-8" />
+	  <title>MEMO HealthCheck</title>
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	  <meta content="width=device-width, initial-scale=1" name="viewport" />
+	  <meta content="" name="description" />
+	  <meta content="" name="author" />
+	  <link rel="shortcut icon" href="./pic/favicon.ico" />
+	  <script type="text/javascript" src="./js/jquery-2.1.3.min.js"></script>	
+	</head>
+<!-- END HEAD -->
+
+	<body class="page-container-bg-solid">
+		
+		<script type="text/javascript">
+			function reportErrorHealthCheck(msg) {
+				$.ajax({
+			        type: 'GET',
+			        url: rootURL + '/rest/admin/reportErrorHealthCheck/'+msg,
+			        dataType: "json",
+	
+			        success: function (response) {
+			            if(response.result=="ok") {
+			            	console.log('report error OK');
+			            }
+			            else{
+			            	console.log('report error ERROR: ' + response);
+			            }
+			        },
+			        error: function (jqXHR, textStatus, errorThrown) {
+			            console.log('/reportErrorHealthCheck error: ' + textStatus);
+			            
+			            $.ajax({
+					        type: 'POST',
+					        url: 'https://hooks.slack.com/services/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',
+					        dataType: 'json',
+							data: 'payload=' + JSON.stringify({"text": "Service TOMCAT KO : "+textStatus, "username": "healthCheck-bot", "icon_emoji": ":monkey_face:"}),
+								
+					        success: function (response) {
+					        	console.log('servicesHookSlack ok: ' + textStatus);
+					        },
+					        error: function (jqXHR, textStatus, errorThrown) {
+					            console.log('/servicesHookSlack error: ' + textStatus);
+					        }
+					    });
+			        }
+			    });
+			}
+		
+			var rootURL = window.location.protocol+"//"+window.location.hostname;
+	
+	        if(window.location.port)
+	            rootURL+=":"+window.location.port;
+
+			$.ajax({
+	            type: 'GET',
+	            url: rootURL + '/rest/admin/healthCheck',
+	            dataType: "json",
+	
+	            success: function (response) {
+	                if(response.result=="ok") {
+	                	console.log('healthCheck OK');
+	                }
+	                else{
+	                	console.log('healthCheck ERROR: ' + response);
+	                	reportErrorHealthCheck(response.msg);
+	                }
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                console.log('/healthCheck error: ' + textStatus);
+	                reportErrorHealthCheck('Service REST KO : ' + textStatus);
+	            }
+	        });
+		</script>
+	</body>
+
+</html>

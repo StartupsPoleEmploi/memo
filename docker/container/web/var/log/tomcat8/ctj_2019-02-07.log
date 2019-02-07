@@ -1,0 +1,52 @@
+2019-02-07 10:30:09 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 10:30:09 INFO  005-002 QUARTZ Server is master.
+2019-02-07 10:32:48 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 10:32:48 INFO  005-002 QUARTZ Server is master.
+2019-02-07 10:33:59 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 10:33:59 INFO  005-002 QUARTZ Server is master.
+2019-02-07 10:34:17 INFO  004-006 UTILS reporting started. hosts=137.74.30.34:9200 index=memo-prod-metrics frequency=15
+2019-02-07 10:34:17 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NamingException: Could not connect to address=(host=db_memo)(port=3306)(type=master) : Connection refused (Connection refused)
+2019-02-07 10:34:17 ERROR 011-007 Error checking isAdmin. userId=5 error=java.lang.NullPointerException
+2019-02-07 10:34:17 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NamingException: Could not connect to address=(host=db_memo)(port=3306)(type=master) : Connection refused (Connection refused)
+2019-02-07 10:34:17 ERROR 011-005 Error loading user. userId=5 error=java.lang.NullPointerException
+2019-02-07 10:35:05 INFO  028-004 ACCOUNT Envoi d'un email de création de compte. userId=1 loginEmail=julienracine.pe@yahoo.com facebookId=0 peId=null
+2019-02-07 10:40:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 11:00:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 11:00:00 INFO  045-001 Executing interview preparation reminder
+2019-02-07 11:00:00 ERROR 006-007 MAILTOOLS Error building HTML email for admin. subject=Rapport GITHUB - Pour bien préparer votre entretien error=javax.mail.internet.AddressException: Illegal address in string ``''
+2019-02-07 11:20:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 11:40:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 12:00:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 12:00:00 INFO  045-001 Executing interview preparation reminder
+2019-02-07 12:00:00 ERROR 006-007 MAILTOOLS Error building HTML email for admin. subject=Rapport GITHUB - Pour bien préparer votre entretien error=javax.mail.internet.AddressException: Illegal address in string ``''
+2019-02-07 12:14:30 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 12:14:31 INFO  005-002 QUARTZ Server is master.
+2019-02-07 12:16:20 ERROR 004-002 UTILS Error starting metrics reporter. error=java.lang.IllegalArgumentException: protocol = http host = null
+2019-02-07 12:17:19 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 12:17:19 INFO  005-002 QUARTZ Server is master.
+2019-02-07 12:20:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 12:35:29 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 12:35:30 INFO  005-002 QUARTZ Server is master.
+2019-02-07 12:40:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 12:40:00 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NameNotFoundException: Name [comp/env] is not bound in this Context. Unable to find [comp].
+2019-02-07 12:40:00 ERROR 047-002 JOB Error processing merge double account job. error=java.lang.IllegalStateException: Can't overwrite cause with java.lang.IllegalStateException: Illegal access: this web application instance has been stopped already.  Could not load io.sentry.environment.SentryEnvironment.  The eventual following stack trace is caused by an error thrown for debugging purposes as well as to attempt to terminate the thread which caused the illegal access, and has no functional impact.
+2019-02-07 12:40:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 12:40:00 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NamingException: For input string: "@DB_PORT"
+2019-02-07 12:40:00 ERROR 047-002 JOB Error processing merge double account job. error=java.lang.NullPointerException
+2019-02-07 13:00:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 13:00:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 13:00:00 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NameNotFoundException: Name [comp/env] is not bound in this Context. Unable to find [comp].
+2019-02-07 13:00:00 ERROR 047-002 JOB Error processing merge double account job. error=java.lang.IllegalStateException: Can't overwrite cause with java.lang.IllegalStateException: Illegal access: this web application instance has been stopped already.  Could not load io.sentry.environment.SentryEnvironment.  The eventual following stack trace is caused by an error thrown for debugging purposes as well as to attempt to terminate the thread which caused the illegal access, and has no functional impact.
+2019-02-07 13:00:00 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NamingException: For input string: "@DB_PORT"
+2019-02-07 13:00:00 ERROR 047-002 JOB Error processing merge double account job. error=java.lang.NullPointerException
+2019-02-07 13:00:03 ERROR 004-002 UTILS Error starting metrics reporter. error=java.lang.IllegalArgumentException: protocol = http host = null
+2019-02-07 13:00:03 INFO  045-001 Executing interview preparation reminder
+2019-02-07 13:00:03 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NamingException: For input string: "@DB_PORT"
+2019-02-07 13:00:03 ERROR 045-009 Error processing prep reminder alert. userId=0 error=java.lang.NullPointerException
+2019-02-07 13:00:03 ERROR 006-007 MAILTOOLS Error building HTML email for admin. subject=Rapport @ENV - Pour bien préparer votre entretien error=javax.mail.internet.AddressException: Missing local name in string ``@EMAIL_NOREPLY''
+2019-02-07 13:20:00 INFO  047-001 JOB Executing double account merge job
+2019-02-07 13:20:00 ERROR 007-001 DATABASE Error fetching database connection. error=javax.naming.NamingException: For input string: "@DB_PORT"
+2019-02-07 13:20:00 ERROR 047-002 JOB Error processing merge double account job. error=java.lang.NullPointerException
+2019-02-07 13:31:33 INFO  005-001 QUARTZ Quartz started - isMaster=true
+2019-02-07 13:31:33 INFO  005-002 QUARTZ Server is master.
+2019-02-07 13:33:01 ERROR 004-002 UTILS Error starting metrics reporter. error=java.lang.IllegalArgumentException: protocol = http host = null

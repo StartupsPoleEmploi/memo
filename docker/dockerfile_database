@@ -1,0 +1,46 @@
+FROM debian:jessie
+
+ARG DB_POOL_SIZE
+ARG DB_AUTO_INCREMENT_OFFSET
+ARG ENV
+ARG IPTABLES
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && \
+    apt-get -y install mariadb-server && \
+    apt-get -y install iptables vim locate iptables munin-node munin-plugins-extra rsyslog
+
+# mariadb.cnf;
+RUN echo "[mysqld] \n" > /etc/mysql/conf.d/mariadb.cnf; \
+	echo "bind-address =0.0.0.0 \n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "general_log             = 0" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "innodb_file_per_table" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "innodb_buffer_pool_size = $DB_POOL_SIZE \n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "join_buffer_size        = 1M \n" >> /etc/mysql/conf.d/mariadb.cnf;	\
+	echo "server-id               = 1\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "log_bin                 = /var/log/mysql/mysql-bin.log\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "expire_logs_days        = 10\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "max_binlog_size         = 100M\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "replicate-wild-ignore-table=mysql.%\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "binlog_format=ROW\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "auto_increment_increment=2\n" >> /etc/mysql/conf.d/mariadb.cnf; \
+	echo "auto_increment_offset=$DB_AUTO_INCREMENT_OFFSET\n" >> /etc/mysql/conf.d/mariadb.cnf; 
+# pas de réplication en local, ni en recette
+RUN if [ "$ENV" = "LOCAL" ] || [ "$ENV" = "RECETTE" ] || [ "$ENV" = "GITHUB" ]; then echo "skip-log-bin\n" >> /etc/mysql/conf.d/mariadb.cnf; fi
+	
+
+RUN echo "allow ^172\..*" >>/etc/munin/munin-node.conf && \
+    ln -s /usr/share/munin/plugins/mysql_slowqueries  /etc/munin/plugins/mysql_slowqueries; \
+    ln -s /usr/share/munin/plugins/mysql_threads /etc/munin/plugins/mysql_threads; \
+    ln -s /usr/share/munin/plugins/mysql_queries /etc/munin/plugins/mysql_queries; \
+    ln -s /usr/share/munin/plugins/mysql_bytes /etc/munin/plugins/mysql_bytes; \
+    ln -s /usr/share/munin/plugins/mysql_innodb /etc/munin/plugins/mysql_innodb;
+
+CMD sh /etc/iptables.sh; \
+    chown -R mysql: /var/lib/mysql && \
+    chown -R mysql:adm /var/log/mysql && \
+    service rsyslog start; \
+    ./home/database/setAndRunDatabase.sh; \
+    service munin-node start; \
+    tail -f /dev/null

@@ -1,0 +1,9 @@
+Manifest-Version: 1
+Ant-Version: Apache Ant 1.9.6
+Created-By: 1.8.0_121-8u121-b13-0ubuntu1.16.04.2-b13 (Oracle Corporati
+ on)
+Built-by: root
+Build-version: 1-11
+Built-date: 2017-02-17 19:14:16
+Archive-name: boomerang-1.11.war
+

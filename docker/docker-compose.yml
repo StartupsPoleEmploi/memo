@@ -1,0 +1,112 @@
+version: '2'
+services:
+  web:
+    privileged: true
+    env_file:
+     - .env
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfile_web
+      args:
+       - ENV=${ENV}
+       - PATH_CSV_EXPORT=${PATH_CSV_EXPORT}
+       - PATH_EXPORT_DATALAKE_JSON=${PATH_EXPORT_DATALAKE_JSON}
+       - IPTABLES=${IPTABLES}
+    ports:
+     - "80:80"
+    volumes:
+     #données src du site
+     - "${DIR_APP_HOST}:${DIR_APP_DOCKER}"
+     # export datalake
+     - "./container/web/${PATH_EXPORT_DATALAKE_JSON}:${PATH_EXPORT_DATALAKE_JSON}"
+     #setDeployFiles.sh
+     - "./container/web/home/web:/home/web"
+     # conf nginx, tomcat8, clamav
+     - "./container/web/etc/nginx/sites-available:/etc/nginx/sites-available" #memo.conf, memo-maintenance.conf, munin.conf
+     - "./container/web/etc/nginx/nginx.conf:/etc/nginx/nginx.conf" #nginx.conf
+     - "./container/web/etc/clamav/clamd.conf:/etc/clamav/clamd.conf"
+     - "./container/web/etc/tomcat8/server.xml:/etc/tomcat8/server.xml"
+     #munin
+     - "./container/web/var/cache/munin/www:/var/cache/munin/www"
+     # log nginx, tomcat8 
+     - "./container/web/var/log/nginx:/var/log/nginx"
+     - "./container/web/var/log/tomcat8:/var/log/tomcat8"
+     # MAJ heure du conteneur
+     - "/etc/timezone:/etc/timezone:ro"
+     - "/etc/localtime:/etc/localtime:ro"
+     # firewall
+     - "./container/web/etc/iptables.sh:/etc/iptables.sh"
+    links:
+      - "database:db_memo"
+    hostname: memo_web
+    networks:
+      - memo_network
+
+  database:
+    privileged: true
+    env_file:
+     - .env
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfile_database
+      args :
+       - ENV=${ENV}
+       - DB_POOL_SIZE=${DB_POOL_SIZE}
+       - DB_AUTO_INCREMENT_OFFSET=${DB_AUTO_INCREMENT_OFFSET}
+       - IPTABLES=${IPTABLES}
+    ports:
+     - "3306:3306"
+    volumes:
+     # données de la bdd
+     - "./container/database/var/lib/mysql:/var/lib/mysql"
+     # init bdd
+     - "./container/database/home/database/:/home/database/"
+     # conf 
+     - "./container/database/etc/mysql/my.cnf:/etc/mysql/my.cnf"
+     # log
+     - "./container/database/var/log/mysql:/var/log/mysql"
+     # MAJ heure du conteneur 
+     - "/etc/timezone:/etc/timezone:ro"
+     - "/etc/localtime:/etc/localtime:ro"
+     # firewall
+     - "./container/database/etc/iptables.sh:/etc/iptables.sh"
+    hostname: memo_database
+    networks:
+      - memo_network
+
+  mail:
+    privileged: true
+    restart: always
+    env_file:
+     - .env
+    build:
+      context: .
+      dockerfile: dockerfile_mail
+      args:
+       - DOMAIN=${DOMAIN}
+       - DKIM_SELECTOR=${DKIM_SELECTOR}
+       - DKIM_PRIVATEKEY=${DKIM_PRIVATEKEY}
+       - IPTABLES=${IPTABLES}         
+    volumes:
+      - ./container/mail/var/log:/var/log/
+      #File d attente des emails
+      - ./container/mail/var/spool:/var/spool/postfix
+      #MAJ date/heure du conteneur
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      #firewall
+      - "./container/mail/etc/iptables.sh:/etc/iptables.sh"
+    hostname: memo_mail
+    networks:
+      - memo_network
+
+
+networks:
+  memo_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.0.0.0/16
+          gateway: 172.0.0.1   

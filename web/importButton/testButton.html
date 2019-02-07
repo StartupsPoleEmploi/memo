@@ -1,0 +1,254 @@
+<html>
+<head>
+    <title>MEMO, bouton d'import</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <meta content="noindex" name="robots" />
+
+
+    <link rel="shortcut icon" href="../pic/favicon.ico" /> </head>
+
+<style>
+    body
+    {
+        padding: 20px;
+    }
+
+    .btn-memo
+    {
+        height: 32px;
+        width: 250px;
+        border-style: outset;
+    }
+
+</style>
+</head>
+<body>
+
+<a href="javascript:showFrench();">Version française</a> - <a href="javascript:showEnglish();">English version</a>
+
+<div id="french">
+    <h1>Configuration du bouton « Importer dans MEMO»</h1>
+
+    <h3>Contexte</h3>
+
+    Le bouton MEMO va permettre aux utilisateurs de votre site d'importer les offres qu'ils choisissent sur votre site dans leur tableau de bord <a href="https://memo.pole-emploi.fr" target="_blank">MEMO</a> qui regroupe l'ensemble de leurs candidatures (offres issues des job boards, candidatures spontanées, réseau personnel…).
+    <br /><br />
+    Vous pouvez voir des exemples d'intégration sur les sites de <a href="" target="_blank">La Bonne Boîte</a> et de <a href="" target="_blank">Pôle emploi</a>.
+    <br /><br />
+    MEMO est un produit opéré par Pôle emploi.
+    <br /><br />
+
+
+    <h3>Etape 1 : Positionner une ou plusieurs balises &lt;a&gt;</h3>
+
+    Placez une balise <strong>&lt;a&gt;</strong> à l'emplacement où vous voulez voir apparaître un bouton d'import MEMO.
+    <br /><br />
+    <strong>&lt;a class="memo-import-button" data-url="<i>[url_de_l_offre_a_importer]</i>" data-style="<i>[classe css]</i>" data-title="<i>[titre de l'offre]</i>"&gt;&lt;/a&gt;</strong>
+    <br /><br />
+    <strong>class</strong> : mettre la valeur de classe memo-import-button pour que cette balise &lt;a&gt; soit identifiée et qu'un bouton MEMO soit insérée dedans
+    <br /><br />
+    <strong>data-url</strong> : L'attribut data-url doit contenir l'adresse de l'offre à importer. Il doit être encodé avec la méthode javascript encodeURIComponent ou équivalent.
+    <br /><br />
+    <strong>data-style</strong> : (facultatif) une classe à appliquer au bouton. LISTE DES CLASSES A DEFINIR
+    <br /><br />
+    <strong>data-title</strong> : (facultatif) Le titre de l'offre.
+    <br /><br />
+
+
+    <h3>Etape 2 : Script de génération des boutons</h3>
+
+    Placez le snippet javascript suivant avant la balise <strong>&lt;/body&gt;</strong> afin de convertir les balises <strong>&lt;a&gt;</strong> en boutons d'import. Pour information, ce script réalise un traitement asynchrone qui ne ralentira pas le chargement des autres ressources de la page.
+    <br /><br />
+    <blockquote>
+        &lt;script&gt;
+        <br />
+        <div style="margin-left:30px">!function(d,s,id)<br />
+            {</div>
+        <div style="margin-left:60px">var js, fjs= d.getElementsByTagName(s)[0];<br />
+            if(!d.getElementById(id))
+            { </div>
+        <div style="margin-left:90px">
+            js= d.createElement(s);<br />
+            js.id=id;<br />
+            js.async=true;<br /><br />
+            js.src="https://memo.pole-emploi.fr/js/importButton/memoButton-min.js";<br />
+            fjs.parentNode.insertBefore(js,fjs);<br />
+        </div>
+        <div style="margin-left:60px">}</div>
+        <div style="margin-left:30px">}(document,"script","memoScript");</div>
+        &lt;/script&gt;
+    </blockquote>
+
+    <br /><br />
+
+    <h3>Exemples d'implémentation</h3>
+
+    LabonneBoite : Un premier bouton
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/api/v1/office/81973158900027/details" data-title="Informaticien" data-intro-js="1"></a>
+
+    <br />
+    <br />
+
+    Un deuxième bouton
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+
+    <br />
+    <br />
+
+    Un troisième bouton
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+    <br />
+    <br />
+
+    Un quatrième bouton
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+
+    <br />
+
+</div>
+
+
+<div id="english" style="display:none;">
+    <h1>Setting up the « Import into MEMO » button</h1>
+
+    <h3>Context</h3>
+
+    The MEMO button allow your site's visitors to import job offers in their MEMO dashboard. This dashboard contains all their candidacies (job positions found on job boards, spontaneous applications, personal network opportunities…).
+    <br /><br />
+    You can see examples of "import" buttons on <a href="" target="_blank">La Bonne Boîte</a> and <a href="" target="_blank">Pôle emploi</a>
+    <br /><br />
+    MEMO is operated by Pôle emploi.
+    <br /><br />
+
+
+    <h3>Step 1 : Position one or several &lt;a&gt; tags</h3>
+
+        Put an <strong>&lt;a&gt;</strong> tag where you want the "import" button to appear.
+        <br /><br />
+        <strong>&lt;a class="memo-import-button" data-url="<i>[url_of_the_job_offer_to_import]</i>" data-title="<i>[offre_title]</i>" data-style="<i>[button_]</i>"&gt;&lt;/a&gt;</strong>
+        <br /><br />
+        <strong>class</strong> : put the value <strong>memo-import-button</strong> for this <strong>&lt;a&gt;</strong> tag to be transformed in a MEMO button.
+        <br /><br />
+        <strong>data-url</strong> : This attribute must contain the job offer address and be URLEncoded. (use encodeURIComponent in javascript).
+        <br /><br />
+        <strong>data-style</strong> : (optional) a css class to apply to the button.
+        <br /><br />
+        <strong>data-title</strong> : (optional) the offer title.
+        <br /><br />
+    </h3>
+
+
+
+    <h3>Step 2 : Button generator script</h3>
+
+    Put this javascript snippet before the <strong>&lt;/body&gt;</strong> tag in order to transform the <strong>&lt;a&gt;</strong> tags into "import" buttons. Note that this script is asynchronous and will not slow the loading of the rest of the page.
+    <br /><br />
+    <blockquote>
+        &lt;script&gt;
+        <br />
+        <div style="margin-left:30px">!function(d,s,id)<br />
+            {</div>
+        <div style="margin-left:60px">var js, fjs= d.getElementsByTagName(s)[0];<br />
+            if(!d.getElementById(id))
+            { </div>
+        <div style="margin-left:90px">
+            js= d.createElement(s);<br />
+            js.id=id;<br />
+            js.async=true;<br /><br />
+            js.src="https://memo.pole-emploi.fr/js/importButton/memoButtonPE-min.js";<br />
+            fjs.parentNode.insertBefore(js,fjs);<br />
+        </div>
+        <div style="margin-left:60px">}</div>
+        <div style="margin-left:30px">}(document,"script","memoScript");</div>
+        &lt;/script&gt;
+    </blockquote>
+
+    <br /><br />
+
+
+    <h3>Example</h3>
+
+    A first button
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+
+    <br />
+    <br />
+
+
+    A second button
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+
+    <br />
+    <br />
+
+    A third button
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+    <br />
+    <br />
+
+    A fourth button
+    <br />
+    <a class="memo-import-button" data-url="https://labonneboite.pole-emploi.fr/38396013500275/details" data-title="Informaticien"></a>
+
+    <br />
+
+
+</div>
+
+<script>
+    !function(d,s,id)
+    {
+        var js,
+                fjs= d.getElementsByTagName(s)[0];
+        if(!d.getElementById(id))
+        {
+            js= d.createElement(s);
+            js.id=id;
+            js.async=true;
+
+            if(window.location.hostname.indexOf('boomerang')>=0)
+                js.src="http://boomerang:8080/js/importButton/memoButton-min.js";
+            else if(window.location.hostname.indexOf('beta')>=0)
+                js.src="https://memo.beta.pole-emploi.fr/js/importButton/memoButton-min.js";
+            else
+                js.src="https://memo.pole-emploi.fr/js/importButton/memoButton-min.js";
+
+            fjs.parentNode.insertBefore(js,fjs);
+        }
+    }(document,"script","memoButton");
+
+
+    function showFrench()
+    {
+        console.log("-> FR");
+        $("#english").hide();
+        $("#french").show();
+    }
+
+    function showEnglish()
+    {
+        console.log("-> EN");
+        $("#french").hide();
+        $("#english").show();
+    }
+
+</script>
+
+<script src="../js/jquery-2.1.3.min.js"></script>
+<script src="../js/bootstrap/bootstrap-3.3.4.min.js"></script>
+
+</body>
+
+</html>

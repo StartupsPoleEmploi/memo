@@ -1,0 +1,66 @@
+FROM debian:jessie
+
+ARG PATH_CSV_EXPORT
+ARG PATH_EXPORT_DATALAKE_JSON
+ARG ENV
+ARG IPTABLES
+
+ENV TOMCAT_VER tomcat8
+
+RUN echo "#backports\ndeb http://http.debian.net/debian jessie-backports main" >>/etc/apt/sources.list && \
+    apt-get update && \
+    apt -y install -t jessie-backports openjdk-8-jdk ca-certificates-java && \
+    apt-get -y install nginx ${TOMCAT_VER} vim telnet locate net-tools && \
+    apt-get -y install munin munin-node munin-plugins-extra libdbd-mysql-perl libcache-cache-perl libnet-server-perl gawk && \
+    apt-get -y install clamav-daemon && \
+    apt-get -y install iptables rsyslog logrotate cron
+
+# TOMCAT8
+RUN mkdir -p /usr/share/${TOMCAT_VER}/logs /usr/share/${TOMCAT_VER}/temp /usr/share/${TOMCAT_VER}/common/classes /usr/share/${TOMCAT_VER}/common /usr/share/${TOMCAT_VER}/server/classes /usr/share/${TOMCAT_VER}/shared/classes /usr/share/${TOMCAT_VER}/conf
+RUN mkdir -p /usr/share/${TOMCAT_VER}/conf/ /home/www /home/www/ROOT/tmp && \
+    mv /var/lib/${TOMCAT_VER}/webapps/ROOT /var/lib/${TOMCAT_VER}/webapps/old_ROOT && \
+    ln -s /home/www/ROOT /var/lib/${TOMCAT_VER}/webapps/ROOT 
+
+# setenv.sh
+RUN if [ "$ENV" = "PROD" ] ; \
+	then echo "#!/bin/sh\nCATALINA_OPTS=\"-Dfile.encoding=UTF-8\"\nJAVA_OPTS=\"-Xms128m -Xmx1024m -XX:MaxPermSize=256m\"" > /usr/share/${TOMCAT_VER}/bin/setenv.sh; \
+	else echo "#!/bin/sh\nCATALINA_OPTS=\"-Dfile.encoding=UTF-8 -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n\"\nJAVA_OPTS=\"-Xms128m -Xmx512m -XX:MaxPermSize=256m\"" > /usr/share/${TOMCAT_VER}/bin/setenv.sh; fi
+
+#Conf export TDB
+RUN mkdir -p $PATH_CSV_EXPORT
+
+#Conf datalake
+RUN mkdir -p $PATH_EXPORT_DATALAKE_JSON 
+
+#Conf spécifique à la RE7 - bouton memo sur LBB
+RUN if [ "$ENV" = "RECETTE" ] ; then echo "192.168.4.115 labonneboite.beta.pole-emploi.fr" >>/etc/hosts; fi
+
+# ClAMAV (antivirus) 
+RUN freshclam #update les fichiers de virus mais vu timing long de download long, on copie les fichiers d un précédent DL
+
+
+#Copie des conf du frontal
+RUN ln -s /etc/nginx/sites-available/memo.conf /etc/nginx/sites-enabled/memo.conf && \
+    ln -s /etc/nginx/sites-available/munin.conf /etc/nginx/sites-enabled/munin.conf
+
+RUN echo "[docker.web1]\naddress web1\n" >>/etc/munin/munin-conf.d/munin_custom.conf && \
+    echo "[docker.database1]\naddress database1\nuse_node_name yes\n" >>/etc/munin/munin-conf.d/munin_custom.conf && \
+    echo "[docker.mail1]\naddress mail1\nuse_node_name yes\n" >>/etc/munin/munin.conf
+   
+RUN echo "allow ^172\..*" >>/etc/munin/munin-node.conf
+
+#ClamAV (antivirus pr PJ), ${TOMCAT_VER} et nginx
+CMD sh /etc/iptables.sh; \
+	chown clamav:clamav /var/lib/clamav/ && \
+    chown ${TOMCAT_VER}:${TOMCAT_VER} -R /var/log/${TOMCAT_VER} && \
+    chown ${TOMCAT_VER}: $PATH_CSV_EXPORT && \
+    chown ${TOMCAT_VER}: $PATH_EXPORT_DATALAKE_JSON && \
+    chown -R munin: /var/cache/munin/www && \
+    ./home/web/setDeployFiles.sh; \
+    service rsyslog start; \
+    service clamav-daemon start; \
+    service ${TOMCAT_VER} start; \
+    service nginx start; \
+    service munin-node start; \
+    cron -f
+
