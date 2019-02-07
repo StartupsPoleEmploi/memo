@@ -1,5 +1,6 @@
 FROM debian:jessie
 
+<<<<<<< HEAD
 ARG PATH_CSV_EXPORT
 ARG PATH_EXPORT_DATALAKE_JSON
 ARG ENV
@@ -64,3 +65,45 @@ CMD sh /etc/iptables.sh; \
     service munin-node start; \
     cron -f
 
+=======
+ENV TOMCAT tomcat8
+
+RUN echo "#backports\ndeb http://http.debian.net/debian jessie-backports main" >>/etc/apt/sources.list && \
+    apt-get update && \
+    apt -y install -t jessie-backports openjdk-8-jdk ca-certificates-java && \
+    apt-get -y install nginx ${TOMCAT} vim telnet locate net-tools && \
+    apt-get -y install munin munin-node libdbd-mysql-perl libcache-cache-perl libnet-server-perl gawk && \
+    apt-get -y install clamav-daemon && \
+    apt-get -y install rsyslog logrotate cron
+
+# TOMCAT8
+RUN mkdir -p /usr/share/$TOMCAT/logs /usr/share/$TOMCAT/temp /usr/share/$TOMCAT/common/classes /usr/share/$TOMCAT/common /usr/share/$TOMCAT/server/classes /usr/share/$TOMCAT/shared/classes /usr/share/$TOMCAT/conf
+RUN mkdir -p /usr/share/$TOMCAT/conf/ /home/www /home/www/ROOT/tmp && \
+    mv /var/lib/tomcat8/webapps/ROOT /var/lib/tomcat8/webapps/old_ROOT && \
+    ln -s /home/www/ROOT /var/lib/tomcat8/webapps/ROOT && \
+	chown tomcat8:tomcat8 /home/www/ROOT/tmp/ 
+
+# ClAMAV (antivirus) 
+RUN freshclam #update les fichiers de virus mais vu timing long de download long, on copie les fichiers d un précédent DL
+
+# MUNIN
+RUN ln -s /usr/share/munin/plugins/mysql_slowqueries  /etc/munin/plugins/mysql_slowqueries; \
+	ln -s /usr/share/munin/plugins/mysql_threads /etc/munin/plugins/mysql_threads; \
+	ln -s /usr/share/munin/plugins/mysql_queries /etc/munin/plugins/mysql_queries; \
+	ln -s /usr/share/munin/plugins/mysql_bytes /etc/munin/plugins/mysql_bytes; \
+	ln -s /usr/share/munin/plugins/mysql_innodb /etc/munin/plugins/mysql_innodb; \
+	dpkg-reconfigure munin-node
+
+# NGINX
+#Copie des conf ssl 
+RUN mkdir -p /etc/nginx/ssl
+COPY web/etc/nginx/ssl/* /etc/nginx/ssl/
+#Copie des conf du frontal
+RUN ln -s /etc/nginx/sites-available/memo.conf /etc/nginx/sites-enabled/memo.conf
+
+#ClamAV (antivirus pr PJ), tomcat8 et nginx 
+CMD chown clamav:clamav /var/lib/clamav/ && service clamav-daemon start; \
+    chown tomcat8:tomcat8 /var/log/tomcat8 && service tomcat8 start; \
+    service nginx start; \
+    cron -f
+>>>>>>> branch 'master' of https://github.com/StartupsPoleEmploi/memo.git

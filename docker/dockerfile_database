@@ -1,5 +1,6 @@
 FROM debian:jessie
 
+<<<<<<< HEAD
 ARG DB_POOL_SIZE
 ARG DB_AUTO_INCREMENT_OFFSET
 ARG ENV
@@ -44,3 +45,14 @@ CMD sh /etc/iptables.sh; \
     ./home/database/setAndRunDatabase.sh; \
     service munin-node start; \
     tail -f /dev/null
+=======
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && \
+    apt-get -y install mariadb-server && \
+    apt-get -y install vim locate 
+
+CMD chown mysql:mysql /var/log/mysql/ && ./home/database/setAndRunDatabase.sh $DB_NAME $USER_NAME $USER_PASS;\
+    tail -f /dev/null
+
+>>>>>>> branch 'master' of https://github.com/StartupsPoleEmploi/memo.git
