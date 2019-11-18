@@ -1,6 +1,0 @@
-Process Backgrounded
-2019/02/07-13:31:18 Munin::Node::Server (type Net::Server::Fork) starting! pid(223)
-Resolved [*]:4949 to [::]:4949, IPv6
-Not including resolved host [0.0.0.0] IPv4 because it will be handled by [::] IPv6
-Binding to TCP port 4949 on host :: with IPv6
-Setting gid to "0 0"
