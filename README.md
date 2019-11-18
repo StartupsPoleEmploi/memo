@@ -1,6 +1,7 @@
 
 # MEMO
 
+est un projet Open Source des Startups d'Etat Pôle emploi.
 
 # Présentation du projet
 
@@ -42,7 +43,10 @@ You can modify name of database, or credentials in docker-compose.yml, see envir
 Then, report it in datasource configuration file of web containers : META-INF/context.xml
 (By default, variables are set with memo)
 
-To run MEMO on your machine, tape : docker-compose up 
+To run MEMO on your machine, tape : 
+```
+docker-compose up
+``` 
 
 The app is available on port `80` on host machine. Open a web browser, load
 http://localhost and start browsing.
