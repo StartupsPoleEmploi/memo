@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
 --
--- Host: 167.114.255.92    Database: motivaction
+-- Host: localhost    Database: motivaction
 -- ------------------------------------------------------
--- Server version	5.5.5-10.0.37-MariaDB-0+deb8u1
+-- Server version	5.5.5-10.0.38-MariaDB-0+deb8u1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -44,7 +44,7 @@ CREATE TABLE `attachmentFiles` (
   PRIMARY KEY (`id`),
   KEY `md5` (`md5`),
   KEY `userId` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=59343 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `attachments` (
   KEY `userId` (`userId`),
   KEY `md5` (`md5`),
   KEY `candidatureId` (`candidatureId`)
-) ENGINE=InnoDB AUTO_INCREMENT=97127 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,7 +89,7 @@ CREATE TABLE `candidatureEvents` (
   KEY `eventTypeIdx` (`eventType`),
   KEY `eventSubTypeIdx` (`eventSubType`),
   CONSTRAINT `candidatureId` FOREIGN KEY (`candidatureId`) REFERENCES `candidatures` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6225021 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=418 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE `candidatures` (
   KEY `numSiretIdx` (`numSiret`),
   KEY `sourceIdIdx` (`sourceId`),
   CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3881973 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -295,7 +295,7 @@ CREATE TABLE `userLogs` (
   KEY `action` (`action`),
   KEY `domaine` (`domaine`),
   KEY `creationTime` (`creationTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=20607093 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20611101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -347,12 +347,15 @@ CREATE TABLE `users` (
   `country` varchar(100) DEFAULT NULL,
   `cityInsee` varchar(5) DEFAULT NULL,
   `toDelete` tinyint(1) DEFAULT '0',
+  `consentAccess` int(11) NOT NULL DEFAULT '1',
+  `lastAccessRefuserDate` datetime DEFAULT NULL,
+  `lastAccessRequestDate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cohorteIdx` (`cohorte`),
   KEY `sourceIdx` (`source`),
   KEY `loginIdx` (`login`),
   KEY `peIdIdx` (`peId`)
-) ENGINE=InnoDB AUTO_INCREMENT=475507 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=475586 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -442,7 +445,7 @@ DELIMITER ;;
 				ON c.id = cE.candidatureId   
 				WHERE cE.eventType = 3  
 				AND YEAR(creationTime) >= 2017  
-				AND creationTime < DATE(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01'))    # ajout d un mois pour avoir le mois courant
+				AND creationTime < DATE(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01'))    
 				GROUP BY userId, DATE_FORMAT(creationTime, '%m/%y')) vueEntretien   
 			ON vueEntretien.userId = vueActivites.userId  
 			GROUP BY vueEntretien.mois
@@ -484,7 +487,7 @@ DELIMITER ;;
 				WHERE (cE.eventSubType = 9 
 				OR cE.eventSubType = 10) 
 				AND YEAR(cE.creationTime) >= 2017 
-				AND cE.creationTime < DATE(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')) # ajout d un mois pour avoir le mois courant
+				AND cE.creationTime < DATE(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')) 
 				GROUP BY userId, mois) vueSRE 
 			ON vueSRE.userId = vueConnexions.userId 
 			GROUP BY vueSRE.mois
@@ -605,6 +608,10 @@ DELIMITER ;;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;;
 DELIMITER ;
 /*!50106 SET TIME_ZONE= @save_time_zone */ ;
+
+--
+-- Dumping routines for database 'motivaction'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -615,4 +622,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-17 11:28:33
+-- Dump completed on 2019-11-18 18:11:21
