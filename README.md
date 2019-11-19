@@ -55,18 +55,18 @@ http://localhost and start browsing.
 Main parameters of properties files are set in .env file, but some are directly defined in properties files in /src/fr/gouv/motivaction/properties/*
 
 - secret.properties :  
-	salt = a random alphanumeric value 
-    encryptorSecret = a random alphanumeric value
-    pwdSql = a string containing two question mark '?' characters
-   
+	salt = a random alphanumeric value  
+	encryptorSecret = a random alphanumeric value  
+	pwdSql = a string containing two question mark '?' characters   
 
-- mail.properties :
-
-    email.noReply = your sending email address
-    email.noReplyExt = your sending email address
-    email.personal = your sending email name
-    host = name of email container (defined in docker-compose.yml)
-    pathCSV = directory to export dashboard
+- mail.properties :  
+	email.noReply = your sending email address  
+	email.noReplyExt = your sending email address  
+	email.personal = your sending email name  
+	host = name of email container (defined in .env)  
+	
+- memo.propertie :  
+	pathCSV = directory to export dashboard
  
  
 ## Accessing your local MySQL
@@ -75,7 +75,7 @@ To access your local MySQL in your MySQL GUI :
 
 - new connection / select "SSH" tab
 - MySQL host: 127.0.0.1:3306
-- Username: memo (defined in docker-compose.yml as USER_NAME)
-- Password: memo (defined in docker-compose.yml as USER_PASS)
-- Database: memo (defined in docker-compose.yml as DB_NAME)
+- Username: memo (defined in .env as USER_NAME)
+- Password: memo (defined in .env as USER_PASS)
+- Database: memo (defined in .env as DB_NAME)
 
