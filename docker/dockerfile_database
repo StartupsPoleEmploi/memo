@@ -4,8 +4,12 @@ ARG DB_POOL_SIZE
 ARG DB_AUTO_INCREMENT_OFFSET
 ARG ENV
 ARG IPTABLES
+ARG PROXY
 
 ENV DEBIAN_FRONTEND noninteractive
+
+ENV http_proxy="$PROXY"
+ENV https_proxy="$PROXY"
 
 RUN apt-get update && \
     apt-get -y install mariadb-server && \

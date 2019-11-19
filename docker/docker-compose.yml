@@ -13,6 +13,7 @@ services:
        - PATH_CSV_EXPORT=${PATH_CSV_EXPORT}
        - PATH_EXPORT_DATALAKE_JSON=${PATH_EXPORT_DATALAKE_JSON}
        - IPTABLES=${IPTABLES}
+       - PROXY=${PROXY}
     ports:
      - "80:80"
     volumes:
@@ -56,6 +57,7 @@ services:
        - DB_POOL_SIZE=${DB_POOL_SIZE}
        - DB_AUTO_INCREMENT_OFFSET=${DB_AUTO_INCREMENT_OFFSET}
        - IPTABLES=${IPTABLES}
+       - PROXY=${PROXY}
     ports:
      - "3306:3306"
     volumes:
