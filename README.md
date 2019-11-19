@@ -37,21 +37,20 @@ Install docker on your platform (https://docs.docker.com/install/)
 
 MEMO application is splitted in 3 containers : web (nginx,tomcat and clamav), database (mariadb) and email container (postfix).
 
-Go to the docker directory in the repository to get the setup application. 
-
-You can modify name of database, or credentials in docker-compose.yml, see environment variables define in database container
-Then, report it in datasource configuration file of web containers : META-INF/context.xml
-(By default, variables are set with memo)
+Go to the docker directory in the repository to get the setup application `/your_repository_path/docker/`. 
+Edit the configuration file .env
+Set the variable `DIR_APP_HOST=/your_repository_path/web`
+In this file, you can modify name of database, or credentials, see environment variables define in database container
 
 To run MEMO on your machine, tape : 
 ```
-docker-compose up
+docker-compose up -d
 ``` 
 
 The app is available on port `80` on host machine. Open a web browser, load
 http://localhost and start browsing.
 
-## Configuration
+## Parameters
 
 Modify mandatory values in .properties files in /src/fr/gouv/motivaction/properties/*
 

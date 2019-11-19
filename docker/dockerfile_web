@@ -7,8 +7,8 @@ ARG IPTABLES
 
 ENV TOMCAT_VER tomcat8
 
-RUN echo "#backports\ndeb http://http.debian.net/debian jessie-backports main" >>/etc/apt/sources.list && \
-    apt-get update && \
+RUN echo "#backports\ndeb http://archive.debian.org/debian jessie-backports main" >>/etc/apt/sources.list && \
+    apt-get -o Acquire::Check-Valid-Until=false update && \
     apt -y install -t jessie-backports openjdk-8-jdk ca-certificates-java && \
     apt-get -y install nginx ${TOMCAT_VER} vim telnet locate net-tools && \
     apt-get -y install munin munin-node munin-plugins-extra libdbd-mysql-perl libcache-cache-perl libnet-server-perl gawk && \
