@@ -197,13 +197,16 @@
           <div class="widget-thumb-wrap">
             <i class="widget-thumb-icon bg-purple icon-screen-desktop"></i>
             <div class="widget-thumb-body">
-              <span class="" id="quartz"></span>
+              <span id="quartz"></span>
+              <span id="jobsMails"></span><a id='btStartJobsMails' style='padding-left:20px;font-size:12px;'>Start</a><a id='btStopJobsMails' style='padding-left:20px;font-size:12px;'>Stop</a><br/>
+              <span style='font-size:12px;text-transform:lowercase'>(campagne de mails, et fusion de compte)</span>
+              <span id="jobsAdmins"></span><a id='btStartJobsAdmins' style='padding-left:20px;font-size:12px;'>Start</a><a id='btStopJobsAdmins' style='padding-left:20px;font-size:12px;'>Stop</a><br/>
+              <span style='font-size:12px;text-transform:lowercase'>(extract BO)</span><br/>
+              <span id="jobsCleans">JOBS_CLEANS	: RUNNING</span>
+              <span style='font-size:12px;text-transform:lowercase'>(nettoyage des extracts TDB/BO)</span>
+              <span id="jobsCalculs"></span><a id='btStartJobsCalculs' style='padding-left:20px;font-size:12px;'>Start</a><a id='btStopJobsCalculs' style='padding-left:20px;font-size:12px;'>Stop</a><br/>
+              <span style='font-size:12px;text-transform:lowercase'>(calculs de stats et d'export datalake)</span>
             </div>
-          </div>
-          <div>
-            <a id='btStartQuartzMaster' style='padding-left:20px;font-size:12px;'>Définir comme master</a>
-            <br />
-            <a id='btStopQuartzMaster' style='padding-left:20px;font-size:12px;'>Définir comme NON master</a>
           </div>
         </div>
         <!-- END WIDGET THUMB -->
@@ -291,9 +294,33 @@
         <!-- END PORTLET-->
       </div>
     </div>
-
-
-
+    
+     <div class="row widget-row">
+				<div class="col-md-12">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet light tasks-widget">
+						<div class="portlet-title">
+							<div class="caption caption-md font-red-sunglo">
+								<span class="caption-subject theme-font bold uppercase">Test automatique :</span>
+							</div>
+						<div>
+							<a id='btdeleteAllCandidatures' style='padding-left: 20px; font-size: 12px;'>Vider mon TBD</a><br>
+								<br> <a id='btloadTDB' style='padding-left: 20px; font-size: 12px;'>Charger mon TDB</a> 
+								<b id="spinnerLoadTDB" style='padding-left:left;font-size:12px;display:none;'>Chargement en cours<i class="fa fa-spinner fa-spin"></i></b>
+								<span style="font-size: smaller; color: blue">(Nombre de candidatures :</span> 
+								<span style="font-size: smaller; color: red" data-counter="counterup" id="candidatureCurrentUserCount">0</span>
+								<span style="font-size: smaller; color: blue">)</span>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div id="" style="overflow: auto;"></div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+    
+    
     <div class="row widget-row" style='padding-top:15px;'>
       <div class="col-md-12">
         <div class="portlet light tasks-widget">

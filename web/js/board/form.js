@@ -6,6 +6,7 @@ function CandidatureForm(board)
 CandidatureForm.prototype = {
 
     board: null,
+    saveCandidatureSemaphore : null,
 
     init: function (board) {
         var t = this;
@@ -353,7 +354,13 @@ CandidatureForm.prototype = {
             this.afterChangeSave = "showActives";
             this.showUnsavedModal();
         }
-        else {
+        else if(this.board.candidatureOpenedFrom && this.board.candidatureOpenedFrom == 'calendar')
+        {
+            lBR.showCalendar(h);
+            $wST(0);
+        }
+        else
+        {
             if (h != 1) {
                 if (this.board.archiveMode)
                     $Hist({id: "archivedCandidatures"});
@@ -821,6 +828,12 @@ CandidatureForm.prototype = {
         var etat = evt.currentTarget.value;
         this.etat.val(etat);
         this.saveCandidature();
+
+        ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'Candidature',
+                    eventAction: 'saveTunnel'
+                });
     },
 
 
@@ -851,6 +864,8 @@ CandidatureForm.prototype = {
             v, ok = true,
             evt, candId;
 
+        //console.log("saveCandidatureSemaphore : ",t.saveCandidatureSemaphore);
+
         // Si le paramètre async n'est pas renseigné, il est valorisé automatiquement à TRUE
         if (async == undefined)
         	async = true;
@@ -868,7 +883,10 @@ CandidatureForm.prototype = {
 
         ok = t.checkFormValues();
 
-        if (ok) {
+        if (ok && !t.saveCandidatureSemaphore) {
+
+            t.saveCandidatureSemaphore = 1;     // protection pour empêcher la création de plusieurs doublons si l'utilisateur matraque le bouton de sauvegarde
+
             c.nomCandidature = nC;
             c.nomSociete = nS;
             c.numSiret = numS;
@@ -912,6 +930,8 @@ CandidatureForm.prototype = {
                 dataType: "json",
 
                 success: function (response) {
+
+                    lBR.board.form.saveCandidatureSemaphore = 0;
 
                     if (response.result == "ok") {
                     	candId = response.id;
@@ -969,6 +989,9 @@ CandidatureForm.prototype = {
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+
+                    lBR.board.form.saveCandidatureSemaphore = 0;
+
                     // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
                     toastr['error']("Erreur lors de l'enregistrement de la candidature", "Une erreur s'est produite " + errorThrown);
                     lBR.board.form.displayFormAfterSaveError();
@@ -1304,6 +1327,8 @@ CandidatureForm.prototype = {
                 lBR.showArchives();
             else if (aC == "showVideo")
                 lBR.showVideo();
+            else if (aC == "showCalendar")
+                lBR.showCalendar();
             else if (aC == "history")
                 history.go(-1);
 

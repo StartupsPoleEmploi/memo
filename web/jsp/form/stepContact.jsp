@@ -3,7 +3,7 @@
 <div id="candidatureFormStepContact" class="formTunnelBloc" style="display:none;">
 
   <div>
-    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1>Enregistrer votre contact</h1></div>
+    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><span>Enregistrer votre contact</span></div>
     <div class="mt-element-step" style="width: 70%;margin: auto;margin-bottom:20px;">
 		<div class="row step-default">
 	      <div class="col-md-4 bg-grey mt-step-col active" style="padding-top:7px; padding-bottom:7px;border-right: 1px solid #eef1f5;">

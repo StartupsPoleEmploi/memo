@@ -1,0 +1,21 @@
+
+
+.spinner
+{
+    padding-top: 200px;
+    padding-bottom: 200px;
+    font-size: 32px;
+    text-align: center;
+    color: #343C45;    
+}
+
+.spinner i
+{
+    font-size: 48px;
+}
+
+.modalForm .spinner
+{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}

@@ -1,0 +1,689 @@
+
+
+#welcomeLogo
+{
+    text-align: center;
+    font-size: 32px;
+}
+
+header
+{
+    margin: auto;
+    height: 63px;
+}
+
+.headerContent
+{
+    margin: auto;
+    max-width: 1440px;
+    height: 100%;
+}
+
+body
+{
+    font-family: 'Roboto', sans-serif;
+}
+
+.body.withUser
+{
+    margin-top:63px;    
+}
+
+.headerConnectButton
+{
+    background: #fff;
+    border: #000 1px solid;
+    border-radius: 6px !important;
+    color: #777;
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+    padding: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 15px;
+}
+
+.headerConnectButton:hover
+{
+    background: #979797;
+    color: #fff;
+}
+
+.home
+{
+    width: 100%;
+    max-width: 1440px;
+    margin: auto;
+    padding-left: 15px;
+    background-image: url("../pic/image-pc.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: auto;
+}
+
+.homeMainTitle
+{
+    padding-top: 150px;
+}
+
+.home h1
+{
+    font-size: 40px;
+    color: #343C45;
+    max-width: 800px;
+    font-weight: bold;
+}
+
+.home h2
+{
+    color: #343C45;
+    font-family: Roboto;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.home h3
+{
+    font-size: 24px;
+    color: #343C45;
+    max-width: 800px;
+}
+
+
+@media screen and (max-width:520px)
+{
+    .home h1
+    {
+        font-size: 32px;
+    }
+
+    .home h3
+    {
+        font-size: 20px;
+    }
+
+    .homeMainTitle
+    {
+        padding-top: 20px;
+        text-align:center;
+    }
+
+    .home{
+        background:none;
+        padding-right: 15px;
+    }
+
+    .headerConnectButton
+    {
+        margin-right: 0px;
+    }
+
+    .FSE
+    {
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+}
+
+@media screen and (min-width:521px) and (max-width:800px)
+{
+    .home h1,
+    .home h3{
+        max-width: 300px;
+    }
+
+    .home h1
+    {
+        font-size: 36px;
+    }
+
+    .home h3
+    {
+        font-size: 22px;
+    }
+
+    .home
+    {
+        background-size:50%;
+    }
+
+    .homeMainTitle
+    {
+        text-align:center;
+        padding-top: 20px;
+    }
+}
+
+@media screen and (min-width:801px) and (max-width:1200px)
+{
+    .home {
+        background-size: 60%;
+    }
+    .home h1,
+    .home h3{
+        max-width: 500px;
+    }
+    .homeMainTitle
+    {
+        padding-top: 100px;
+    }
+}
+
+
+
+.home p
+{
+    color: #343C45;
+    font-family: Roboto;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+
+
+.homeStartButton
+{
+    height: 53px;
+    width: 201px;
+    border-radius: 5px !important;
+    background-color: #5371F8;
+    color: #FFFFFF;
+    font-size: 25px;
+    line-height: 29px;
+    padding: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+    margin-top: 20px;
+}
+.homeStartButton:hover
+{
+    background-color: #3749E3;
+}
+
+.FSE
+{
+    height: 53px;	
+    width: 277px;	
+    border-radius: 5px;	
+    background-color: #FFFFFF;	
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0.13);
+    margin-top: 40px;
+}
+
+.FSE img
+{
+    margin: 5px;
+}
+
+.blueLine
+{
+    width: 60px;
+    border-top: 3px solid blue;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.blueLine.center
+{
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.homeBlockMargin
+{
+    margin-top: 150px;
+}
+
+.esRanking
+{
+    width: 120px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30px;
+}
+
+.ranking
+{
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 58px;
+    text-align: center;
+    color: #343C45;
+}
+
+.rankingStars
+{
+    text-align: center;
+}
+.rankingStars img
+{
+    margin-right: 3px;
+}
+
+.rankingLink
+{
+    margin-top: 20px;
+    color: #5371F8;
+    font-family: Roboto;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+.rankingLink:hover
+{
+    text-decoration: underline;
+}
+
+
+@media screen and (max-width:991px)
+{
+    .homeBlockMargin
+    {
+        margin-top: 50px;
+        padding-right: 15px;
+    }
+
+    .homeBlockMargin h2,
+    .homeBlockMargin p
+    {
+        text-align: center;
+    }
+}
+
+.homeDashboardBorder
+{
+    width: 100%;	
+    border-radius: 10px;
+    background-color: #FFFFFF;	
+    box-shadow: 0 0 9px 0 rgba(0,0,0,0.15);
+    border-left: none;
+    padding-top: 30px;
+    padding-right: 10px;
+    padding-bottom: 0;
+}
+
+.homeDashboardBorder img
+{
+    width:100%;
+}
+
+.topMargin0
+{
+    margin-top: 0;
+}
+
+.center
+{
+    text-align: center;
+}
+
+.marginLeft30
+{
+    margin-left: 30px;
+}
+
+.homeFeatures
+{
+    background-color: rgba(115,157,253,0.1);
+    text-align: center;
+    padding: 50px 15px 0;
+    margin-top: 50px;
+    margin-right: 15px;
+}
+
+.homeFeatureList
+{
+    max-width: 900px;
+    margin : 20px auto 50px !important;
+}
+
+.homeFeature
+{
+    padding-right:24px;
+    text-align: left;
+}
+
+.homeFeature > div
+{
+    border: 1px solid #EDF1F8;
+    border-radius: 10px !important;
+    background-color: #FFFFFF;
+    box-shadow: 0 12px 17px 0 rgba(214,214,214,0.5);
+    padding-top: 35px;
+    padding-left: 20px;
+    padding-right: 20px;
+    min-height: 270px;
+}
+
+.homeFeature.last
+{
+    padding-right: 0;
+
+}
+
+.homeFeatureTitle
+{
+    color: #343C45;
+    font-size: 16px !important;
+    font-weight: 500 !important;;
+    line-height: 19px !important;;
+    margin-top: 20px;
+}
+
+.homeFeature img
+{
+    height: 44px;
+}
+
+.homeFeatureText
+{
+    color: #818181 !important;
+    font-size: 13px !important;
+    line-height: 18px !important;
+}
+
+@media screen and (max-width:520px)
+{
+    .homeFeatures
+    {
+        margin-right: 0px;
+    }
+}
+
+@media screen and (max-width:991px)
+{
+    .homeFeature > div
+    {
+        min-height: 50px;
+        padding-top: 15px;
+    }
+
+    .homeFeature
+    {
+        margin-right: auto;
+        margin-left: auto;
+        width: 90%;
+        margin-top: 15px;
+    }
+
+    .homeFeature img {
+        float: left;
+        margin-right: 20px;
+    }
+
+    .homeFeature.last
+    {
+        padding-right: 20px;
+
+    }
+}
+
+
+.homeCommentCarroussel
+{
+    margin-top: 40px;
+}
+
+.homeComments
+{
+    padding-top: 50px;
+    text-align: center;
+    margin-right: 15px;
+
+}
+
+.homeComments > p,
+.homeComments > h2
+{
+    max-width: 600px;
+    margin: auto;
+    padding-right: 0;
+}
+
+.homeComments button
+{
+    border: none;
+    background: #fff;
+    margin-top: 120px;
+    
+}
+
+.homeComments button .fa
+{
+    color: #5371F8;
+    font-weight: bold;
+    font-size: 24px;
+    border-radius: 50% !important;
+    box-sizing: border-box;
+    height: 51px;
+    width: 51px;
+    border: 1px solid #EDF1F8;
+    background-color: #FFFFFF;
+    box-shadow: 0 9px 14px 0 rgba(185,185,185,0.5);
+    padding-top: 18px;
+}
+
+.homeComments .left button
+{
+    float: right;
+}
+
+.homeComments .left .fa
+{
+    padding-right: 4px;
+}
+
+.homeComments .right button
+{
+    float: left;
+}
+
+.homeComments .right .fa
+{
+    padding-left: 4px;
+}
+
+.homeComment
+{
+    border: 1px solid #EDF1F8;
+    border-radius: 10px !important;
+    background-color: #FFFFFF;
+    box-shadow: 0 12px 17px 0 rgba(214,214,214,0.5);
+    min-height: 300px;
+
+    padding-top: 30px;
+    padding-right: 25px;
+    padding-left: 25px;
+    padding-bottom: 45px;
+
+    text-align: left;
+
+    position: relative;
+}
+
+.homeComment img
+{
+    margin-right: 5px;
+}
+
+.homeCommentText
+{
+    font-size: 16px !important;
+    line-height: 22px;
+    margin-top: 20px;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+.homeCommentSignature
+{
+    font-size: 14px !important;
+    line-height: 16px;
+    text-align: right;
+    
+}
+
+.homeTeam
+{
+    margin-top: 50px;
+    background-color: #F9F9F7;
+    padding-top: 50px;
+    padding-bottom: 10px;
+    text-align: center;
+    margin-right: 15px;
+}
+
+.homeTeam img
+{
+    height: 300px;
+}
+
+.homeTeam > p,
+.homeTeam > h2
+{
+    max-width: 800px;
+    margin: auto;
+}
+
+@media screen and (max-width:520px)
+{
+    .homeTeam
+    {
+        margin-right: 0px;
+    }
+
+    .homeComments
+    {
+        margin-right: 0px;
+    }
+
+    .homeComments button {
+        margin-top: 20px;
+    }
+    .homeComment
+    {
+        width: 100%;
+        margin: auto;
+    }
+    .homeCommentSignature
+    {
+        right: 10px;
+        left: 10px;
+    }
+    .homeComment {
+
+        padding: 15px 10px;
+    }
+
+    .homeComments button .fa {
+
+        border-radius: none !important;
+        height: auto;
+        width: auto;
+        border: none;
+        box-shadow: none;
+    }
+
+    .homeTeam img
+    {
+        width: 80%;
+        height: 80%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (min-width:521px) and (max-width:991px)
+{
+    .homeTeam
+    {
+        margin-right: 15px;
+    }
+
+    .homeComments
+    {
+        margin-right: 0px;
+    }
+    
+    .homeComments p,
+    .homeComments h2
+    {
+        padding-right: 15px;
+    }
+
+    .homeComments button {
+        margin-top: 20px;
+    }
+    .homeComment
+    {
+        width: 308px;
+        margin: auto;
+    }
+
+    .homeTeam img
+    {
+        width: 70%;
+        height: 70%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+h2.white
+{
+    color: #fff;
+}
+
+.homeWave
+{
+    background-image: url("../pic/image_vaguebleue.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    height: 425px;
+    margin-top: 60px;
+    margin-bottom: 150px;
+    margin-right: 15px;
+}
+
+.homeWave div
+{
+    margin-top: 150px;
+}
+
+.homeWave div button
+{
+    margin-top: 45px;
+}
+
+@media screen and (max-width:520px)
+{
+    .homeWave
+    {
+        background-image: url("../pic/image_vaguebleue.svg");
+        height: 305px;
+        margin-top: 20px;
+        margin-right: 0px;
+    }
+
+    .homeWave div
+    {
+        margin-top: 17%;
+    }
+
+    .homeWave div button
+    {
+        margin-top: 20px;
+    }
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}

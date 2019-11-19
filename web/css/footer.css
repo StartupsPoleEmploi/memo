@@ -105,6 +105,16 @@
     text-decoration: underline;
 }
 
+.openConseilsButton,
+.openConseilsButton:hover,
+.openConseilsButton:focus
+{
+    font-size: 12px;
+    clear: both;
+    color: #000;
+    text-decoration: underline;
+}
+
 .doorbell-button
 {
     position: fixed;

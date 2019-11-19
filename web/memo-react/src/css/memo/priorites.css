@@ -1,0 +1,92 @@
+
+#prioritesPage
+{
+    color: #fff;
+}
+
+#prioritesForm {
+	padding:30px;
+}
+
+#prioritesForm .formBloc label {
+	font-size: 20px;
+}
+
+#prioritesForm span {
+    font-size: 13px;
+    text-align:center;
+    font-weight: normal;
+}
+
+#prioritesForm .form-group span {
+    color: #000;
+    margin-bottom: 0;
+    font-size: 13px;
+    text-align:left;
+    font-weight: normal;
+}
+
+#prioritesForm > div > div {
+    padding-bottom: 15px;
+}
+
+.btnPrioritePostuler{
+	background-color: #999999;
+	font-weight: bold;
+    color: white;	
+}
+.btnPrioritePostuler:hover {
+    color: #2c3e50;
+    text-decoration: none;
+}
+.btnPrioriteRelancer{
+	background-color: #F2AE43;
+	font-weight: bold;
+    color: white;	
+}
+.btnPrioriteRelancer:hover {
+    color: #2c3e50;
+    text-decoration: none;
+}
+.btnPrioriteEntretien{
+	background-color: #00C7FC;
+	font-weight: bold;
+    color: white;	
+}
+.btnPrioriteEntretien:hover {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.prioritesFormCancel {
+	margin-top: 30px;
+}
+
+@media screen and (max-width:991px) {
+	.prioriteSeparator {
+		border-bottom: 2px solid #e6e6e6;
+	}	
+	
+	div#prioritesForm button {
+		margin-top: 15px;
+	}
+	
+}
+
+#conseilsPageContainer li
+{
+    margin-top: 20px;
+}
+
+
+
+#mdConseilNudgeReseau .modal-footer .checkbox
+{
+    float: right;
+}
+
+#mdConseilNudgeReseau .modal-footer button
+{
+    float: right;
+    margin-right: 40px;
+}

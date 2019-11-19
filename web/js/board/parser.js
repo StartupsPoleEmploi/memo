@@ -78,6 +78,8 @@ Parser.prototype = {
             p = ps["manpower"] || (ps["manpower"] = new ParserManpower("manpower"));
         else if (isInDomain(u, "randstad."))
             p = ps["randstad"] || (ps["randstad"] = new ParserRandstad("randstad"));
+        else if (isInDomain(u, "jobijoba.com"))
+            p = ps["jobijoba"] || (ps["jobijoba"] = new ParserJobiJoba("jobijoba"));
         else if (isInDomain(u, "job.com") &&
             (
                 isInDomain(u, "ouestjob.com") ||
@@ -90,6 +92,8 @@ Parser.prototype = {
                 isInDomain(u, "pacajob.com")
             ) )
             p = ps["regionsjob"] || (ps["regionsjob"] = new ParserRegionsJob());
+        else if(url.indexOf("getJobJSONForMemo")>=0)
+        	p = ps["memo"] || (ps["memo"] = new ParserMemo());
         else
             p = ps["generic"] || (ps["generic"] = new GenericParser());
 

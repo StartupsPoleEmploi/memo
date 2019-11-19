@@ -213,6 +213,5 @@ public class Candidature {
 	public void setDateEntretien(long dateEntretien) {
 		this.dateEntretien = dateEntretien;
 	}
-    
-	
+
 }

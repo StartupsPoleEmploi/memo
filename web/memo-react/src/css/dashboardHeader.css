@@ -1,0 +1,211 @@
+.dashboardHeaderContainer
+{
+    width: 100%;
+}
+
+.dashboardHeader
+{
+    width: 100%;
+    /*height: 75px;*/
+    display:flex;
+    justify-content:space-between;
+}
+
+.dashboardHeaderContainer.filterFixedPosition
+{
+    position: fixed;
+    z-index: 1000;
+    background: #f4f4f4;
+    /*border-bottom: 1px solid;
+    border-radius: 5px !important;
+    box-shadow: 0 0 7px 0 rgba(121,122,137,0.13);*/
+}
+
+.quickImportField {
+    display: flex;
+    flex-direction: row;
+    margin-top: -10px;
+    background: white;
+    padding: 6px 10px 6px 0;
+    border-radius: 5px !important;
+    box-shadow: 0 0 7px 0 rgba(121,122,137,0.13);
+}
+
+.quickImportField input
+{
+    min-width: 350px;
+    background: none;
+    border: 0 !important;
+}
+
+.quickImportError {
+    font-size: 12px;
+    width: 135px;
+    color: rgb(169,68,66);
+}
+
+.quickImportField input:focus
+{
+    background: none;
+}
+
+.quickImportField input::placeholder
+{
+    font-style: italic;
+}
+
+
+.quickImportField .blueButton
+{
+    font-size: 15px;	
+    line-height: 18px;
+    margin-top: 0;
+    padding: 5px 15px;
+}
+
+.quickFilterField {
+    display: flex;
+    flex-direction: row;
+    margin-top: -10px;
+    min-height: 47px;
+}
+
+.quickFilterField.fixedFilterForm
+{
+    position: fixed;
+    z-index: 1000;
+    padding: 4px 5px;
+    top: 77px;
+    right: 20px;
+    background: rgba(169,68,66,0.3);
+    border-radius: 3px !important;
+}
+
+
+.quickFilterField form {
+    display: flex;
+    flex-direction: row;
+    background: white;
+    border-radius: 5px !important;
+    box-shadow: 0 0 7px 0 rgba(121,122,137,0.13);
+    padding: 6px 0;
+}
+
+.quickFilterField input[type="text"]
+{
+    min-width: 200px;
+    font-size: 15px  !important;
+    background: none;
+    border: 0 !important;
+}
+
+.quickFilterField .searchButton
+{
+    background: #fff;
+    border: 0;
+}
+
+.quickFilterField .searchButton i
+{
+    font-size: 18px;
+}
+
+
+.quickFilterField input:focus
+{
+    background: none;
+}
+
+.quickFilterField input::placeholder
+{
+    font-style: italic;
+
+}
+
+.hideFilterButton
+{
+    border: none;
+}
+.hideFilterButton:hover
+{
+    text-decoration: underline;
+}
+
+.quickFilterField button:hover,
+.hideFilterButton button:hover
+{
+    color: #3749E3;
+}
+
+.advancedFilterContainer
+{
+    position: fixed;
+    width: 100%;
+    top: 110px;
+    /*height: 150px;*/
+    background-color: #F4F4F4;
+    z-index: 1000;
+    padding: 10px 20px 10px 20px;
+    box-shadow: 0 5px 2px -2px rgba(0,0,0,0.19);
+}
+
+.advancedFilterContainer .row
+{
+    border-top: 1px solid #979797;
+    padding-top: 5px;
+}
+
+.advancedFilterContainer input[type="text"],
+.advancedFilterContainer select
+{
+    width: 100%;
+    font-size: 15px !important;
+    padding-left: 10px;
+    color: #414042;
+    max-width:450px;
+}
+
+.advancedFilterContainer input[type="text"]
+{
+    margin-top: 10px;
+}
+
+.advancedFilterContainer label
+{
+    margin-top: 10px;
+}
+
+.quickFilterField .searchButton
+{
+    font-size: 15px;	
+    line-height: 18px;
+    margin-top: 0;
+    padding: 5px 15px;
+}
+
+.searchButton i.fa-times
+{
+    color: rgb(169,68,66);
+}
+
+.quickFilterField > button
+{
+    font-size: 15px;	
+    line-height: 18px;
+    margin-top: 0;
+    padding: 5px 15px;
+    background: #fff;
+    border: 0;
+    border-radius: 5px !important;
+    box-shadow: 0 0 7px 0 rgba(121,122,137,0.13);
+    margin-left: 10px;
+}
+
+.advancedFilterContainer .blueButton
+{
+    padding: 5px 15px;
+    font-size: 15px;
+    line-height: normal;
+    margin-top: 10px;
+    border-radius: 6px !important;
+}

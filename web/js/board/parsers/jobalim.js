@@ -4,7 +4,7 @@ function ParserJobAlim(subParser)
     if(subParser=="jobalim")
     {
         this.logo = "jobalim.png";
-        this.name = "Jobalim.com";
+        this.name = "Jobalim";
     }
     else
     {
@@ -51,7 +51,7 @@ ParserJobAlim.prototype = {
 
         tmp = cont.find("#info_entreprise_titre > p > img").attr("src");
         if (tmp && !tmp.endsWith("logo/")) {
-            c.logoUrl = ((this.name=="Vitijob.com")?"https://www.vitijob.com/":"") + tmp;
+            c.logoUrl = "https://www.jobalim.com/"+tmp;
             r = 1;
         }
 

@@ -64,7 +64,7 @@
                         </label>
                     </div>
 
-                    <div><b>Le saviez-vous ?</b> Les phrases secrètes font d'excellents mots de passe (ex :  "J'ai acheté 5 CDs aujourd'hui").</div>
+                    <div>Si vous souhaitez renforcer la sécurité de votre mot de passe, nous vous conseillons d'utiliser au minimum une lettre, un chiffre et un caractère spécial.<br /><b>Le saviez-vous ?</b> Les phrases secrètes font d'excellents mots de passe (ex :  "J'ai acheté 5 CDs aujourd'hui").</div>
 
                     <div class="form-actions text-center">
                         <button type="button" id="buttonCreateAccount" class="btn btn-rounded btn-lg green">S'inscrire</button>

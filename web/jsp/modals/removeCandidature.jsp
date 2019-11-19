@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body" id="mdRemoveCandidatureDesc">
 
-        Vous êtes sur le point de supprimer définitivement la candidature pour le poste <span class="mdPoste"></span>
+        Vous êtes sur le point de supprimer définitivement la candidature pour le poste <span id="mdRemoveCandidaturePoste" class="mdPoste"></span>
 
       </div>
       <div class="modal-footer">

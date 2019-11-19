@@ -23,6 +23,11 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.metrics.ElasticsearchReporter;
 
@@ -38,6 +43,8 @@ import fr.gouv.motivaction.model.Stat;
 import fr.gouv.motivaction.model.UserLog;
 import fr.gouv.motivaction.model.UserSummary;
 import fr.gouv.motivaction.service.MailService;
+
+import static fr.gouv.motivaction.Constantes.tabIpConseiller;
 
 /**
  * Created by Alan on 12/04/2016.
@@ -457,5 +464,82 @@ public class Utils {
     	}
         
         return result; 
+    }
+    
+    public static String hmacDigest(String msg, String keyString, String algo)
+    {
+        //log.info("params : "+msg+" / "+keyString);
+        String digest = null;
+        try
+        {
+            SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"), algo);
+            Mac mac = Mac.getInstance(algo);
+            mac.init(key);
+
+            byte[] bytes = mac.doFinal(msg.getBytes("ASCII"));
+
+            StringBuffer hash = new StringBuffer();
+            for (int i = 0; i < bytes.length; i++) {
+                String hex = Integer.toHexString(0xFF & bytes[i]);
+                if (hex.length() == 1) {
+                    hash.append('0');
+                }
+                hash.append(hex);
+            }
+            digest = hash.toString();
+        }
+        catch (Exception e)
+        {
+            log.error(logCode+"-006 CANDIDATURE hmacDigest error : "+e);
+        }
+        return digest;
+    }
+    
+    public static String getIp(HttpServletRequest request) {
+    	 String ip = request.getHeader("X-Forwarded-For");
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+             ip = request.getHeader("Proxy-Client-IP");
+         }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+             ip = request.getHeader("WL-Proxy-Client-IP");
+         }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+             ip = request.getHeader("HTTP_CLIENT_IP");
+         }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+         }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+             ip = request.getRemoteAddr();
+         }
+         return ip;
+    }
+    
+    public static boolean isIpConseiller(HttpServletRequest request) {
+    	boolean res = false;
+    	String ip;
+    	String userAgent;
+    	String [] tabIp;
+    	String ipUser;
+	
+    	if (request != null) {
+    		ip = getIp(request);
+    		userAgent = request.getHeader("User-Agent");
+    		 
+    		if (ip != null && !StringUtils.containsIgnoreCase(userAgent, "pila")) {
+    			// il ne s'agit pas d'une borne PILA
+    			tabIp = ip.split(",");
+    	    	ipUser = tabIp[0];
+				// On vérifie l'ip de l'utilisateur avec les IP des conseillés
+				/*for(int i=0 ; i<Constantes.tabIpConseiller.length; i++) {
+					if(ipUser.equals(Constantes.tabIpConseiller[i])) {
+						res = true;
+						break;
+					}
+				}*/
+				res = tabIpConseiller.isInRange(ipUser);
+    		}
+    	}
+		return res;
     }
 }

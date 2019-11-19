@@ -1,0 +1,284 @@
+.ReactModalPortal{
+    z-index: 2000;
+}
+.Modal {
+    position: fixed;
+    top: 5vh;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    background-color: white;
+    border-radius: 5px !important;
+    padding: 30px;
+    padding-top: 10px;
+    width: 90%;
+    margin: auto;
+    max-width: 800px;
+    overflow-y: auto;
+    max-height: 90vh;
+    min-height: 480px;
+    font-size: 16px;
+    transform: translate(-50%,0%);
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(20,20,20,0.65);
+}
+
+button.modalClose
+{
+    float: right;
+    border:0;
+    background:none;
+    cursor:pointer;
+    font-size: 24px;
+    margin-right: -20px;
+}
+
+.modalActions
+{
+    text-align: center;
+    margin-top: 40px;
+}
+
+#doorbellButton,
+.modalActions button
+{
+    border-radius: 6px !important;
+    background-color: #5371F8;
+    color: #FFFFFF;
+    font-size: 15px;
+    padding: 5px 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    border: 1px solid #5371F8;
+}
+.modalActions button:hover
+{
+    background-color: #3749E3;
+    border: 1px solid #3749E3;
+    color: #FFFFFF;
+}
+
+#doorbellButton,
+.modalActions button.modalClose
+{
+    border: 1px solid #000;
+    float: none;
+    color: #000;
+    background: #fff;
+    font-size: 15px;
+}
+
+#doorbellButton:hover,
+.modalActions button.modalClose:hover
+{
+    background-color: #979797;
+    color: #fff;
+}
+
+.modalTitle{
+    text-align:center;
+    font-size: 24px;
+    color: #7D7D7D;
+    font-size: 24px;
+    clear:both;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    /*border-bottom: 1px solid #e5e5e5;*/
+}
+.clearFloat{
+    clear:both;
+}
+
+.modalSelect
+{
+    margin-top: 30px;
+    margin-bottom: -10px;
+}
+
+.modalSelect select
+{
+    width: 100%;
+}
+
+.modalComment
+{
+    margin-top: 50px;    
+}
+
+.shareLink.modalComment
+{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.shareLink.modalComment textarea
+{
+    padding: 10px;
+    height: 90px;
+    font-size: 14px !important;
+    font-weight: bold;
+    color: darkblue;
+}
+
+
+
+.modalDatePicker
+{
+    margin-top: 30px;    
+    margin-bottom: -30px;
+}
+
+.modalComment textarea
+{
+    width: 100%;
+}
+
+.Modal .errorMessage
+{
+    text-align: left;
+}
+
+.modalForm .formError {
+    margin: 5px 0 0 5px;
+}
+
+.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name
+{
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+}
+
+.react-datepicker {
+    font-family: Roboto !important;
+    font-size: 1.4rem !important;
+}
+
+.react-datepicker__year-dropdown, .react-datepicker__month-dropdown, .react-datepicker__month-year-dropdown
+{
+    width: 60% !important;
+}
+
+.react-datepicker__year-option, .react-datepicker__month-option, .react-datepicker__month-year-option
+{
+    line-height: 30px !important;
+}
+
+.react-datepicker__year-option:first-of-type, .react-datepicker__month-option:first-of-type, .react-datepicker__month-year-option:first-of-type
+{
+    padding-bottom: 5px !important;
+    padding-top: 7px !important;
+}
+
+.react-datepicker__year-option:last-of-type, .react-datepicker__month-option:last-of-type, .react-datepicker__month-year-option:last-of-type
+{
+    padding-bottom: 7px !important;
+    padding-top: 5px !important;
+}
+
+.react-datepicker__current-month, .react-datepicker-time__header, .react-datepicker-year-header
+{
+    font-size: 1.5rem !important;
+    padding-bottom: 5px !important;
+}
+
+.react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button)
+{
+    right: 110px !important;
+}
+.react-datepicker__time-container,
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box
+{
+    width: 100px !important;
+}
+
+.modalLongField
+{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.modalLongField input
+{
+    width: 100%;
+    height: 35px !important;
+}
+
+.modalFieldIcon
+{
+    padding-top: 5px;
+}
+
+.modalLongField i
+{
+    margin-right:10px;
+}
+
+.modalLongField + div.formError
+{
+    margin-top: 8px;
+    margin-bottom: 0px;
+    text-align: left;
+    margin-left: 30px;
+    color: rgb(169,68,66);
+}
+
+.borderedModalField
+{
+    border-bottom: 2px solid #e6e6e6;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width:520px)
+{
+    .Modal {
+        top: 30px;
+        left: 50%;
+        padding: 10px 10px 20px;
+        width: 95%;
+    }   
+
+    button.modalClose
+    {
+        margin-right: 0px;
+    }
+
+    .modalActions button
+    {
+        margin-bottom: 20px;
+    }
+
+    .modalActions button.modalClose
+    {
+        margin-right: 10px;
+    }
+
+}
+
+.modalActionCheckbox
+{
+    margin-left: 15px !important;
+    margin-right: 5px !important;
+}
+
+.tippy-content
+{
+    font-size: 16px;
+}
+.tippy-tooltip
+{
+    border-radius: 3px !important;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    text-align: center;
+}

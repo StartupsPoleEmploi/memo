@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                     
-                <h1>Informations légales et conditions d'utilisation</h1>
+                <h2>Informations légales et conditions d'utilisation</h2>
                     L'utilisateur s'engage à prendre connaissance des présentes conditions d'utilisation avant toute utilisation du site internet et à les respecter. Ces conditions d'utilisation peuvent être modifiées à tout moment. Elles s'imposent à l'utilisateur dès leur mise en ligne sur le site internet memo.pole-emploi.fr. La date de mise à jour est mentionnée. L'utilisateur est donc invité à consulter régulièrement la dernière version mise à jour.
                     Date de mise à jour : 15 avril 2017
                     <h3>1. Directeur de la publication et hébergeur</h3>
@@ -27,7 +27,7 @@
                         <h3>3. Création de compte</h3>
                         Les données nécessaires pour créer un compte et utiliser le service, sont l'adresse email de l'utilisateur et son mot de passe.
                         <h3>4. Protection des données à caractère personnel</h3>
-                        Les données à caractère personnel sont collectées et traitées par Pôle emploi pour la seule finalité définie à l'article 2. Il s'agit des données d'identification nécessaires à la création du compte et des informations relatives à ses candidatures, ainsi que des pièces jointes dans les fiches candidatures. Elles ne sont visibles que par les personnes auxquelles l'utilisateur donne volontairement accès à son tableau de bord. L'utilisation des boutons de réseaux sociaux peut entraîner le transfert de données vers ces réseaux sociaux, le cas échéant, en dehors de l'Union européenne. Les données sont supprimées deux ans après la dernière connexion. L'utilisateur peut également supprimer l'ensemble de ses données depuis Menu>paramètres.
+                        Les données à caractère personnel sont collectées et traitées par Pôle emploi pour la seule finalité définie à l'article 2. Il s'agit des données d'identification nécessaires à la création du compte et des informations relatives à ses candidatures, ainsi que des pièces jointes dans les fiches candidatures. Elles ne sont visibles que par les agents de Pôle Emploi et les personnes auxquelles l'utilisateur donne volontairement accès à son tableau de bord. L'utilisation des boutons de réseaux sociaux peut entraîner le transfert de données vers ces réseaux sociaux, le cas échéant, en dehors de l'Union européenne. Les données sont supprimées deux ans après la dernière connexion. L'utilisateur peut également supprimer l'ensemble de ses données depuis Menu>paramètres.
                         <br /><br />
                         Conformément aux articles 39 et suivants de la loi n°78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés, l'utilisateur dispose d'un droit d'accès aux informations le concernant, en s'adressant au correspondant informatique et libertés de Pôle aux coordonnées suivantes : Pôle emploi, Correspondant informatique et libertés, 1-5 avenue du Docteur Gley, 75987 Paris cedex 20 (adresse électronique : Courriers-cnil@pole-emploi.fr ).
                         <br /><br />

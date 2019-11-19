@@ -1,0 +1,186 @@
+<html>
+<head>
+    <title>Test Widget Générique MEMO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <meta content="noindex" name="robots" />
+
+
+    <link rel="shortcut icon" href="../pic/favicon.ico" />
+
+<style>
+    body
+    {
+        padding: 20px;
+    }
+
+    .btn-memo
+    {
+        height: 50px;
+        width: 250px !important;
+        border-style: outset;
+        text-overflow : ellipsis ;
+    }
+
+</style>
+</head>
+<body>
+	<h1>Configuration du Bouton Générique MEMO</h1>
+	
+	<h3>Contexte</h3>
+
+    Le bouton MEMO va permettre aux utilisateurs de votre site d'importer les offres qu'ils choisissent sur votre site dans leur tableau de bord <a href="https://memo.pole-emploi.fr" target="_blank">MEMO</a> qui regroupe l'ensemble de leurs candidatures (offres issues des job boards, candidatures spontanées, réseau personnel…).
+    <br /><br />
+    Vous pouvez voir des exemples d'intégration sur les sites de <a href="https://labonneboite.pole-emploi.fr/" target="_blank">La Bonne Boîte</a> et de <a href="https://www.pole-emploi.fr" target="_blank">Pôle emploi</a>.
+    <br /><br />
+    MEMO est un produit opéré par Pôle emploi.
+    <br /><br />
+    
+    
+     <h3>Etape 1 : Positionner une ou plusieurs balises &lt;a&gt;</h3>
+
+    Placez une balise <strong>&lt;a&gt;</strong> à l'emplacement où vous voulez voir apparaître un bouton d'import MEMO.
+    <br /><br />
+    <strong>&lt;a class="memo-import-button" data-url="<i>[url_de_l_offre_a_importer]</i>" data-style="<i>[classe css]</i>" data-title="<i>[titre de l'offre]</i>"&gt;&lt;/a&gt;</strong>
+    <br /><br />
+    <strong>class</strong> : mettre la valeur de classe memo-import-button pour que cette balise &lt;a&gt; soit identifiée et qu'un bouton MEMO soit insérée dedans
+    <br /><br />
+    <strong>data-url</strong> : L'attribut data-url doit contenir l'adresse de l'offre à importer. Il doit être encodé avec la méthode javascript encodeURIComponent ou équivalent.
+    <br /><br />
+    <strong>data-title</strong> : (facultatif) Le titre de l'offre.
+    <br /><br />
+    
+    
+    <h3>Etape 2 : Script de génération des boutons</h3>
+
+    Placez le snippet javascript suivant avant la balise <strong>&lt;/body&gt;</strong> afin de convertir les balises <strong>&lt;a&gt;</strong> en boutons d'import. Pour information, ce script réalise un traitement asynchrone qui ne ralentira pas le chargement des autres ressources de la page.
+    <br /><br />
+    <blockquote>
+        &lt;script&gt;
+        <br />
+        <div style="margin-left:30px">!function(d,s,id)<br />
+            {</div>
+        <div style="margin-left:60px">var js, fjs= d.getElementsByTagName(s)[0];<br />
+            if(!d.getElementById(id))
+            { </div>
+        <div style="margin-left:90px">
+            js= d.createElement(s);<br />
+            js.id=id;<br />
+            js.async=true;<br /><br />
+            js.src="https://memo.pole-emploi.fr/js/importButton/memoButtonMEMO-min.js";<br />
+            fjs.parentNode.insertBefore(js,fjs);<br />
+        </div>
+        <div style="margin-left:60px">}</div>
+        <div style="margin-left:30px">}(document,"script","memoScript");</div>
+        &lt;/script&gt;
+    </blockquote>
+    
+    <h3>Informations importantes pour les partenaires souhaitant poser le bouton MEMO : </h3>
+    
+    	<ul>
+    	<li>Il faut définir un endpoint API qui sera appelé par le bouton (cf. attribut :<strong>data-url</strong>) </li>
+    	<li>Il faut ouvrir l'accès à MEMO pour ce endpoint API (éventuel paramétrage serveur pour donner l'accès à *.memo.pole-emploi.fr à cette ressource)</li>
+    	<li>L'API devra retourner les formats JSON suivants selon les cas : 
+    	<ul>
+    	    <li><strong>Si l'offre existe :</strong><br />
+    	    <code>
+    	        {<br />
+    	        "jobTitle" : "",<br />
+    	        "jobBoard" : "",<br />
+    	        "logoUrl" : "",<br />
+    	        "urlSource" : "",<br />
+    	        "company" : "", <br />
+    	        "location" : "", <br />
+    	        "description" : "", <br />
+    	        "siretNumber" : "", <br />
+    	        "contactEmail" : "", <br />
+    	        "contactName" : "", <br />
+    	        "contactPhoneNumber" : "", <br />
+    	        "expired" : true|false<br />
+    	        }<br />
+    		</code>
+    		<br />
+    		<div>
+    		    <ul>
+    			<li><strong>jobId :</strong> Obligatoire. L'identifiant unique de l'offre (ex : www.jobboard.com/rest/job/<strong>jobId</strong>)</li>
+    			<li><strong>jobTitle :</strong> Obligatoire. Le nom de l'offre (max. 128 caractères)</li>
+    			<li><strong>jobBoard :</strong> Obligatoire. Le nom de votre site (max. 45)</li>
+    			<li><strong>description :</strong> Obligatoire. La description de l'offre</li>
+    			<li><strong>logoUrl :</strong> Le chemin du logo associé à l'offre (max. 255)</li>
+    			<li><strong>urlSource :</strong> L'URL de l'offre (utile pour fournir "un chemin propre" ou avec du tracking)</li>
+    			<li><strong>company :</strong> Le nom de l'entreprise de l'offre (max. 128)</li>
+    			<li><strong>location :</strong> Le lieu de travail de l'offre (max. 255)</li>
+    			<li><strong>siretNumber :</strong> Le numéro de siret de l'entreprise (max. 20)</li>
+    			<li><strong>contactEmail :</strong> L'adresse e-mail de la personne à contacter (max. 128)</li>
+    			<li><strong>contactName :</strong> Le nom de la personne à contacter (max. 255)</li>
+    			<li><strong>contactPhoneNumber :</strong> Le numéro de téléphone de la personne à contacter (max. 24)</li>
+    			<li><strong>expired :</strong> true si l'offre est périmée, false si l'offre est active</li>
+    		    </ul>
+            </div>
+            </li>
+            <li>
+    	    <strong>En cas d'erreur :</strong><br>
+    	    <code>
+    	        {<br />   
+    	            "error" : "",<br />
+    	            "message" : ""<br />
+    	        }<br />
+    	    </code>
+    	    <br />
+    		<div>
+    		    <ul>
+    		    <li><strong>error :</strong> Obligatoire. Le nom de l'erreur</li>
+    			<li><strong>message :</strong> Message complémentaire optionnel</li>
+    			</ul>
+    		</div>
+    		</li>
+
+    		</ul>
+    	</ul>
+    	
+    	<br/> 
+    	
+    	<h3>Démonstration :</h3>
+ 
+<strong>Dans le cas où l'offre existe :</strong><br><br>  
+<a class="memo-import-button" data-url="http://localhost/rest/candidatures/getJobJSONForMemo/Success" data-title="Informatique"></a> <br/><br/>
+
+<strong>Dans le cas où l'offre est expirée :</strong><br><br>
+<a class="memo-import-button" data-url="http://localhost/rest/candidatures/getJobJSONForMemo/Expired" data-title="Informatique"></a>
+
+<script>
+    !function(d,s,id)
+    {
+        var js,
+                fjs= d.getElementsByTagName(s)[0];
+        if(!d.getElementById(id))
+        {
+            js= d.createElement(s);
+            js.id=id;
+            js.async=true;
+
+            if(window.location.hostname.indexOf('localhost')>=0)
+                js.src="http://localhost/js/importButton/memoButtonMEMO-min.js";
+            else if(window.location.hostname.indexOf('beta')>=0)
+                js.src="https://memo.beta.pole-emploi.fr/js/importButton/memoButtonMEMO-min.js";
+            else
+                js.src="https://memo.pole-emploi.fr/js/importButton/memoButtonMEMO-min.js";
+
+            fjs.parentNode.insertBefore(js,fjs);
+        }
+    }(document,"script","memoButton");
+
+
+
+</script>
+
+<script src="../js/jquery-2.1.3.min.js"></script>
+<script src="../js/bootstrap/bootstrap-3.3.4.min.js"></script>
+
+</body>
+
+</html>

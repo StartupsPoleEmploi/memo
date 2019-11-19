@@ -4,8 +4,8 @@ function MemoButtonToolkit()
 
     if(window.location.hostname.indexOf('beta')>=0)
         this.evt = "r";
-    else if(window.location.hostname.indexOf('boomerang')>=0)
-        this.evt = "l";
+    else if(window.location.hostname.indexOf('localhost')>=0)
+    	this.evt = "loc";
 
     this.init();
 }
@@ -41,9 +41,10 @@ MemoButtonToolkit.prototype = {
             if(this.evt=="p")
                 css.href = "https://memo.pole-emploi.fr/css/importButton/memoButtonLBB.css";
             else if(this.evt=="r")
-                css.href = "https://memo.beta.pole-emploi.fr/css/importButton/memoButtonLBB.css";
-            else
-                css.href = "http://boomerang:8080/css/importButton/memoButtonLBB.css";
+                css.href = "https://memo.beta.pole-emploi.fr/css/importButton/memoButtonLBB.css"; 
+            else         	
+            	css.href="http://localhost/css/importButton/memoButtonLBB.css";
+            
 
             fcss.parentNode.insertBefore(css,fcss);
         }
@@ -105,8 +106,9 @@ MemoButtonToolkit.prototype = {
             ifr.setAttribute("src", "https://memo.pole-emploi.fr/importButton/importButtonLBB.html");
         else if(this.evt=="r")
             ifr.setAttribute("src", "https://memo.beta.pole-emploi.fr/importButton/importButtonLBB.html");
-        else
+        else if(this.evt == "l")
             ifr.setAttribute("src", "http://boomerang:8080/importButton/importButtonLBB.html");
+        else ifr.setAttribute("src", "http://localhost/importButton/importButtonLBB.html");
 
         ifr.setAttribute("style", "display:none; overflow:hidden; width:0px; height:0px;");
 

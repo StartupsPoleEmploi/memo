@@ -169,6 +169,11 @@ function $goToFaq(e)
     $('#mdFAQ').animate({scrollTop: $("#"+e).position().top}, 500);
 }
 
+function $goToConseils(e)
+{	
+	$wST($("#"+e).position().top);
+}
+
 /*$.toaster({ settings : { timeout : {
     "danger" : 10000,
     "info" : 5000,
@@ -343,4 +348,25 @@ function getEmailInText(v)
     }
 
     return res;
+}
+
+function checkEs6()
+{
+    "use strict";
+
+    if (typeof Symbol == "undefined")
+    {
+        return false;
+    }
+    try
+    {
+        eval("class Foo {}");
+        eval("var bar = (x) => x+1");
+    }
+    catch (e)
+    {
+        return false;
+    }
+
+    return true;
 }

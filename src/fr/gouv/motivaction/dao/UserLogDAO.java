@@ -45,24 +45,30 @@ public class UserLogDAO {
         }
     }
 	
-	public static Object [] listUserLogsPerPreviousDay(int day) throws Exception
+	public static Object [] listUserLogsPerPreviousDay(long day) throws Exception
     {
         ArrayList<UserLog> lstUserLog = new ArrayList<UserLog>();
 
         Connection con = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
+        long count = 0;
+        
         try
         {
             con = DatabaseManager.getConnection();
             String sql = "SELECT * from userLogs uL " + 
             				"INNER JOIN users u ON uL.userId = u.id " +
             				"WHERE DATE(uL.creationTime) = DATE( SUBDATE(NOW(), INTERVAL " + day + " DAY) )";
+            
             pStmt = con.prepareStatement(sql);
             rs = pStmt.executeQuery();
 
-            while (rs.next())
+            while (rs.next()) {
             	lstUserLog.add(UserLogDAO.initUserLogFromDB(rs));
+            	count++;
+            }
+            log.debug(logCode+" - SQL (nb lignes)=" + count + "\n sql="+sql);
         }
         catch (Exception e)
         {

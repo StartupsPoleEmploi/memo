@@ -235,6 +235,49 @@ public class AttachmentAction
         return res;
     }
 
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("/file/{candidatureId}/{attachmentId}")
+    public String deleteFilePOST (@Context HttpServletRequest servletRequest, @PathParam("candidatureId")long candidatureId, @PathParam("attachmentId")long attachmentId, MultivaluedMap<String,String> form)
+    {
+        // controle user
+        String res;
+        long userId = UserService.checkUserAuthWithCSRF(servletRequest,form);
+
+        if(userId>0)
+        {
+            final Timer.Context context = unstoreTimer.time();
+
+            try
+            {
+                Candidature cand = CandidatureService.getCandidature(userId,candidatureId);
+
+                if(cand!=null)
+                {
+                    AttachmentService.deleteFile(userId,candidatureId,attachmentId);
+
+                    res = "{ \"result\" : \"ok\" }";
+                }
+                else
+                    throw new Exception("User trying to delete attachment belonging to someone else");
+            }
+            catch (Exception e)
+            {
+                log.error(logCode + "-004 Error deleting file. userId="+userId+" candidatureId="+candidatureId+" attachmentId="+attachmentId+" error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+            }
+            finally {
+                context.stop();
+            }
+        }
+        else
+        {   // message de reconnexion
+            res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+        }
+
+        return res;
+    }
+
     /*
     @GET
     @Produces({ MediaType.APPLICATION_JSON })

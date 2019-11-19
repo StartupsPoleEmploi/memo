@@ -3,7 +3,7 @@
 <div id="candidatureForm2ndStepWithOffre" class="formTunnelBloc" style="display:none;">
 
 	<div>
-		<div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1>Enregistrer votre offre d'emploi</h1></div>
+		<div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h2>Enregistrer votre offre d'emploi</h2></div>
 	</div>
 
 	<div class="mt-element-step" style="width: 70%;margin: auto;">

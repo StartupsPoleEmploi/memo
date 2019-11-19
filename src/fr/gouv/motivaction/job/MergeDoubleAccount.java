@@ -1,22 +1,20 @@
 package fr.gouv.motivaction.job;
 
-import com.codahale.metrics.Timer;
-import fr.gouv.motivaction.mails.MailTools;
-import fr.gouv.motivaction.model.UserSummary;
-import fr.gouv.motivaction.service.MailService;
-import fr.gouv.motivaction.service.UserService;
-import fr.gouv.motivaction.utils.DatabaseManager;
-import fr.gouv.motivaction.utils.Utils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import fr.gouv.motivaction.Constantes;
+import fr.gouv.motivaction.mails.MailTools;
+import fr.gouv.motivaction.service.MailService;
+import fr.gouv.motivaction.service.UserService;
+import fr.gouv.motivaction.utils.DatabaseManager;
+import fr.gouv.motivaction.utils.Utils;
 
 public class MergeDoubleAccount implements Job
 {
@@ -31,7 +29,7 @@ public class MergeDoubleAccount implements Job
 
         if(body != null)
         {
-            MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Fusion des comptes en double ?", body);
+            MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Fusion des comptes en double ?", body);
         }
     }
 

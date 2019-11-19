@@ -39,4 +39,5 @@
     <src>/css/stats.css</src>
     <src>/css/privacy.css</src>
     <src>/css/introJsMemo.css</src>
+    <src>/css/calendar.css</src>
 </pack:style>

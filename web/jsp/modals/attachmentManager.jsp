@@ -11,7 +11,7 @@
         <div class="tfErr" id="fileDropError"></div>
 
         <div id="fileDropZone">
-          <div class="dzPrompt">Déposez un fichier ici<span><br />ou cliquez pour sélectionner un fichier</span></div>
+          <div class="dzPrompt">Déposez un fichier ici<span><br />ou cliquez pour sélectionner un fichier (taille maximale de 1 Mo)</span></div>
           <div class="dzSpinner"><i class="fa fa-spinner fa-spin"></i><span><br />Copie en cours, merci de patienter</span></div>
           <div class="dzDone">Téléchargement terminé</div>
         </div>

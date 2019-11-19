@@ -14,14 +14,22 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
-import fr.gouv.motivaction.exception.PeConnectException;
-import fr.gouv.motivaction.mails.MailTools;
-import fr.gouv.motivaction.model.User;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import fr.gouv.motivaction.exception.EmailLoginException;
+import fr.gouv.motivaction.exception.LaBonneBoiteAPIException;
+import fr.gouv.motivaction.json.CandidatureJson;
+import fr.gouv.motivaction.model.User;
+import fr.gouv.motivaction.utils.Utils;
 
 public class APIService {
 
@@ -199,6 +207,32 @@ public class APIService {
 		return res;
     }
 
+    public static JSONObject getLaBonneBoiteAPIFiche(String uri) throws Exception {
+
+		WebTarget target = null;
+		Response response = null;
+		JSONParser parser = null;	
+		JSONObject res = null;	
+		
+    	if (uri != null) {
+			if (wsClient != null) {
+				target = wsClient.target(UriBuilder.fromUri(uri).build());
+				if (target != null) {
+					// Appel de l'API
+					response = target.request(MediaType.APPLICATION_JSON)
+								.header(HttpHeaders.CONTENT_TYPE, "application/json")
+								.header(HttpHeaders.ACCEPT, "application/json")
+								.get();
+					if (response.getStatus() == 200) {
+						parser = new JSONParser();
+						res = (JSONObject) parser.parse((String)response.readEntity(String.class));
+					}
+				}
+	    	}
+    	}
+		return res;
+    }
+    
 	public static URI getPEConnectFormURI(boolean noPrompt) throws Exception
 	{
 		//log.info("memoHost : "+memoHost+memoRedirectEndPoint);
@@ -218,7 +252,28 @@ public class APIService {
 		return new URI(uri.toString());
 	}
 
-	public static User getUserFromPEConnect(HttpServletRequest request) throws PeConnectException
+	public static URI getPEConnectFormURIREACT(boolean noPrompt) throws Exception
+	{
+		//log.info("memoHost : "+memoHost+memoRedirectEndPoint);
+
+		StringBuilder uri = new StringBuilder(PEAMHost)
+				.append(PEAMauthorizeEndPoint)
+				.append("?")
+				.append("realm=/individu")
+				.append("&response_type=code")
+				.append(noPrompt?"&prompt=none":"")
+				.append("&client_id=").append(memoClientId)
+				.append("&redirect_uri=").append(memoHost).append("/rest/account/peConnect/react/openidconnectok")
+				.append("&nonce=").append(buildNonce())
+				.append("&state=").append(buildState())
+				.append("&scope=").append("application_").append(memoClientId).append("+api_peconnect-individuv1+api_peconnect-coordonneesv1+openid+profile+email+coordonnees");
+
+		//log.info("URI : "+uri.toString());
+
+		return new URI(uri.toString());
+	}
+
+	public static User getUserFromPEConnect(HttpServletRequest request) throws EmailLoginException
 	{
 		// récupération des paramètres transmis par la mire PE
 		String authorizationCode = request.getParameter("code");
@@ -228,6 +283,11 @@ public class APIService {
 		String scope = request.getParameter("scope");
 
 		User res = null;
+
+		/*log.info("PEAM "+authorizationCode);
+		log.info("PEAM "+clientId);
+		log.info("PEAM "+state);
+		log.info("PEAM "+scope);*/
 
 		if(checkPEAMSource(clientId,state))
 		{
@@ -261,9 +321,82 @@ public class APIService {
 					}
 					catch (Exception e)
 					{
-						if (e.getClass() == PeConnectException.class) 
-							throw new PeConnectException(); // renouvellement de la propagation de l'exception
+						if (e.getClass() == EmailLoginException.class) 
+							throw new EmailLoginException(); // renouvellement de la propagation de l'exception
 						else 
+							log.error(logCode + "-005 API Error getting user from authorization token. error=" + e);
+					}
+				}
+				else
+				{
+					log.warn(logCode + "-006 API Forged nonce. nonce=" + nonce + " accessToken="+accessToken.toString()+" sourceIp=" + request.getRemoteAddr());
+				}
+			}
+			else
+			{
+				log.error(logCode+"-003 API Error getting authorization token.");
+			}
+		}
+		else
+		{
+			//traitement cas d'erreur requête illégitime
+			log.warn(logCode + "-001 API Forged clientId or state. clientId=" + clientId + " sourceIp=" + request.getRemoteAddr());
+		}
+
+		return res;
+	}
+
+	public static User getUserFromPEConnectREACT(HttpServletRequest request) throws EmailLoginException
+	{
+		// récupération des paramètres transmis par la mire PE
+		String authorizationCode = request.getParameter("code");
+		String clientId = request.getParameter("client_id");
+		String iss = request.getParameter("iss");
+		String state = request.getParameter("state");
+		String scope = request.getParameter("scope");
+
+		User res = null;
+
+		/*log.info("PEAM "+authorizationCode);
+		log.info("PEAM "+clientId);
+		log.info("PEAM "+state);
+		log.info("PEAM "+scope);*/
+
+		if(checkPEAMSource(clientId,state))
+		{
+			JSONObject accessToken = getPEAMAccessTokenREACT(authorizationCode);
+
+			if(accessToken!=null)
+			{
+				String nonce = (String)accessToken.get("nonce");
+
+				if(APIService.isTokenValid(nonce))
+				{
+					String sAccessToken = (String) accessToken.get("access_token");
+
+					try
+					{
+						JSONObject userPE = getPEAMUser(sAccessToken);
+						JSONObject userAddress = null;
+
+						try
+						{
+							userAddress = getPEAMUserAddress(sAccessToken);
+						}
+						catch (Exception peamAddressException)
+						{
+							log.error(logCode+"-007 API Error getting user address through PEAM. error"+peamAddressException);
+						}
+
+						//log.info("userAddress : "+userAddress.toJSONString());
+						User user = getMEMOUserFromPEAMUser(userPE,userAddress);
+						res = user;
+					}
+					catch (Exception e)
+					{
+						if (e.getClass() == EmailLoginException.class)
+							throw new EmailLoginException(); // renouvellement de la propagation de l'exception
+						else
 							log.error(logCode + "-005 API Error getting user from authorization token. error=" + e);
 					}
 				}
@@ -299,10 +432,12 @@ public class APIService {
 
 		if(user==null)
 		{
+			//@RG - UTILISATEUR : création automatique du compte MEMO si utilisateur PeConnecté en provenance de PE.FR et inconnu de MEMO via son peId
 			user = UserService.createUserFromPEAMUser(peUserInfo);
 		}
 		else
 		{
+			//@RG - UTILISATEUR : maj automatique du compte MEMO si utilisateur PeConnecté en provenance de PE.FR et connu de MEMO
 			UserService.updatePEAMUser(user, peUserInfo, (peUserAddress!=null?true:false));
 		}
 
@@ -386,6 +521,56 @@ public class APIService {
 		return authorizationToken;
 	}
 
+	public static JSONObject getPEAMAccessTokenREACT(String authorizationCode)
+	{
+		String url = PEAMHost + PEAMaccessTokenEndPoint +"?realm=%2Findividu";
+
+		JSONObject  authorizationToken = null;
+
+		WebTarget target = null;
+		Response response = null;
+
+		Form form = new Form();
+		form.param("client_id",memoClientId);
+		form.param("client_secret",memoClientSecret);
+		form.param("grant_type","authorization_code");
+		form.param("response_type","code");
+		form.param("redirect_uri",memoHost+"/rest/account/peConnect/react/openidconnectok");		///rest/account/peConnect/openidconnectok
+		form.param("code",authorizationCode);
+
+		/*log.info("memoClientId : "+memoClientId);
+		log.info("memoClientSecret : "+memoClientSecret);
+		log.info("redirect : "+memoHost+memoRedirectEndPoint);
+		log.info("url  : "+url.toString());*/
+
+		target = wsClient.target(UriBuilder.fromUri(url).build());
+
+		if (target != null)
+		{
+			// Appel de l'API
+			response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+
+			if(response.getStatus()==200)
+			{
+				JSONParser parser = new JSONParser();
+				try
+				{
+					authorizationToken = (JSONObject) parser.parse((String) response.readEntity(String.class));
+				}
+				catch (Exception e)
+				{
+					log.error(logCode + "-002 API Error parsing authorization request response. error=" + e);
+				}
+			}
+			else
+			{
+				log.error(logCode + "-004 API Error getting access token. responseStatus="+ response.getStatus());
+			}
+		}
+
+		return authorizationToken;
+	}
+
 	public static String buildNonce() throws Exception
 	{
 		return UserService.getEncryptedToken(memoTokenDuration);
@@ -434,5 +619,55 @@ public class APIService {
 
 		return result;
 	}
-
+	
+	public static long saveCandidatureFromAPI(CandidatureJson candidatureJson, long timestamp) throws Exception {
+        User user = null;
+        long res = 0;
+        
+		if (candidatureJson != null) {
+	        try {
+	        	user = UserService.getUserFromPEAMID(candidatureJson.getPeId());
+	        	
+		        if (user == null) {
+		        	// L'utilisateur n'existe pas encore ds MEMO, donc on le créé automatiquement 
+		        	log.info(logCode + " 008 - API save candidature - user unknown in MEMO - peId=" + candidatureJson.getPeId());
+		        	//@RG - UTILISATEUR : création automatique du compte MEMO si utilisateur PeConnecté en provenance de JEPOSTULE et inconnu de MEMO via son peId
+		        	user = UserService.createUserFromAPI(convertCandidatureJsonIntoUser(candidatureJson));
+		        }
+		        // On enregistre sa canditature spontanée
+        		res = CandidatureService.saveCandidatureFromAPI(candidatureJson, user.getId());
+        		if(res != 0) {
+        			Utils.logUserAction(user.getId(), "Candidature", "Création", res);
+        		}
+        		// On vérifie que le code ROME est valorisée
+    			if (!StringUtils.isEmpty(candidatureJson.getRomeRecherche())) {
+    				// @RG - Utilisateur : enregistrement pour l'utilisateur du code ROME associé à la candidature importée via l'API si celui-ci n'existe pas déjà 
+    				UserService.saveROME(user.getId(), candidatureJson.getRomeRecherche());
+    			}
+	        } 
+	        catch(Exception e) {
+    			// On fait remonter les exceptions connues jusqu'au webservice
+    			if (e instanceof LaBonneBoiteAPIException) throw e;
+    			if (e instanceof EmailLoginException) throw e;
+	        	log.error(logCode + " 009 - API save candidature - user exception=" + e);
+	        }
+		} else {
+			log.error(logCode + " 010 - API save candidature - candidatureJson=null");
+		}
+		return res;
+	}
+	
+	private static User convertCandidatureJsonIntoUser(CandidatureJson candidatureJson) {
+		User res = null;
+		
+		if (candidatureJson != null && !StringUtils.isEmpty(candidatureJson.getEmailUtilisateur())) {
+			res = new User();
+			res.setFirstName(candidatureJson.getPrenomUtilisateur());
+			res.setLastName(candidatureJson.getNomUtilisateur());
+			res.setAddress(candidatureJson.getAdresseUtilisateur());
+			res.setPeEmail(candidatureJson.getEmailUtilisateur());
+			res.setPeId(candidatureJson.getPeId());
+		}
+		return res;
+	}
 }

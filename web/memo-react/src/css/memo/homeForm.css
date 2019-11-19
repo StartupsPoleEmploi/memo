@@ -1,0 +1,288 @@
+
+
+.createAccountBloc
+{
+    background-color : #20314e;
+    background-size : cover;
+    min-height: 600px;
+    padding-top: 80px;
+    padding-bottom: 50px;
+    color: #fff;
+}
+
+.peConnectButton img
+{
+    max-width: 250px;
+}
+
+.createAccountBloc .login-form
+{
+    max-width: 800px;
+    background: #fff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding-top: 30px;
+    padding-bottom: 35px;
+    padding-left: 70px;
+    padding-right: 70px;
+    color : #364150;
+    margin : auto;
+    margin-bottom: 50px;
+    margin-top: 80px;
+}
+
+@media screen and (max-width:760px)
+{
+    .createAccountBloc .login-form {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    #peConnectButton img
+    {
+        width: 80% !important;
+    }
+}
+
+
+@media screen and (min-width:991px)
+{
+    .createAccountBloc .createBoundary {
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+}
+
+.createAccountBloc h3
+{
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.createAccountBloc  .createBoundary
+{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.createAccountBloc .boundary
+{
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 30px;
+}
+
+.createAccountBloc a:hover,
+.createAccountBloc a
+{
+    text-decoration: underline;
+    color: #364150;
+}
+
+.createAccountBloc > .content
+{
+    margin-top: 66px;
+}
+
+.createBoundaryLeft,
+.createBoundaryRight
+{
+    border-bottom: 1px solid #364150;
+    padding-top: 10px;
+}
+
+.createAccountBloc .form-actions
+{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.createAccountBloc .connectAction
+{
+    font-size: 16px;
+}
+
+
+.alert-danger
+{
+    border:none;
+    background: none;
+    color : #e02828;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: justify;
+}
+
+#connectionPage .connectAction
+{
+    /*border-top : 1px solid #364150;*/
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.connectTitle
+{
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.showXS
+{
+    display: none;
+}
+
+.hideXS
+{
+    display: block;
+}
+
+.hideRowXS
+{
+    display: table-row;
+}
+
+
+
+@media screen and (max-width:414px)
+{
+    #connectionPage .form-actions
+    {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    #connectionPage .connectAction
+    {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    #createAccount .form-actions
+    {
+        margin-top: 15px;
+        margin-bottom: 0;
+    }
+    
+    .hideXS,
+    .hideRowXS
+    {
+        display: none !important;
+    }
+
+    .showXS
+    {
+        display: block;
+    }
+
+    table.showXS
+    {
+        display: table;
+    }
+
+    .showRowXS
+    {
+        display: table-row;
+    }
+
+    .extConnect
+    {
+        margin-top: 20px !important;
+        margin-bottom: 10px;
+    }
+
+
+    .connectTitleBorder {
+        border-top: 1px solid;
+        padding: 0;
+        padding-top : 20px;
+        max-width: 240px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media screen and (max-width:991px)
+{
+    #connectionPage .connectAction
+    {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .hideXS,
+    .hideRowXS
+    {
+        display: none !important;
+    }
+
+    .showXS
+    {
+        display: block;
+    }
+
+    table.showXS
+    {
+        display: table;
+    }
+
+    .showRowXS
+    {
+        display: table-row;
+    }
+
+    .extConnect
+    {
+        margin-top: 20px !important;
+        margin-bottom: 10px;
+    }
+
+
+
+}
+
+.connectTitleBorder {
+    border-top: 1px solid;
+    padding: 0;
+    padding-top : 20px;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+    float: none;
+}
+
+
+.homeFormSpinner
+{
+    font-size: 21px;
+}
+
+#loginPasswordRenewed {
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 15px;
+}
+
+#peConnectPage iframe {
+    border: 0;
+    width: 100%;
+    height: 550px;
+    max-width: 390px;
+}
+
+.extConnect
+{
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.extConnect td
+{
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.fa-lock
+{
+    min-width: 14px;
+}

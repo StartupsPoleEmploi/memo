@@ -30,10 +30,16 @@ BackOffice.prototype = {
 
         $("#btGetUserActivities").on("click",$.proxy( t.getUserActivities, t));
         $("#btGetSpecificUserActivities").on("click",$.proxy( t.getSpecificUserActivities, t));
+        $("#btdeleteAllCandidatures").on("click",$.proxy( t.deleteAllCandidatures, t));
+        $("#btloadTDB").on("click",$.proxy( t.loadTDB, t));
         $("#btGetCandAndUserCount").on("click",$.proxy( t.getCandAndUserCount, t));
 
-        $("#btStartQuartzMaster").on("click",$.proxy( t.startQuartzMaster, t));
-        $("#btStopQuartzMaster").on("click",$.proxy( t.stopQuartzMaster, t));
+        $("#btStartJobsMails").on("click",$.proxy( t.startJobsMails, t));
+        $("#btStopJobsMails").on("click",$.proxy( t.stopJobsMails, t));
+        $("#btStartJobsAdmins").on("click",$.proxy( t.startJobsAdmins, t));
+        $("#btStopJobsAdmins").on("click",$.proxy( t.stopJobsAdmins, t));
+        $("#btStartJobsCalculs").on("click",$.proxy( t.startJobsCalculs, t));
+        $("#btStopJobsCalculs").on("click",$.proxy( t.stopJobsCalculs, t));
 
         t.setDisplay();
 
@@ -62,6 +68,7 @@ BackOffice.prototype = {
         {
             t.getCandidatureCount();
             t.getCandidaturePerUser();
+            t.getCandidatureCurrentUserCount();
         }
     },
 
@@ -248,7 +255,7 @@ BackOffice.prototype = {
                 {
                     var a, as = response.activities,
                         h = "<table><tr><th>ID</th><th>EMAIL</th><th>A FAIRE</th><th>CANDIDATURES</th><th>RELANCES</th><th>ENTRETIENS</th>" +
-                            "<th>NB CONNEXIONS</th><th>NB CONNEXIONS FACEBOOK</th><th>DERNIERE ACTIVITE</th><th>ACTIVITES</th><th>EMAIL TEST</th></tr>";
+                            "<th>NB CONNEXIONS</th><th>NB CONNEXIONS FACEBOOK</th><th>DERNIERE ACTIVITE</th><th>ACTIVITES</th><th>EMAIL TEST (prios semaine) </th></tr>";
 
                     for(var i=0; i<as.length; ++i)
                     {
@@ -411,6 +418,113 @@ BackOffice.prototype = {
         }
 
     },
+    
+    deleteAllCandidatures : function()
+    {	
+    	var t = this ; 
+    	      	       	
+    	$.ajax({
+    		
+            type: 'DELETE',
+            url: this.rootURL+'/admin/deleteAllCandidatures',
+         
+            success: function(response)
+            {
+                if(response.result=="ok")
+                {
+                	t.getCandidatureCurrentUserCount();
+                	// Pr refresh automatiquement le TDB
+    				localStorage.setItem("refreshBoardFromBO",1);
+                }
+                else
+                {
+                    console.log("Erreur lors de suppression des candidatures");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {             
+                console.log('/admin error: ' + textStatus);
+            }
+
+        });
+    		
+    
+    },
+    
+    loadTDB : function()
+    {	
+    	var t = this ;
+    	
+    	$("#btloadTDB").hide();
+        $("#spinnerLoadTDB").show();
+       
+        for(var i in CS.JOBBOARD_LIB) {
+	    	$.ajax({
+	    		type : 'PUT',
+	    		url: this.rootURL + '/admin/loadTDB/' + CS.JOBBOARD_LIB[i],
+	
+	    		success: function(response)
+	    		{
+	    			if (response.jobboard == CS.JOBBOARD_LIB[i]) {
+    					$("#btloadTDB").show();
+    					$("#spinnerLoadTDB").hide();
+    				
+    					// refresh du compteur de candidatures
+    					t.getCandidatureCurrentUserCount();
+    					// Pr refresh automatiquement le TDB
+    					localStorage.setItem("refreshBoardFromBO",1);
+    				}
+	    		},
+	
+	    		error : function(jqXHR, textStatus, errorThrown)
+	    		{		
+	    			console.log('/admin error test auto : ' + textStatus);
+	    			
+	    			if (response.jobboard == CS.JOBBOARD_LIB[i]) {
+    					$("#btloadTDB").show();
+    					$("#spinnerLoadTDB").hide();
+    				
+    					// refresh du compteur de candidatures
+    					t.getCandidatureCurrentUserCount();
+    					// Pr refresh automatiquement le TDB
+    					localStorage.setItem("refreshBoardFromBO",1);
+    				}
+	    		}
+	
+	    	});
+    	}
+    },
+
+    getCandidatureCurrentUserCount : function()
+    {
+    	
+        $.ajax({
+            type: 'GET',
+            url: this.rootURL + '/admin/candidatureCurrentUserCount',
+            dataType: "json",
+
+            success: function (response)
+            {
+                if(response.result=="ok")
+                {
+                    var count = response.candidatureCurrentUserCount;
+                    $('#candidatureCurrentUserCount').html(count);
+                    
+                }
+                else
+                {
+                    console.log("Erreur lors du chargement du nombre de candidature de l'utilisateur en cours");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                    console.log('/admin error: ' + textStatus);
+            }
+        });
+
+    },
+    
+    
 
     showActivities : function(userId)
     {
@@ -511,8 +625,17 @@ BackOffice.prototype = {
         $('#blocNbCandidatureReseau').hide();
     },
 
+    displayQuartzInfo : function(response)
+    {
+    	$("#quartz").html("hostname : " + response.hostname + "<br/> quartz running : " + response.quartzIsRunning);
+        $("#jobsMails").html("<br/> jobs_mails : " + response.jobsMails);  
+        $("#jobsAdmins").html("<br/> jobs_admins : " + response.jobsAdmins);
+        $("#jobsCalculs").html("<br/> jobs_calculs : " + response.jobsCalculs);
+    },
+    
     getQuartzInfo : function()
     {
+    	var t = this;
         $.ajax({
             type: 'GET',
             url: this.rootURL + '/admin/quartz',
@@ -522,69 +645,151 @@ BackOffice.prototype = {
             {
                 if(response.result=="ok")
                 {
-                    $("#quartz").html("hostname : " + response.hostname + ", <br/>quartz : " + response.quartzIsRunning + ", is quartz master : " + response.isQuartzMaster + " (host quartz master=" + response.hostQuartzMaster + ")");
-                }
-                else
-                {
-                    toastr['error']("Erreur lors du chargement du status Quartz","Une erreur s'est produite "+response.msg);
+                    t.displayQuartzInfo(response);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown)
             {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
-                console.log('/quartz error: ' + textStatus);
+                console.log('/getQuartzInfo error: ' + textStatus);
             }
         });
     },
-
-    startQuartzMaster : function()
+    
+    startJobsMails : function()
     {
+    	var t = this;
         $.ajax({
             type: 'GET',
-            url: this.rootURL + '/admin/startQuartzMaster',
+            url: this.rootURL + '/admin/startJobs/mails',
             dataType: "json",
 
             success: function (response)
             {
                 if(response.result=="ok")
                 {
-                    $("#quartz").html("hostname : " + response.hostname + ", <br/>quartz : " + response.quartzIsRunning + ", is quartz master : " + response.isQuartzMaster + " (host quartz master=" + response.hostQuartzMaster + ")");
-                }
-                else
-                {
-                    toastr['error']("Erreur lors de startQuartzMaster","Une erreur s'est produite "+response.msg);
+                	t.displayQuartzInfo(response);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown)
             {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
-                console.log('/quartz error: ' + textStatus);
+                console.log('/startJobsMails error: ' + textStatus);
             }
         });
     },
 
-    stopQuartzMaster : function()
+    stopJobsMails : function()
     {
+    	var t = this;
         $.ajax({
             type: 'GET',
-            url: this.rootURL + '/admin/stopQuartzMaster',
+            url: this.rootURL + '/admin/stopJobs/mails',
             dataType: "json",
 
             success: function (response)
             {
                 if(response.result=="ok")
                 {
-                    $("#quartz").html("hostname : " + response.hostname + ", <br/>quartz : " + response.quartzIsRunning + ", is quartz master : " + response.isQuartzMaster + " (host quartz master=" + response.hostQuartzMaster + ")");
-                }
-                else
-                {
-                    toastr['error']("Erreur lors de stopQuartzMaster","Une erreur s'est produite "+response.msg);
+                	t.displayQuartzInfo(response);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown)
             {
                 // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
-                console.log('/quartz error: ' + textStatus);
+                console.log('/stopJobsMails error: ' + textStatus);
+            }
+        });
+    },
+    
+    startJobsAdmins : function()
+    {
+    	var t = this;
+        $.ajax({
+            type: 'GET',
+            url: this.rootURL + '/admin/startJobs/admins',
+            dataType: "json",
+
+            success: function (response)
+            {
+                if(response.result=="ok")
+                {
+                	t.displayQuartzInfo(response);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
+                console.log('/startJobsAdmins error: ' + textStatus);
+            }
+        });
+    },
+
+    stopJobsAdmins : function()
+    {
+    	var t = this;
+        $.ajax({
+            type: 'GET',
+            url: this.rootURL + '/admin/stopJobs/admins',
+            dataType: "json",
+
+            success: function (response)
+            {
+                if(response.result=="ok")
+                {
+                	t.displayQuartzInfo(response);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
+                console.log('/stopJobsAdmins error: ' + textStatus);
+            }
+        });
+    },
+    
+    startJobsCalculs : function()
+    {
+    	var t = this;
+        $.ajax({
+            type: 'GET',
+            url: this.rootURL + '/admin/startJobs/calculs',
+            dataType: "json",
+
+            success: function (response)
+            {
+                if(response.result=="ok")
+                {
+                	t.displayQuartzInfo(response);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
+                console.log('/startJobsCalculs error: ' + textStatus);
+            }
+        });
+    },
+
+    stopJobsCalculs : function()
+    {
+    	var t = this;
+        $.ajax({
+            type: 'GET',
+            url: this.rootURL + '/admin/stopJobs/calculs',
+            dataType: "json",
+
+            success: function (response)
+            {
+                if(response.result=="ok")
+                {
+                	t.displayQuartzInfo(response);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
+                console.log('/stopJobsCalculs error: ' + textStatus);
             }
         });
     }

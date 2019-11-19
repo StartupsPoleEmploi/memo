@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="19px" viewBox="0 0 20 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.1 (72631) - https://sketchapp.com -->
+    <title>icon/demie-etoile</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/demie-etoile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="Group-14" stroke-width="2">
+            <polygon id="Star-Copy-5" stroke="#EBEBEB" fill="#EBEBEB" transform="translate(15.244717, 9.045085) scale(-1, 1) translate(-15.244717, -9.045085) " points="20 15 14.1221475 18.0901699 15.2447174 11.545085 10.4894348 6.90983006 17.0610737 5.95491503 20 2.13162821e-14"></polygon>
+            <polygon id="Star" stroke="#FFDA68" fill="#FFDA68" points="10 15 4.12214748 18.0901699 5.24471742 11.545085 0.489434837 6.90983006 7.06107374 5.95491503 10 2.30926389e-14"></polygon>
+        </g>
+    </g>
+</svg>

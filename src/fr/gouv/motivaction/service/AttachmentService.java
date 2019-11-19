@@ -54,26 +54,6 @@ public class AttachmentService {
             prop.load(in);
 
             env = prop.getProperty("env");
-            /*if (env != null && "PROD".equals(env)) {
-                tenantName = prop.getProperty("tenantName.production");
-                authUrl = prop.getProperty("authUrl.production");
-                userName = prop.getProperty("userName.production");
-                password = prop.getProperty("password.production");
-                container = prop.getProperty("container.production");
-
-            } else if ("RECETTE".equals(env)){
-                tenantName = prop.getProperty("tenantName.recette");
-                authUrl = prop.getProperty("authUrl.recette");
-                userName = prop.getProperty("userName.recette");
-                password = prop.getProperty("password.recette");
-                container = prop.getProperty("container.recette");
-            } else {
-                tenantName = prop.getProperty("tenantName.local");
-                authUrl = prop.getProperty("authUrl.local");
-                userName = prop.getProperty("userName.local");
-                password = prop.getProperty("password.local");
-                container = prop.getProperty("container.local");
-            }*/
 
             maxFileSize = Long.parseLong(prop.getProperty("maxFileSize"));
             authorizedFilesRegexp = prop.getProperty("authorizedFilesRegexp");

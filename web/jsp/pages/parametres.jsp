@@ -4,7 +4,7 @@
 
     <div id="parametresPageContainer">
 
-        <div class="pageTitle"><h1>Paramètres</h1></div>
+        <div class="pageTitle"><span>Paramètres</span></div>
 
 		<div class="row">
         <div class="col-md-12 col-xs-12" id="parametresForm">
@@ -45,19 +45,30 @@
 					<div id="userInfo" class="formBloc">
 						<label for="userInfo">Mes informations</label>
 						<div></div>
-						<div><br />Vous pouvez mettre à jour ces informations sur le site de <a href="https://candidat.pole-emploi.fr/candidat/mescoordonnees/consultation" target="poleemploi">Pôle emploi</a>.<br />Elles seront mises à jour sur MEMO à votre prochaine connexion avec votre compte Pôle emploi</div>
+						<div><br />Vous pouvez mettre à jour ces informations sur le site de <a href="https://candidat.pole-emploi.fr/candidat/mescoordonnees/consultation" target="poleemploi">Pôle emploi</a>.<br />Elles seront mises à jour sur Memo à votre prochaine connexion avec votre compte Pôle emploi</div>
 					</div>
 
-					<div class="formBloc">
-						<label for="receiveEmailForm">Notifications</label>
+					  <div class="formBloc">
+						<label for="receiveEmail">Notifications</label>
 						<div class="form-group">
-							<label class="col-md-5 col-sm-6 col-xs-12 control-label" for="receiveEmailForm">Recevoir des conseils/rappels par email : </label>
+							<label class="col-md-5 col-sm-6 col-xs-12 control-label" for="receiveEmail">Recevoir des conseils/rappels par email : </label>
 							<div class="col-md-5 col-sm-6 col-xs-4 ">
 								<div class="visible-xs"><br /></div>
-								<input type="checkbox" id="receiveEmailForm" />
+								<input name="updateNotificationState" type="checkbox" id="receiveEmailForm" />
 							</div>
 						</div>
 					</div>
+					
+					 <div class="formBloc">
+						<label for="consentAccess">Accès conseiller</label>
+						<div class="form-group">
+							<label class="col-md-5 col-sm-6 col-xs-12 control-label" for="consentAccess">Autoriser les conseillers Pôle emploi à consulter votre espace Memo</label>
+							<div class="col-md-5 col-sm-6 col-xs-4 ">
+								<div class="visible-xs"><br /></div>
+								<input name="updateConsentState" type="checkbox" id="consentAccessForm" />
+							</div>
+						</div>
+					</div> 
 
 					<div class="formBloc">
 	                	<label for="extractTDBButton">Tableau de bord</label>
@@ -77,7 +88,7 @@
 		
         <div class="formButtons" style="display: block;">
             <button type="button" class="btn dark btn-outline parametresFormCancel">Fermer</button>
-            <button type="button" class="btn green buttonSaveParametres">Enregistrer</button>
+            <!--  <button type="button" class="btn green buttonSaveParametres">Enregistrer</button>-->
         </div>
         
 

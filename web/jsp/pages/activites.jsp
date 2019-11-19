@@ -4,7 +4,7 @@
 
   <div id="activitesPageContainer">
 
-    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1>Journal de vos activités</h1></div>
+    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><span>Journal de vos activités</span></div>
 
     <div class="row">
       <div class="col-md-12 col-xs-12" >

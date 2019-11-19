@@ -1,22 +1,8 @@
 package fr.gouv.motivaction.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 import org.apache.log4j.Logger;
 
 import fr.gouv.motivaction.dao.AdminDAO;
-import fr.gouv.motivaction.mails.MailTools;
-import fr.gouv.motivaction.model.UserActivity;
 import fr.gouv.motivaction.utils.Utils;
 
 public class AdminService {
@@ -84,5 +70,19 @@ public class AdminService {
 
         return res;
     }
+    
+    public static void deleteAllCandidatures(long userId) throws Exception
+    {
+    	AdminDAO.deleteAllCandidatures(userId);
+    }
 
+    public static void loadTDB(long userId, String jobboard) throws Exception
+    {
+    	AdminDAO.loadTDB(userId, jobboard);
+    }
+
+    public static long getCandidatureCurrentUserCount(long userId) throws Exception
+    {
+        return AdminDAO.getCandidatureCurrentUserCount(userId);
+    }
 }

@@ -16,8 +16,8 @@
                         <div class="marginFooterHeader">
                         <!-- BEGIN LOGO -->
                         <div class="pull-left">
-                            <div class="logoSmall pull-left" id="logoHomeHeader"><img src="./pic/logo_memo.png" alt="Logo MEMO"/></div>
-                            <div class="logoPE hidden-xs"><a href="http://www.pole-emploi.fr" target="_blank"><img src="./pic/logos/pe.png" alt="Logo Pôle emploi"/></a></div>
+                            <div class="logoSmall pull-left" id="logoHomeHeader"><img src="../pic/logo_memo.png" alt="Logo MEMO"/></div>
+                            <div class="logoPE hidden-xs"><a href="http://www.pole-emploi.fr" target="_blank"><img src="../pic/logos/pe.png" alt="Logo Pôle emploi"/></a></div>
                         </div>
 
                         <!-- END LOGO -->

@@ -3,7 +3,7 @@
 <div id="candidatureFormStepEntretien" class="formTunnelBloc" style="display:none;">
 
   <div>
-    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1>Quel est votre entretien ?</h1></div>
+    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><span>Quel est votre entretien ?</span></div>
     
     <div class="mt-element-step" style="width: 70%;margin: auto; margin-bottom: 20px;">
 		<div class="row step-default">

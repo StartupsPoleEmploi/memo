@@ -2,8 +2,15 @@ package fr.gouv.motivaction.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -11,13 +18,13 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,7 +36,9 @@ import fr.gouv.motivaction.Constantes.JobBoardUrl;
 import fr.gouv.motivaction.dao.CandidatureDAO;
 import fr.gouv.motivaction.dao.CandidatureEventDAO;
 import fr.gouv.motivaction.dao.UserDAO;
+import fr.gouv.motivaction.exception.LaBonneBoiteAPIException;
 import fr.gouv.motivaction.exception.OffreExpiredException;
+import fr.gouv.motivaction.json.CandidatureJson;
 import fr.gouv.motivaction.mails.MailTools;
 import fr.gouv.motivaction.model.Candidature;
 import fr.gouv.motivaction.model.CandidatureEvent;
@@ -55,6 +64,7 @@ public class CandidatureService {
     private static final String logCode = "009";
 
     public static Timer saveCandidaturesTimer = Utils.metricRegistry.timer("saveCandidaturesTimer");
+    public static Timer saveCandidatureTimer = Utils.metricRegistry.timer("saveCandidatureTimer");
     public static Timer saveCandidatureStateTimer = Utils.metricRegistry.timer("saveCandidatureStateTimer");
     public static Timer saveCandidatureDateTimer = Utils.metricRegistry.timer("saveCandidatureDateTimer");
     public static Timer removeCandidatureTimer = Utils.metricRegistry.timer("removeCandidatureTimer");
@@ -64,7 +74,9 @@ public class CandidatureService {
     public static Timer setCandidatureExpiredTimer = Utils.metricRegistry.timer("setCandidatureExpiredTimer");*/
 
     static Properties propSlack;
+    static Properties propApi;
     public static String lbbSecret;
+    public static String apiLbbFicheUrl;
     public static VTimeZone tz;
 
     static {
@@ -74,15 +86,19 @@ public class CandidatureService {
     private static void loadSlackProperties()
     {
         propSlack = new Properties();
+        propApi = new Properties();
         InputStream in = null;
 
         try
         {
             in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/secret.properties");
             propSlack.load(in);
-
             lbbSecret = propSlack.getProperty("lbbSecret");
-
+            in.close();
+            
+            in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/api.properties");
+            propApi.load(in);
+            apiLbbFicheUrl = propApi.getProperty("apiLbbFicheUrl");
             in.close();
         }
         catch (IOException e)
@@ -119,6 +135,77 @@ public class CandidatureService {
         return result;
     }
 
+    public static long saveCandidatureFromAPI(CandidatureJson candidatureJson, long idUser) throws Exception
+    {
+    	Candidature candidature = null;
+    	long idCand = 0;
+    	long idCandEvt = 0;
+    	CandidatureEvent candidatureEvent = null;
+    	String url ="";
+    	JSONObject jsonFicheLBB = null;
+    	boolean isDoublon = false;
+    	LocalDateTime currentTime = LocalDateTime.now();
+        final Timer.Context context = saveCandidatureTimer.time();
+        
+        if (candidatureJson != null) {
+        	if (!StringUtils.isEmpty(candidatureJson.getNumSiret())) {
+        		isDoublon = CandidatureDAO.isDoublon(idUser,candidatureJson.getNumSiret());
+        		if (!isDoublon) {
+        			candidature = new Candidature();
+		        	url = apiLbbFicheUrl;
+		        	if (!StringUtils.isEmpty(url)) {
+		        		url = url.replaceAll("%id%", candidatureJson.getNumSiret());
+		        		// Ajout de param d'authen pr appeler l'API de LBB
+		        		url = translateURLLaBonneBoite(url);
+		        		try {
+		        			// Appel à l'API LBB pour récupérer les infos de la fiche entreprise
+		        			jsonFicheLBB = APIService.getLaBonneBoiteAPIFiche(url);
+		            		if (jsonFicheLBB != null) {
+		            			// Candidature de type SPONTANEE
+		            			candidature = new Candidature();
+			            		candidature.setNomCandidature((String)jsonFicheLBB.get("name"));
+			            		candidature.setUserId(idUser);
+			            		candidature.setType(Constantes.TypeOffre.SPONT.ordinal());
+			                	candidature.setNumSiret(candidatureJson.getNumSiret());
+			                	candidature.setArchived(0);
+			                	candidature.setEtat(Constantes.Etat.A_POSTULE.ordinal());
+			                	candidature.setIsButton(0);
+			                	candidature.setSourceId(candidatureJson.getNumSiret());
+			                	candidature.setJobBoard("candidatureLaBonneBoite");
+			                	candidature.setNomSociete((String)jsonFicheLBB.get("name"));
+			                	candidature.setVille((String)jsonFicheLBB.get("city"));
+			                	candidature.setEmailContact((String)jsonFicheLBB.get("email"));
+			                	candidature.setTelContact((String)jsonFicheLBB.get("phone"));
+			                	candidature.setUrlSource((String)jsonFicheLBB.get("url"));
+			                	idCand = CandidatureDAO.save(candidature);
+			                	// Event 'J'ai postule'
+			                	candidatureEvent = new CandidatureEvent();
+			                	candidatureEvent.setCandidatureId(idCand);
+			                	candidatureEvent.setEventType(Constantes.TypeEvt.AI_POSTULE.ordinal());
+			                	candidatureEvent.setEventTime(Timestamp.valueOf(currentTime).getTime());
+			                	idCandEvt = CandidatureEventDAO.save(candidatureEvent);
+			                	if(idCandEvt != 0) {
+			            			Utils.logUserAction(idUser, "CandidatureEvent", "Création", idCandEvt);
+			            		}
+		            		} else {
+		            			throw new LaBonneBoiteAPIException("Society with SIRET : " + candidatureJson.getNumSiret() + " not found in LBB API");
+		            		}
+		        		} catch (Exception e) {
+		        			log.error(logCode + "-006 Error API LBB. uri=" + url + " error=" + e);
+		        			// On fait remonter l'exception jusqu'au webservice
+		        			throw e;
+		        		}
+		        	}
+        		} else {
+        			throw new LaBonneBoiteAPIException("Candidature has already saved" );
+        		}
+        	} else {
+        		throw new LaBonneBoiteAPIException("SIRET is null" );
+        	}
+        }
+        return idCand;  
+    }
+    
     public static Candidature saveCandidatures(MultivaluedMap<String,String>form, long userId) throws Exception
     {
         Candidature candidature = null;
@@ -418,6 +505,59 @@ public class CandidatureService {
         return res;
     }
     
+    public static String getJSONFromPartnerUrl(String url) throws Exception
+    {
+       
+        String res = "";
+
+        CookieHandler.setDefault(new CookieManager(null,CookiePolicy.ACCEPT_ALL));  // permet la connexion à la recette PE.fr
+
+        URL Url = new URL(url);
+
+        try
+        {
+            HttpURLConnection con = (HttpURLConnection) Url.openConnection();
+
+            con.setConnectTimeout(15 * 1000);
+            con.setReadTimeout(15 * 1000);
+
+            // User Agent nécessaire pour certains jobboards
+            con.setRequestProperty("User-Agent", "curl/7.38.0");
+
+            InputStream is = con.getInputStream();
+
+            // Encoding character
+            String encoding = con.getContentEncoding();
+            encoding = getEncodingFromURL(encoding, url);
+            // ContentType character
+            String contentType = "";
+            if (con.getContentType() != null && con.getContentType().indexOf("charset=") > 0) {
+                contentType = con.getContentType();
+                contentType = contentType.substring(contentType.indexOf("charset=") + 8, contentType.length());
+                contentType = contentType.toUpperCase();
+            }
+
+            if (contentType != "" && !contentType.equals(encoding)) {
+                // En conflit, dans certains cas, tel qu'avec carriere.info.fr
+                encoding = contentType;
+            }
+
+            res = IOUtils.toString(is, encoding);
+
+        }
+        catch (java.net.SocketTimeoutException e)
+        {
+            log.error(logCode + "-020 Error timemout import offre. url="+url+" error=" + e);
+            res = "error";
+        }
+        catch (Exception e)
+        {
+            log.error(logCode + "-021 Error import Offre. url="+url+" error=" + e);
+            res = "error";
+        }
+
+        return res;
+    }
     public static String getOffrePoleEmploiFromAPI(String url) throws Exception
     {
         String res = null;
@@ -521,13 +661,14 @@ public class CandidatureService {
     public static String translateURLApec(String u)
     {
         String idOffre = u;
-        String res = "https://cadres.apec.fr/cms/webservices/offre/public?numeroOffre=";
+        String res = "https://www.apec.fr/cms/webservices/offre/public?numeroOffre=";
+        String separator = "detail-offre/"; 
         // forme attendue https://cadres.apec.fr/cms/webservices/offre/public?numeroOffre=161524336W
         // forme en entrée https://cadres.apec.fr/offres-emploi-cadres/0_0_0_161824336W__________offre-d-emploi-developpeur-php-h-f.html?numIdOffre=161524336W&selectedElement=0&sortsType=SCORE&sortsDirection=DESCENDING&nbParPage=20&typeAffichage=detaille&page=0&motsCles=d%C3%A9veloppeur&xtmc=developpeur&xtnp=1&xtcr=1&retour=%2Fhome%2Fmes-offres%2Frecherche-des-offres-demploi%2Fliste-des-offres-demploi.html%3FmotsCles%3Dd%25C3%25A9veloppeur%26sortsType%3DSCORE%26sortsDirection%3DDESCENDING
 
-        idOffre = u.substring(u.indexOf("numIdOffre") + 11);
-        if (idOffre.indexOf("&")!=-1)
-        	idOffre = idOffre.substring(0, idOffre.indexOf("&"));
+        idOffre = u.substring(u.indexOf(separator) + separator.length());
+        if (idOffre.indexOf("?")!=-1)
+        	idOffre = idOffre.substring(0, idOffre.indexOf("?"));
 
         return res + idOffre;
     }
@@ -664,44 +805,13 @@ public class CandidatureService {
 
         String res=url+"?"+params;
 
-        String signature = hmacDigest(params,lbbSecret,"HmacMD5");
+        String signature = Utils.hmacDigest(params,lbbSecret,"HmacMD5");
         res+="&signature="+signature;
 
         /*if(res.startsWith("https"))
             res = "http"+res.substring(5);*/
 
         return res;
-    }
-
-
-    public static String hmacDigest(String msg, String keyString, String algo)
-    {
-        //log.info("params : "+msg+" / "+keyString);
-        String digest = null;
-        try
-        {
-            SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"), algo);
-            Mac mac = Mac.getInstance(algo);
-            mac.init(key);
-
-            byte[] bytes = mac.doFinal(msg.getBytes("ASCII"));
-
-            StringBuffer hash = new StringBuffer();
-            for (int i = 0; i < bytes.length; i++) {
-                String hex = Integer.toHexString(0xFF & bytes[i]);
-                if (hex.length() == 1) {
-                    hash.append('0');
-                }
-                hash.append(hex);
-            }
-            digest = hash.toString();
-        }
-        catch (Exception e)
-        {
-            log.error(logCode+"-006 CANDIDATURE hmacDigest error : "+e);
-        }
-
-        return digest;
     }
 
     public static String getEncodingFromURL(String encoding,String url)
@@ -845,6 +955,13 @@ public class CandidatureService {
                 res = getJobIdFromRandstad(url);
                 res += getRelevantContentFromRandstad(html);
             }
+            else if(Utils.isInDomain(url, JobBoardUrl.JOBIJOBA.getDomaine())) {
+            	
+            	jobBoard = JobBoardUrl.JOBIJOBA.toString();
+            	res = getJobIdFromJobiJoba(url);
+            	res += getRelevantContentFromJobiJoba(html);
+            		
+            }
             else if(Utils.isInDomain(url,"job.com") && (
                         Utils.isInDomain(url,"ouestjob.com") ||
                         Utils.isInDomain(url,"parisjob.com") ||
@@ -874,11 +991,11 @@ public class CandidatureService {
 	
 	                if (!isGeneric) {
 		        		// Mails aux admins pour alerter la bascule vers l'import générique
-		        		MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Avertissement " + MailTools.env + " d'import MEMO de " + jobBoard + " basculé vers import générique", "L'import n'a pas été fait pour l'url suivante : " + url + " error : " + e);
+		        		MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Avertissement " + Constantes.env + " d'import MEMO de " + jobBoard + " basculé vers import générique", "L'import n'a pas été fait pour l'url suivante : " + url + " error : " + e);
 		        		res = getRelevantContentFromGenericSource(html);
 		        	} else {
 		        		// Mails aux admins pour analyser le problème sur l'import
-	                    MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Erreur " + MailTools.env + " d'import MEMO générique", "L'import générique n'a pas été fait pour l'url suivante : " + url);
+	                    MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Erreur " + Constantes.env + " d'import MEMO générique", "L'import générique n'a pas été fait pour l'url suivante : " + url);
 		        	}
 	        	}
 	            catch(Exception ex)
@@ -886,7 +1003,7 @@ public class CandidatureService {
 	                res = "error";
 	                // Mails aux admins pour analyser le problème sur l'import
 	                log.error(logCode + "-004 Error processing import on server. url=" + url + " error=" + ex);
-	                MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Erreur " + MailTools.env + " d'import MEMO générique", "L'import générique n'a pas été fait pour l'url suivante : " + url + " error : " + ex);
+	                MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Erreur " + Constantes.env + " d'import MEMO générique", "L'import générique n'a pas été fait pour l'url suivante : " + url + " error : " + ex);
 	        	}
         	}
             else
@@ -901,8 +1018,10 @@ public class CandidatureService {
 	public static String getIsExpiredFromHTML(String html, String url) throws Exception
     {
         String res="ok";
-
-        if(Utils.isInDomain(url,"labonneboite"))
+        
+        if(url.indexOf("getJobJSONForMemo")>=0)
+            res = getIsExpiredFromMemo(html);
+        else if(Utils.isInDomain(url,"labonneboite"))
             res = getIsExpiredFromLaBonneBoite(html);
         else if(Utils.isInDomain(url,"pole-emploi"))
             res = getIsExpiredFromPoleEmploi(html);
@@ -936,6 +1055,8 @@ public class CandidatureService {
             res = getIsExpiredFromQapa(html);*/
         else if(Utils.isInDomain(url, JobBoardUrl.ADECCO.getDomaine()))
             res = getIsExpiredFromAdecco(html);
+        else if(Utils.isInDomain(url, JobBoardUrl.JOBIJOBA.getDomaine()))
+        	res = getIsExpiredFromJobiJoba(html);
         else if(Utils.isInDomain(url, JobBoardUrl.MANPOWER.getDomaine()))
             res = getIsExpiredFromManpower(html);
         else if(Utils.isInDomain(url,"job.com") && (
@@ -952,6 +1073,32 @@ public class CandidatureService {
 
         return res;
     }
+
+	private static String getIsExpiredFromMemo(String html) {
+		
+		
+		String res = "";
+		JSONObject jsonObject = null;
+		JSONParser parser  = new JSONParser();
+		boolean expired;
+		
+		try {
+			jsonObject = (JSONObject) parser.parse(html);
+			if(jsonObject != null) {
+				if(jsonObject.get("expired") != null) {
+					expired = Boolean.parseBoolean((String)jsonObject.get("expired"));
+					if (expired)
+						res = "expired";
+				}
+			}
+		}
+		catch(Exception e) {
+			log.error(logCode + " - error parsing json generic button");
+		}
+
+		return res;
+	}
+
 
 	private static String getRelevantContentFromGenericSource(String html) throws Exception
     {
@@ -1775,6 +1922,8 @@ public class CandidatureService {
                 oId = oId.substring(0,oId.indexOf("#"));
             else if(oId.indexOf("&amp;")>=0)
                 oId = oId.substring(0,oId.indexOf("&amp;"));
+            else if(oId.indexOf("&")>=0)
+                oId = oId.substring(0,oId.indexOf("&"));
 
             res += oId + "\n";
         }
@@ -1910,11 +2059,11 @@ public class CandidatureService {
         String res = "";
 
         if ("ok".equals(getIsExpiredFromRegionsjob(html))) {
-        	// L'offre n'est pas expirée
-        	res = html.substring(html.indexOf("<div id=\"annonce"));
-            if (res.indexOf("<div id=\"load-profils-candidats")>0) {
-            	res = res.substring(0, res.indexOf("<div id=\"load-profils-candidats"));
-            }
+        	if (html.indexOf("\"@type\": \"JobPosting\"")>0) {
+        		// -51 car il faut aussi prendre les 51 caractères précédents correspondant à {"@context": "http://schema.org", "@type": "JobPosting"
+        		res = html.substring(html.indexOf("\"@type\": \"JobPosting\"")-51);
+        		res = res.substring(0, res.indexOf("</script>"));
+        	} 
         } else {
         	throw new OffreExpiredException();
         }
@@ -1969,7 +2118,49 @@ public class CandidatureService {
 
         return res;
     }
-
+    
+    public static String getJobIdFromJobiJoba(String url)
+    {
+		String res ="";
+			
+		try
+        {
+            res = "offreId=";                     
+            String oId = url.substring(url.lastIndexOf("/") + 1);                    
+            res += oId ;
+            
+        }
+		catch (Exception e)
+		{
+			res="";
+		}
+		
+		return res ; 
+    	
+    }
+    
+    private static String getRelevantContentFromJobiJoba(String html) throws Exception {
+		String res= "";
+		
+		if("ok".equals(getIsExpiredFromJobiJoba(html))) {
+			
+			if(html.indexOf("<div class=\"col-sm-12 col-md-8 permalink-wrapper")>=0)
+				res= html.substring(html.indexOf("<div class=\"col-sm-12 col-md-8 permalink-wrapper"));			
+		}
+				
+		return res ;
+    }
+    
+    private static String getIsExpiredFromJobiJoba(String html) {
+		
+    	String res = "ok" ;
+		
+		if(html.indexOf("Malheureusement cette offre d'emploi n'est plus disponible !")>=0)
+			res="expired";
+		
+		return res;
+    	
+    }
     public static CandidatureEvent saveCandidatureEvent(MultivaluedMap<String,String>form, long userId) throws Exception
     {
         CandidatureEvent evt = null;

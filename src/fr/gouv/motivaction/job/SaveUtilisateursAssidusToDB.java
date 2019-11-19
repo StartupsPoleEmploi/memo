@@ -1,20 +1,22 @@
 package fr.gouv.motivaction.job;
 
-import com.codahale.metrics.Timer;
-import fr.gouv.motivaction.mails.MailTools;
-import fr.gouv.motivaction.service.MailService;
-import fr.gouv.motivaction.utils.DatabaseManager;
-import fr.gouv.motivaction.utils.Utils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import com.codahale.metrics.Timer;
+
+import fr.gouv.motivaction.Constantes;
+import fr.gouv.motivaction.mails.MailTools;
+import fr.gouv.motivaction.service.MailService;
+import fr.gouv.motivaction.utils.DatabaseManager;
+import fr.gouv.motivaction.utils.Utils;
 
 /**
  * Created by Alan on 03/04/2018.
@@ -34,7 +36,7 @@ public class SaveUtilisateursAssidusToDB implements Job {
         String body = this.saveUtilisateursAssidusToDB();
 
         // envoi du mail de rapport d'execution aux intras, devs et extra
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Enregistrement des utilisateurs assidus du mois précédent", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Enregistrement des utilisateurs assidus du mois précédent", body);
     }
 
     /**

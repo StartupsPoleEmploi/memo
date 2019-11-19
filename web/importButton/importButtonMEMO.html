@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="noindex" name="robots" />
+</head>
+<body>
+<div id="importContainer" ></div>
+</body>
+
+<script>
+    !function(d,s)
+    {
+        var js,
+                fjs= d.getElementsByTagName(s)[0];
+
+        js= d.createElement(s);
+        js.async=true;
+
+        if(window.location.hostname.indexOf('beta')>=0)
+            js.src="https://memo.beta.pole-emploi.fr/js/importButton/buttonQueryMEMO-min-0.js";
+        else if(window.location.hostname.indexOf('localhost')>=0)
+            js.src="http://localhost/js/importButton/buttonQueryMEMO-min-0.js";
+        else
+            js.src="https://memo.pole-emploi.fr/js/importButton/buttonQueryMEMO-min-0.js";
+        fjs.parentNode.insertBefore(js,fjs);
+
+    }(document,"script");
+</script>
+
+</html>

@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
-import com.codahale.metrics.Timer;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import com.codahale.metrics.Timer;
+
+import fr.gouv.motivaction.Constantes;
 import fr.gouv.motivaction.model.UserSummary;
 import fr.gouv.motivaction.service.MailService;
 import fr.gouv.motivaction.utils.DatabaseManager;
@@ -30,7 +32,7 @@ public class DailyAlert extends AlertMail {
         String body = this.buildAndSendWeeklyTaskReminderNoCandidature(0);
         body += "<br/><br/> Moludo du random d'envoie :" + this.moduloFiltreEnvoiMailAdmin;
         // envoi du mail de rapport d'execution aux admins
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Memo vous aide pour votre recherche d'emploi", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Memo vous aide pour votre recherche d'emploi", body);
     }
 
     // email de relance pour les utilisateurs sans fiches actives
@@ -136,7 +138,7 @@ public class DailyAlert extends AlertMail {
 
         html += MailTools.buildHTMLSignature(source, campaign, "Si vous êtes toujours en recherche d'emploi<br />cliquez ici pour utiliser MEMO", false);
 
-        html += MailTools.buildHTMLFooter(user, source, campaign);
+        html += MailTools.buildHTMLFooter(user, source, campaign, true);
 
         boolean enBCC = false;
         // pour limiter l'envoi de mails aux admins
@@ -144,7 +146,7 @@ public class DailyAlert extends AlertMail {
     		enBCC = true;
     	}
     	
-        if ("PROD".equals(MailTools.env) || test || ("RECETTE".equals(MailTools.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
+        if ("PROD".equals(Constantes.env) || test || ("RECETTE".equals(Constantes.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
         	// PROD ou RECETTE avec modulo OK ou mode TEST depuis le BO
         	MailService.sendMailWithImage(user.getEmail(), subject, html, test, enBCC);
         }

@@ -1,0 +1,70 @@
+.linkAdvice
+{
+    color: #5371F8;
+}
+
+
+.adviceContainer .blueButton,
+.adviceModal .blueButton
+{
+    margin-bottom: 15px;
+    line-height: normal;
+    font-size: 18px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+
+.adviceContainer h2 {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.adviceContainer h1 {
+    margin-bottom: 30px;
+}
+
+.titleAdviceMoreInformation {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.adviceModal
+{
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.adviceModal p
+{
+    text-align: justify;
+    padding: 10px;
+}
+
+.adviceModal hr
+{
+    margin-bottom: 30px !important;
+    margin-top: 30px !important;
+}
+
+@media screen and (max-width:1000px)
+{
+    .adviceBackground,
+    .advicePage .breadcrumb
+    {
+        background: #fff;
+    }
+}
+
+@media screen and (max-width:800px)
+{
+    .adviceBackground{
+        padding: 0px 10px 50px 10px;
+    }
+
+    .adviceContainer
+    {
+        padding:0;
+    }
+
+}

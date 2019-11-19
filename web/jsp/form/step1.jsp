@@ -2,7 +2,7 @@
 
 <div id="candidatureForm1stStep" class="formTunnelBloc" style="display:none;">
 
-    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1> Quel type de candidature (ou démarche) souhaitez-vous enregistrer ?</h1></div>
+    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><span> Quel type de candidature (ou démarche) souhaitez-vous enregistrer ?</span></div>
 
 	<div class="mt-element-step" style="width: 70%;margin: auto;">
 		<div class="row step-default">

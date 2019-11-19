@@ -19,7 +19,7 @@ MemoButtonToolkit.prototype = {
         this.initFrameMessageListener();
         this.buildIframe();
         this.buildButtons();
-        this.initToolTip();
+        //this.initToolTip();
         this.initEvents();
         this.removeATags();
     },
@@ -64,10 +64,10 @@ MemoButtonToolkit.prototype = {
 
                     btn.attr("data-original-title", e.data.btText);
                     btn.attr("class","btn-memo "+e.data.className);
-                    /*btn.html("<div></div><span>"+e.data.btText+"</span>" +
-                     "<span class='sr-only'>"+e.data.srText+"</span>");*/
-                    btn.html("<div></div><span class='sr-only'>"+e.data.srText+"</span>");
-                    $(".tooltip.in").html("<div class='tooltip-arrow' style='left: 50%;'></div><div class='tooltip-inner'>"+e.data.btText+"</div>");
+                    btn.html("<div></div><span>"+e.data.btText+"</span>" +
+                        "<span class='sr-only'>"+e.data.srText+"</span>");
+                    //btn.html("<div></div><span class='sr-only'>"+e.data.srText+"</span>");
+                    //$(".tooltip.in").html("<div class='tooltip-arrow' style='left: 50%;'></div><div class='tooltip-inner'>"+e.data.btText+"</div>");
                     btn.attr("title", e.data.btText);
                     if(e.data.className == "btn-memo-off")
                         btn.attr("disabled","disabled");
@@ -77,6 +77,8 @@ MemoButtonToolkit.prototype = {
                         if(memoButtonToolkit.clickedButtons.indexOf(btId)>-1)
                             memoButtonToolkit.clickedButtons.splice(memoButtonToolkit.clickedButtons.indexOf(btId),1);
                     }
+
+                    //memoButtonToolkit.clickedTooltipElement = null;
                 }
             }
         })
@@ -128,30 +130,30 @@ MemoButtonToolkit.prototype = {
         btn.setAttribute("rel","nofollow");
 
         aNode.parentNode.insertBefore(btn, aNode.nextSibling);
-        /*btn.innerHTML =  "<div></div><span>Enregistrer dans MEMO</span>"+
-         "<span class='sr-only'>"+title+"</span>";*/
-        btn.innerHTML =  "<div></div>"+
+        btn.innerHTML =  "<div></div><span>Enregistrer dans MEMO</span>"+
             "<span class='sr-only'>"+title+"</span>";
+        /*btn.innerHTML =  "<div></div>"+
+         "<span class='sr-only'>"+title+"</span>";*/
 
-        /*if(aNode.getAttribute("data-intro-js"))
-         {
-         if(rank==0 && this.activateIntroJs())
-         //this.loadIntroJs();
-         this.loadJePostuleIntroJs();
-         }*/
-    },
-
-    initToolTip : function()
-    {
-        try
+        if(aNode.getAttribute("data-intro-js"))
         {
-            $('button.btn-memo').tooltip();
-            $('button.btn-memo').attr("title","Enregistrer l'offre d'emploi dans MEMO (Ouvre une fenêtre popup)");
-        }
-        catch(err){ // tentative tant que la lib tooltip n'est pas dispo
-            setTimeout(function(){memoButtonToolkit.initToolTip();},100);
+            if(rank==0 && this.activateIntroJs())
+                this.loadIntroJs();
+            //this.loadJePostuleIntroJs();
         }
     },
+
+    /*initToolTip : function()
+     {
+     try
+     {
+     $('button.btn-memo').tooltip();
+     $('button.btn-memo').attr("title","Enregistrer l'offre d'emploi dans MEMO (Ouvre une fenêtre popup)");
+     }
+     catch(err){ // tentative tant que la lib tooltip n'est pas dispo
+     setTimeout(function(){memoButtonToolkit.initToolTip();},100);
+     }
+     },*/
 
     initEvents : function()
     {
@@ -162,22 +164,31 @@ MemoButtonToolkit.prototype = {
             $(bts[i]).on("click",function(e){
                 memoButtonToolkit.sendClickOrder(e.currentTarget);
                 localStorage.setItem("lastMemoClick",new Date().getTime());
-                memoButtonToolkit.clickedTooltipElement = e.currentTarget;
+                //memoButtonToolkit.clickedTooltipElement = e.currentTarget;
             });
 
-            $(bts[i]).on("focus",function(e){
-                $(e.currentTarget).tooltip("show");
-            });
+            /*$(bts[i]).on("focus",function(e){
+             $(e.currentTarget).tooltip("show");
+             });*/
 
-            $(bts[i]).on("blur",function(e){
-                $(e.currentTarget).tooltip("hide");
-            });
+            /*$(bts[i]).on("blur",function(e){
+             $(e.currentTarget).tooltip("hide");
+             });*/
 
-            $(bts[i]).on("mouseout",function(e){
-                if(memoButtonToolkit.clickedTooltipElement) {
-                    $(".tooltip").tooltip("hide");
-                }
-            });
+            /*$(bts[i]).on("mouseout",function(e){
+             if(memoButtonToolkit.clickedTooltipElement) {
+             $(".tooltip").tooltip("hide");
+             }
+             });*/
+
+            /*$(bts[i]).on("mouseover",function(e){
+             if(memoButtonToolkit.clickedTooltipElement && memoButtonToolkit.clickedTooltipElement!=e.currentTarget) {
+
+             try{$(memoButtonToolkit.clickedTooltipElement).tooltip("hide");}catch(err){}
+
+             try{memoButtonToolkit.clickedTooltipElement.tooltip("hide");}catch(err){}
+             }
+             });*/
         }
 
         document.onkeydown = function(e) {
@@ -249,21 +260,19 @@ MemoButtonToolkit.prototype = {
         prt.removeChild(aNode);
     },
 
-    /*startIntroJs : function()
-     {
-     this.introJs = new introJs();
-     this.introJs.setOptions({"steps" : [{element:"#memo-button-0", intro: "<b>Astuce : Utilisez le bouton MEMO</b><br /><br />Enregistrez toutes vos candidatures pour les suivre facilement depuis votre tableau de bord MEMO"}], "doneLabel":"J'ai compris","showBullets":false,"showStepNumbers":false,tooltipPosition:"top"});
-     this.introJs.start();
-
-     localStorage.setItem("lastMemoIntroJs",new Date().getTime());
-     localStorage.setItem("memoIntroJsCount",(localStorage.getItem("memoIntroJsCount")?2:1));
-     },*/
     startIntroJs : function()
     {
-        //this.startJePostuleIntroJs();
-    }
+        this.introJs = new introJs();
+        this.introJs.setOptions({"steps" : [{element:"#memo-button-0", intro: "<b>Astuce : Utilisez le bouton MEMO</b><br /><br />Enregistrez toutes vos candidatures pour les suivre facilement depuis votre tableau de bord MEMO"}], "doneLabel":"J'ai compris","showBullets":false,"showStepNumbers":false,tooltipPosition:"top"});
+        this.introJs.start();
 
-    /*,
+        localStorage.setItem("lastMemoIntroJs",new Date().getTime());
+        localStorage.setItem("memoIntroJsCount",(localStorage.getItem("memoIntroJsCount")?2:1));
+    },
+    /*startIntroJs : function()
+     {
+     //this.startJePostuleIntroJs();
+     },
 
      startJePostuleIntroJs : function()
      {
@@ -276,22 +285,20 @@ MemoButtonToolkit.prototype = {
      },*/
 
 
-    /*loadIntroJs : function()
-     {
-     try
-     {
-     if(introJs)
-     this.startIntroJs();
-     else
-     this.importIntroJs();
-
-     }
-     catch(err)
-     {
-     this.importIntroJs();
-     }
-
-     },*/
+    loadIntroJs : function()
+    {
+        try
+        {
+            if(introJs)
+                this.startIntroJs();
+            else
+                this.importIntroJs();
+        }
+        catch(err)
+        {
+            this.importIntroJs();
+        }
+    },
 
     /*loadJePostuleIntroJs : function()
      {
@@ -309,53 +316,53 @@ MemoButtonToolkit.prototype = {
      }
      },*/
 
-    /*importIntroJs : function()
-     {
-     var js, css, path = "https://memo.pole-emploi.fr/",
-     jsPath = "js/introjs/intro_memo-min.js",
-     cssPath = "css/introjs/introjs_memo-min.css",
-     fjs = document.getElementsByTagName("script")[0],
-     fcss = document.getElementsByTagName("link")[0];
+    importIntroJs : function()
+    {
+        var js, css, path = "https://memo.pole-emploi.fr/",
+            jsPath = "js/introjs/intro_memo-min.js",
+            cssPath = "css/introjs/introjs_memo-min.css",
+            fjs = document.getElementsByTagName("script")[0],
+            fcss = document.getElementsByTagName("link")[0];
 
-     js = document.createElement("script");
-     js.async = true;
+        js = document.createElement("script");
+        js.async = true;
 
-     css = document.createElement("link");
-     css.async = true;
+        css = document.createElement("link");
+        css.async = true;
 
-     if (window.location.hostname.indexOf('beta') >= 0)
-     path = "https://memo.beta.pole-emploi.fr/";
+        if (window.location.hostname.indexOf('beta') >= 0)
+            path = "https://memo.beta.pole-emploi.fr/";
 
-     js.src = path + jsPath;
-     css.href = path + cssPath;
-     css.rel = "stylesheet";
-     css.type = "text/css";
+        js.src = path + jsPath;
+        css.href = path + cssPath;
+        css.rel = "stylesheet";
+        css.type = "text/css";
 
-     fjs.parentNode.insertBefore(js, fjs);
-     fcss.parentNode.insertBefore(css, fcss);
-     },*/
+        fjs.parentNode.insertBefore(js, fjs);
+        fcss.parentNode.insertBefore(css, fcss);
+    },
 
-    /*activateIntroJs : function()
-     {
-     var lMI = localStorage.getItem("lastMemoIntroJs"),
-     mIC = localStorage.getItem("memoIntroJsCount") || 0,
-     lMC = localStorage.getItem("lastMemoClick"),
-     now = new Date().getTime(),
-     res = false;
+    activateIntroJs : function()
+    {
+        var lMI = localStorage.getItem("lastMemoIntroJs"),
+            mIC = localStorage.getItem("memoIntroJsCount") || 0,
+            lMC = localStorage.getItem("lastMemoClick"),
+            now = new Date().getTime(),
+            res = false;
 
-     mIC = eval(mIC);
-     // @RG - ONBOARDING affichage de l'onboarding sur le bouton MEMO LBB si pas de click sur MEMO depuis moins de 30 jours, pas d'affichage de l'onboarding depuis moins de 14 jours, pas d'affichage de l'onboarding depuis moins d'1 jour et un seul affichage
-     // affichage si
-     if( (!lMC || (now-eval(lMC))>(30*24*60*60*1000)) &&  // pas de click sur MEMO depuis moins de 30 jours
-     (!lMI || (now-eval(lMI))>(14*24*60*60*1000)) &&  // pas d'affichage depuis moins de 14 jours
-     (!lMI || ((now-eval(lMI))>(24*60*60*1000) && mIC < 2)) // pas d'affichage depuis moins d'1 jour et un seul affichage
-     )
-     {
-     res = true;
-     }
+        mIC = eval(mIC);
+        // @RG - ONBOARDING affichage de l'onboarding sur le bouton MEMO LBB si pas de click sur MEMO depuis moins de 30 jours, pas d'affichage de l'onboarding depuis moins de 14 jours, pas d'affichage de l'onboarding depuis moins d'1 jour et un seul affichage
+        // affichage si
+        if( (!lMC || (now-eval(lMC))>(30*24*60*60*1000)) &&  // pas de click sur MEMO depuis moins de 30 jours
+            (!lMI || (now-eval(lMI))>(14*24*60*60*1000)) &&  // pas d'affichage depuis moins de 14 jours
+            (!lMI || ((now-eval(lMI))>(24*60*60*1000) && mIC < 2)) // pas d'affichage depuis moins d'1 jour et un seul affichage
+        )
+        {
+            res = true;
+        }
 
-     return res;
-     }*/
+        return res;
+    }
 
     /*activateJePostuleIntroJs : function()
      {

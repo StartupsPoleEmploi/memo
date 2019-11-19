@@ -296,6 +296,21 @@ Board.prototype = {
         if (h != 1) {
             if (evt && evt.currentTarget && evt.currentTarget.attributes["etat"])
                 etat = evt.currentTarget.attributes["etat"].value;
+
+            if(evt)
+            {
+                var source = "boutonPlus";
+                if(evt.currentTarget.getAttribute("id"))
+                    source = evt.currentTarget.getAttribute("id");
+
+                ga('send', {
+                            hitType: 'event',
+                            eventCategory: 'Candidature',
+                            eventAction: 'Ouverture tunnel',
+                            eventLabel: source
+                        });
+            }
+
             $Hist({id: "newCandidature", etat: etat, step: '1'});
         }
 
@@ -320,7 +335,7 @@ Board.prototype = {
             c = t.selectedCandidature;
 
         if (h != 1)
-            $Hist({id: "openCandidature", cId: c.id});
+            $Hist({id: "openCandidature", cId: c.id, candidatureOpenedFrom : this.candidatureOpenedFrom});
 
         if (!c.descriptionLoaded)
             t.loadCandidature(c);
@@ -1299,6 +1314,8 @@ Board.prototype = {
             else
                 hT+=t.buildCandidatureLogo(c,1);
             hT+='</span></a></div>';
+            
+                  	
 
             hT+='</div>';
         }
@@ -1307,6 +1324,9 @@ Board.prototype = {
             hT+= t.buildCandidatureLogo(c);
         }
 
+        if(t.archiveMode)
+        	hT+=t.isCardWon(c);
+        
         hT+='</td></tr></table></div></div>';
 
         h += hT;
@@ -1536,6 +1556,7 @@ Board.prototype = {
                     h+= '48px" src="./pic/logos/'+l;
 
                 h+='"  alt="logo '+jB+'"/></a>';
+               
             }
             else
             {
@@ -1557,20 +1578,36 @@ Board.prototype = {
 
     openCandidature : function(evt)
     {
-        evt.stopPropagation();
+        var t=this, elId, id, c, gaEventLabel = 'calendrier';
 
-        var t=this,
-            elId = evt.currentTarget.attributes['id'].value,
-            id = elId.substring(elId.indexOf('_')+1),
+        if(lBR.calendar.rendered && evt instanceof CalendarEvent)    // ouverture depuis le calendrier
+        {
+            c = t.candidatures[""+evt.candidatureId];
+            this.candidatureOpenedFrom = 'calendar';
+        }
+        else    // ouverture depuis un click sur le tableau de bord
+        {
+            this.candidatureOpenedFrom = 'board';
+
+            evt.stopPropagation();
+
+            elId = evt.currentTarget.attributes['id'].value;
+            id = elId.substring(elId.indexOf('_')+1);
             c = t.candidatures[""+id];
+        }
 
         t.selectedCandidature = c;
         t.editMode = 1;
 
-        if(elId.charAt(0)=='T')
-            ga('send', { hitType : 'event', eventCategory : 'Candidature', eventAction : 'openCandidature', eventLabel : 'titre' });
-        else
-            ga('send', { hitType : 'event', eventCategory : 'Candidature', eventAction : 'openCandidature', eventLabel : 'editer' });
+        if(elId)
+        {
+            if (elId.charAt(0) == 'T')
+                gaEventLabel = 'titre';
+            else
+                gaEventLabel = 'editer';
+        }
+
+        ga('send', { hitType : 'event', eventCategory : 'Candidature', eventAction : 'openCandidature', eventLabel : gaEventLabel });
 
         t.editCandidature();
     },
@@ -1604,7 +1641,8 @@ Board.prototype = {
     confirmRemoveCandidature : function(async)
     {
         var t=this,
-            c = t.selectedCandidature;
+            c = t.selectedCandidature,
+            cId = c.id;
         
         t.hideModalRemoveOrArchive();
         
@@ -1616,7 +1654,7 @@ Board.prototype = {
 
         $.ajax({
             type: 'DELETE',
-            url: lBR.rootURL + '/candidatures/' + lBR.board.selectedCandidature.id,
+            url: lBR.rootURL + '/candidatures/' + cId,
             data : p,
             dataType: "json",
             async : async,
@@ -1625,6 +1663,10 @@ Board.prototype = {
             {
                 if(response.result=="ok")
                 {
+                    // mise à jour du calendrier
+                    if(lBR.calendar.rendered)
+                        lBR.calendar.removeCandidature({id:cId});
+
                     toastr['success']("Candidature supprimée","");
                     lBR.board.hideModalRemoveOrArchive();
                 }
@@ -1755,6 +1797,10 @@ Board.prototype = {
         if(eval(localStorage.getItem("refreshBoardAfterImport")))
         {
             localStorage.setItem("refreshBoardAfterImport",0);
+            lBR.board.loadBoard();
+        } else if(eval(localStorage.getItem("refreshBoardFromBO"))) {
+        	localStorage.setItem("refreshBoardFromBO",0);
+        	lBR.board.candidatures = {};
             lBR.board.loadBoard();
         }
     },
@@ -2061,16 +2107,47 @@ Board.prototype = {
 
     findCandidatureBySourceId : function(c)
     {
+        var cs = this.candidatures;
         if(c && c.sourceId && c.sourceId!="null")
         {
-            for(k in this.candidatures)
+            for(k in cs)
             {
-                var src = this.candidatures[k].sourceId;
-                if (src && src!="null" && src == c.sourceId)
-                    return this.candidatures[k];
+                if(cs[k])
+                {
+                    var src = cs[k].sourceId;
+                    if (src && src != "null" && src == c.sourceId)
+                        return cs[k];
+                }
             }
         }
         return;
+    },
+
+    // affiche le tableau de bord en masquant l'éventuel formulaire ouvert
+    displayBoard : function()
+    {
+        this.candidatureOpenedFrom = null;
+        this.form.cancelCandidatureForm(1);    // masque le formulaire et reconstruit le tableau de bord
+    },
+    
+    //@RG - CARTE : ajout d'une image spécifique sur les candidatures qui ont fait l'objet d'un retour à l'emploi (carte gagnée)
+    isCardWon : function(c)
+    {
+    	var t = lBR.board, cE,
+    	//étiquette de carte gagnée
+    	res = '<img src="../../pic/gagne.png"/>',
+    	resF = "";
+    	for(var idxCe in c.events)
+    	{
+    		cE = c.events[idxCe];
+    		//filtre pour que la carte gagné soit affichée en mode archiver && de type "AI_POSTE"
+    		if(t.archiveMode  && cE && cE.eventType == CS.TYPES.ARCHIVER &&  cE.eventSubType == CS.SUBTYPES.AI_POSTE )
+    		{	
+    			resF = res ;
+    			break ;
+    		}
+    	}
+    	return resF ; 
     }
 
 }

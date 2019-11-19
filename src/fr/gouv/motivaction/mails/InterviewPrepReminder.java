@@ -6,10 +6,12 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-import com.codahale.metrics.Timer;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import com.codahale.metrics.Timer;
+
+import fr.gouv.motivaction.Constantes;
 import fr.gouv.motivaction.model.UserSummary;
 import fr.gouv.motivaction.service.MailService;
 import fr.gouv.motivaction.utils.DatabaseManager;
@@ -34,7 +36,7 @@ public class InterviewPrepReminder extends AlertMail {
         String body = buildAndSendInterviewPrepReminder(0);
         body += "<br/><br/> Moludo du random d'envoie :" + this.moduloFiltreEnvoiMailAdmin;
         // envoi du mail de rapport d'execution aux admins
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Pour bien préparer votre entretien", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Pour bien préparer votre entretien", body);
     }
 
     /**
@@ -146,7 +148,7 @@ public class InterviewPrepReminder extends AlertMail {
 
 
         html += MailTools.buildHTMLSignature(source, campaign, "", false);
-        html += MailTools.buildHTMLFooter(user, source, campaign);
+        html += MailTools.buildHTMLFooter(user, source, campaign, true);
 
         boolean enBCC = false;
         // pour limiter l'envoi de mails aux admins
@@ -154,7 +156,7 @@ public class InterviewPrepReminder extends AlertMail {
     		enBCC = true;
     	}
     	
-        if ("PROD".equals(MailTools.env) || test || ("RECETTE".equals(MailTools.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
+        if ("PROD".equals(Constantes.env) || test || ("RECETTE".equals(Constantes.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
         	// PROD ou RECETTE avec modulo OK ou mode TEST depuis le BO
         	MailService.sendMailWithImage(user.getEmail(), subject, html, test, enBCC);
         }

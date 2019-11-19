@@ -14,6 +14,7 @@ $(document).ready(function(){
         if (memoVars.isVisitor)
 
             lBR.buildVisitorDisplay();
+        	lBR.buildConseillerDisplay();
     }
 
 });

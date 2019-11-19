@@ -14,6 +14,7 @@
         visitorLink = StringEscapeUtils.escapeXml11(visitorLink);
 
     boolean isVisitor = false;
+    boolean isConseiller = false;
     
     boolean isResetPasswd = false;
     if (request.getParameter("resetToken") != null) {
@@ -22,12 +23,25 @@
 
     if(request.getParameter("link")!=null)
     {
-        userId = UserService.getUserIdFromLink(request);
+        userId = UserService.getUserIdFromVisitorLink(request.getParameter("link"));
 
         if(userId>0)
         {
             isVisitor = true;
             Utils.logUserAction(userId, "User", "Accès visiteur", 0);
+        }
+        else
+            visitorLink="";
+    }
+    else if (request.getParameter("linkConseiller")!=null) {
+    	visitorLink = request.getParameter("linkConseiller");
+        userId = UserService.getUserIdFromConseillerLink(request.getParameter("linkConseiller"));
+
+        if(userId>0)
+        {
+            isVisitor = true;
+            isConseiller = true;
+            Utils.logUserAction(userId, "User", "Accès conseiller", 0);
         }
         else
             visitorLink="";

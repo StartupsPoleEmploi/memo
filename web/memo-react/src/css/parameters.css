@@ -1,0 +1,104 @@
+.parameterBackground{
+    background: #f4f4f4;
+    padding: 0px 60px 50px 60px;
+}
+
+.parameterContainer{
+    background: #fff;
+    padding: 20px;
+}
+
+
+.parameterPage h2
+{
+    color: #4B4A4C;	
+    font-size: 25px;
+    font-weight: 300;
+}
+
+.parameterPage h3
+{
+    margin-top: 30px;
+    margin-left: 15px;
+    color: #414042;	
+    font-size: 22px;	
+    font-weight: bold;
+}
+
+.parameterPage label
+{
+    font-weight: 500;
+    color: #414042;	
+    font-size: 18px;
+}
+
+.parameterLeft
+{
+    text-align:left;
+    padding-left: 0px;
+}
+
+.parameterRight
+{
+    text-align: right;
+    padding-right: 0px;
+}
+
+.parameterRight > div.memoSwitchContainer
+{
+    float: right;
+}
+
+.parameterSeparator,
+.parameterPage .row
+{
+    border-bottom: 1.5px solid #D6D9DF;
+    margin: 15px;
+}
+
+.parameterPage .row
+{
+    padding-bottom: 15px;
+    color: #414042;	
+    font-size: 15px;	
+    font-weight: 500;
+}
+
+.parameterRight .blueButton
+{
+    font-size: 18px;
+    line-height: 20px;
+    padding: 10px 30px;
+    border: none;
+    margin-top: 0;
+}
+
+@media screen and (max-width:1000px)
+{
+    .parameterBackground,
+    .parameterPage .breadcrumb
+    {
+        background: #fff;
+    }
+
+    .cguContainer,
+    .faqContainer,
+    .privacy .pageContainer {
+        padding-top: 0px;    
+        padding-bottom: 0px;    
+    }
+
+}
+
+@media screen and (max-width:800px)
+{
+    .parameterBackground{
+        padding: 0px 10px 50px 10px;
+    }
+
+    .parameterContainer
+    {
+        padding:0;
+    }
+
+}

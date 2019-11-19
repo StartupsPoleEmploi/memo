@@ -3,7 +3,7 @@
 <div id="noCardWelcomeMsg" class="formTunnelBloc" style="display:none;">
 
   <div>
-    <div class="pageTitle"><h1>Bienvenue <span></span></h1></div>
+    <div class="pageTitle"><span>Bienvenue <span></span></span></div>
     <p>MEMO vous permet de créer un <strong>tableau de bord</strong> de votre recherche d'emploi.<br /><br />
     Celui-ci va vous permettre d'<strong>enregistrer en un seul endroit toutes vos candidatures</strong> et démarches afin d’en suivre les évolutions.<br /><br />
       MEMO ne vous permet pas de rechercher des offres d’emploi ou de diffuser votre CV ligne, mais il vous permet de bénéficier de <strong>conseils et de rappels personnalisés</strong> au <strong>bon moment</strong>.<br /><br />

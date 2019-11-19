@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
-import com.codahale.metrics.Timer;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import com.codahale.metrics.Timer;
+
+import fr.gouv.motivaction.Constantes;
 import fr.gouv.motivaction.model.UserSummary;
 import fr.gouv.motivaction.service.MailService;
 import fr.gouv.motivaction.utils.DatabaseManager;
@@ -30,7 +32,7 @@ public class NudgeAlert extends AlertMail {
         String body = buildAndSendSpontaneousNudgeMail(0);
         body += "<br/><br/> Moludo du random d'envoie :" + moduloFiltreEnvoiMailAdmin;
         // envoi du mail de rapport d'execution aux intras, devs et extra
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Avez-vous pensé aux candidatures spontanées ?", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Avez-vous pensé aux candidatures spontanées ?", body);
     }
 
 
@@ -122,7 +124,7 @@ public class NudgeAlert extends AlertMail {
                 "<hr /></td></tr>";
 
         html += MailTools.buildHTMLSignature(source, campaign, "", false);
-        html+= MailTools.buildHTMLFooter(user, source, campaign);
+        html+= MailTools.buildHTMLFooter(user, source, campaign, true);
 
         boolean enBCC = false;
         // Pour limiter l'envoi de mails aux admins tous les 50 mails générés
@@ -130,7 +132,7 @@ public class NudgeAlert extends AlertMail {
     		enBCC = true;
     	}
     	
-        if ("PROD".equals(MailTools.env) || test || ("RECETTE".equals(MailTools.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
+        if ("PROD".equals(Constantes.env) || test || ("RECETTE".equals(Constantes.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
         	// PROD ou RECETTE avec modulo OK ou mode TEST depuis le BO
         	MailService.sendMailWithImage(user.getEmail(), subject, html, test, enBCC);
         }

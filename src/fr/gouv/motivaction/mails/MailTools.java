@@ -20,13 +20,15 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import fr.gouv.motivaction.dao.UserDAO;
 import org.apache.log4j.Logger;
 
 import com.mchange.v1.util.StringTokenizerUtils;
 
+import fr.gouv.motivaction.Constantes;
+import fr.gouv.motivaction.dao.UserDAO;
 import fr.gouv.motivaction.model.User;
 import fr.gouv.motivaction.model.UserSummary;
+import fr.gouv.motivaction.service.ConseillerService;
 import fr.gouv.motivaction.service.MailService;
 import fr.gouv.motivaction.service.UserService;
 import fr.gouv.motivaction.utils.Quartz;
@@ -43,12 +45,8 @@ public class MailTools
     private static final Logger log = Logger.getLogger("ctj");
     private static final String logCode = "006";
 
-    public static String env;
     public static String host;
-    public static String hostQuartzMaster;
     public static String heloHost;
-
-    public static boolean isMaster = false;
     
     // En cas de plantage du properties
     public static int moduloFiltreAccount = 100;
@@ -77,8 +75,6 @@ public class MailTools
     
     private static DataSource dsB;
     private static DataSource dsPE;
-    
-    public static String pathCSV;
 
     public static String url;
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -92,33 +88,16 @@ public class MailTools
     private static void loadProperties() {
 	    prop = new Properties();
 	    InputStream in = null;
-	    String hostExec;
 
 	    try {
 	    	in = MailService.class.getResourceAsStream("/fr/gouv/motivaction/properties/mails.properties");
 	    	prop.load(in);
 	    	
-	    	env = prop.getProperty("env");
 	    	host = prop.getProperty("host");
     		url = prop.getProperty("url");
             heloHost = prop.getProperty("heloHost");
     		dsB = new FileDataSource(prop.getProperty("dsB"));
     		dsPE = new FileDataSource(prop.getProperty("dsPE"));
-    		pathCSV = prop.getProperty("pathCSV");
-    		hostQuartzMaster = prop.getProperty("host.quartz.master");
-    		
-	    	if (env != null && "PROD".equals(env)) {
-	    		hostExec = getHostname();
-	    		if(hostExec.equals(hostQuartzMaster) || "RECETTE".equals(env))
-	    			isMaster = true;
-	    		
-	    	} else if ("RECETTE".equals(env)){
-	    		isMaster = true;
-	    	} else {
-	    		hostQuartzMaster="localhost";
-	    		isMaster = true;
-	    	}
-	    	
 	    	
             try
             {
@@ -173,13 +152,13 @@ public class MailTools
     
     public static String buildSubject(boolean test, String subject, String to) {
     	String res = subject;
-    	if ("RECETTE".equals(MailTools.env)) {
+    	if ("RECETTE".equals(Constantes.env)) {
 	    	// pour différencier les mails de la RE7, on ajoute le login au sujet du mail
-    		res = subject + " " + to + "(" + MailTools.env + ")";
+    		res = subject + " " + to + "(" + Constantes.env + ")";
     	}
     	if(test) {
     		// pour différencier les mails de test
-    		res = subject + " " + to + " - mail de test" + "(" + MailTools.env + ")";
+    		res = subject + " " + to + " - mail de test" + "(" + Constantes.env + ")";
     	}
     	return res;
     }
@@ -206,7 +185,7 @@ public class MailTools
     	InternetAddress[] tabRes = null;
     	String[] tabTo = null;
     	try {
-			if ("PROD".equals(MailTools.env) && !test) {  
+			if (("PROD_BATCH".equals(Constantes.env) || "PROD".equals(Constantes.env)) && !test) {  
 		        	tabRes = new InternetAddress[] {new InternetAddress(to)};
 			} else {
 				tabTo = Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra);
@@ -230,7 +209,7 @@ public class MailTools
     	InternetAddress[] tabRes = null;
     	String[] tabBcc = null;
     	try {
-			if ("PROD".equals(MailTools.env) && !test) {  
+			if ("PROD".equals(Constantes.env) && !test) {  
 				tabBcc = Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra);
 		        if (tabBcc != null && tabBcc.length > 0) {
 		        	tabRes = new InternetAddress[tabBcc.length];
@@ -265,14 +244,17 @@ public class MailTools
         return res;
     }
 
-    public static String buildHTMLFooter(UserSummary user, String source, String campaign)
+    public static String buildHTMLFooter(UserSummary user, String source, String campaign, boolean withFaqUnsubscribeSmallLink)
     {
         String params = "?utm_campaign="+campaign+"&utm_medium=email&utm_source="+source;
 
         String res="";
 
         res+="<tr style='background:#20314d;'><td style='color:#fff;text-align: center; padding:25px 10px;'>MEMO un service propulsé par Pôle emploi - <a href='"+url+params+"' style='color:#fff; text-decoration:none; white-space:nowrap'>memo.pole-emploi.fr</a></td></tr>";
-        res+="<tr style='background:#f7f8fa;'><td style='text-align: center; font-size:12px; padding:15px 10px;'><a href='"+url+"/faq"+params+"' style='color:#20314d'>FAQ</a> - <a href='"+url+"/rest/account/unsubscribe/"+UserService.getUnsubscribeLinkForUser(user.getUserId())+params+"' style='color:#20314d'>Se désinscrire des notifications</a></td></tr>";
+        
+        if (withFaqUnsubscribeSmallLink)
+        	res+="<tr style='background:#f7f8fa;'><td style='text-align: center; font-size:12px; padding:15px 10px;'><a href='"+url+"/faq"+params+"' style='color:#20314d'>FAQ</a> - <a href='"+url+"/rest/account/unsubscribe/"+UserService.getUnsubscribeLinkForUser(user.getUserId())+params+"' style='color:#20314d'>Se désinscrire des notifications</a></td></tr>";
+        
         res+="</table></div></body></html>";
 
         return res;
@@ -325,6 +307,59 @@ public class MailTools
             res+="<table width='100%'>"+
         			"<tr><td style='width:25%;'></td><td style='font-size:16px; font-weight:bold; background:#32c6d2; text-align:center; font-family:verdana; padding: 10px 10px; border-radius: 5px;'><a href='"+url+params+"' style='color:#fff; text-decoration:none; text-transform:uppercase;'>" + lien + "</a></td><td style='width:25%;'></td></tr>"+
         		"</table><br /><br />";
+	        res+="A vos côtés pour réussir ensemble !<br />";
+	        res+="L'équipe MEMO<br /><br />";
+        }
+        else
+        {
+        	// Signature light
+        	res+="A vos côtés pour réussir ensemble !<br />";
+            res+="L'équipe MEMO<br /><br />";
+        }
+
+        res+="<hr /><div style='text-align:center'>Besoin d'aide ?<br />Rendez-vous sur notre rubrique <strong><a href='"+url+"/faq"+params+"'>Aide / Support</a></strong></div><hr /></td></tr>";
+
+        return res;
+    }
+    
+    public static String buildHTMLSignatureRequestToUseMemo(String source, String campaign)
+    {
+        String params = "?utm_campaign="+campaign+"&utm_medium=email&utm_source="+source;
+
+        String res = "<tr><td style='border-left:1px solid #c1c1c1;border-right:1px solid #c1c1c1; padding:25px 10px;'>";
+
+        res+="<table width='100%'>"+
+    			"<tr><td style='width:25%;'></td><td style='font-size:16px; font-weight:bold; background:#32c6d2; text-align:center; font-family:verdana; padding: 10px 10px; border-radius: 5px;'><a href='"+url+"' style='color:#fff; text-decoration:none; text-transform:uppercase;'>Activer mon espace</a></td><td style='width:25%;'></td></tr>"+
+    		"</table><br /><br />";
+        
+        res+="En cliquant sur \"Activer mon espace\", vous autorisez l’accès à votre espace Memo "
+        		+ "aux conseillers de Pôle emploi. Vous pouvez à tout moment revenir sur votre choix en cliquant sur Menu > Paramètres.<br/><br/>";
+        res+="A vos côtés pour réussir ensemble !<br />";
+        res+="L'équipe MEMO<br /><br />";
+
+        res+="<hr /><div style='text-align:center'>Besoin d'aide ?<br />Rendez-vous sur notre rubrique <strong><a href='"+url+"/faq"+params+"'>Aide / Support</a></strong></div><hr /></td></tr>";
+
+        return res;
+    }
+    
+    public static String buildHTMLSignatureRequestToAccessTDB(String to , String source, String campaign, String lien1 , String lien2 , boolean topLight) throws Exception
+    {
+        String params = "?utm_campaign="+campaign+"&utm_medium=email&utm_source="+source;
+
+        String res = "<tr><td style='border-left:1px solid #c1c1c1;border-right:1px solid #c1c1c1; padding:25px 10px;'>";
+
+        if (!topLight)
+        {
+            // Signature complète
+            if (lien1 == null && lien2 == null || "".equals(lien1) && "".equals(lien2))
+            {    // Par défaut
+                lien1 = "Autoriser";
+            	lien2 = "Refuser";
+            }
+            res+="<table width='100%'>"+
+        			"<tr><td style='width:25%;'></td><td style='font-size:16px; font-weight:bold; background:#3C8123; text-align:center; font-family:verdana; padding: 10px 10px; border-radius: 5px;'><a href='"+url+"/rest/conseiller/accessAccepter/"+to+"' style='color:#fff; text-decoration:none; text-transform:uppercase;'>" + lien1 + "</a></td><td style='width:25%;'></td></tr><br>"+
+        			"<tr><td style='width:25%;'></td><td style='font-size:16px; font-weight:bold; background:#CE3616; text-align:center; font-family:verdana; padding: 10px 10px; border-radius: 5px;'><a href='"+url+"/rest/conseiller/accessRefuser/"+to+"' style='color:#fff; text-decoration:none; text-transform:uppercase;'>" + lien2 + "</a></td><td style='width:25%;'></td></tr><br>"+
+        			"</table><br /><br />";
 	        res+="A vos côtés pour réussir ensemble !<br />";
 	        res+="L'équipe MEMO<br /><br />";
         }

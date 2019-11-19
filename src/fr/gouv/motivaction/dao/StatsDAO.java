@@ -39,7 +39,7 @@ public class StatsDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM statsUsersAssidus_m;";
 
             pStmt = con.prepareStatement(sql);
@@ -76,7 +76,7 @@ public class StatsDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM statsUsersEntretien_m;";
 
             pStmt = con.prepareStatement(sql);
@@ -114,7 +114,7 @@ public class StatsDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM statsUsersRetourEmploi_m;";
 
             pStmt = con.prepareStatement(sql);
@@ -154,7 +154,7 @@ public class StatsDAO {
         {
             String sqlStartDate = getSQLStartDate();
 
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT DATE_FORMAT(creationTime, '%m/%y') as mois, COUNT(*), DATE_FORMAT(creationTime, '%y%m') as idx FROM users ";
 
             if(source!=null)
@@ -203,7 +203,7 @@ public class StatsDAO {
         {
             String sqlStartDate = getSQLStartDate();
 
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT DATE_FORMAT(creationDate, '%m/%y') as mois, count(*) FROM motivaction.candidatures ";
 
 
@@ -255,7 +255,7 @@ public class StatsDAO {
         {
             String sqlStartDate = getSQLStartDate();
 
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT DATE_FORMAT(creationDate, '%m/%Y') as mois, count(*) FROM motivaction.candidatures " +
                     "WHERE jobboard = '" + jobboard + "' AND isButton = 1 " +
                     "AND creationDate > '"+sqlStartDate+"' " +
@@ -312,7 +312,7 @@ public class StatsDAO {
         {
             String sqlStartDate = getSQLStartDate();
 
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT DATE_FORMAT(candidatures.creationDate, '%m/%Y') as mois, type, count(*) FROM motivaction.candidatures " +
                     "WHERE type>0 AND userId IN (SELECT userId FROM utilisateursAssidus) " +
                     "AND candidatures.creationDate > '"+sqlStartDate+"' " +
@@ -360,7 +360,7 @@ public class StatsDAO {
         ArrayList result = new ArrayList();
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "CALL getUtilisationCartesReseau()";
             pStmt = con.prepareStatement(sql);
             rs = pStmt.executeQuery();

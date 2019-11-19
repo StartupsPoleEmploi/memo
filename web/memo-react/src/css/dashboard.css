@@ -1,0 +1,366 @@
+.dashboardBody
+{
+    
+
+}
+
+.dashboardContainer
+{
+    background-color: #F4F4F4;
+    /*padding-top: 80px;*/
+}
+
+.dashboardColumn
+{
+    background: #fff;
+    border: 1px solid;
+    border-top-width: 5px;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 14px 0 rgba(66,67,69,0.11);
+    padding: 10px;
+    padding-bottom: 25px;
+    margin-bottom: 50px;
+    border-left-color: lightgray;
+    border-right-color: lightgray;
+    border-bottom-color: lightgray;
+}
+
+.dashboardColumnTitle
+{
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    margin-left: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.newCandidatureButton
+{
+    height: 50px;
+    border: 1px dashed #979797;
+    border-radius: 4px !important;
+    box-shadow: 0 0 4px 0 #E8EDF5;
+    color: #979797;
+    margin: 0px 30px 15px 30px;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 15px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.newCandidatureButton:hover
+{
+    border-color: #464E55;
+    color: #464E55;
+}
+
+
+.dashboardCandidatureCount
+{
+    color: #B7BEB9
+}
+
+.brouillon,
+.brouillon .dashboardColumnTitle i
+{
+    color : #F5A623;
+}
+.candidature,
+.candidature .dashboardColumnTitle i
+{
+    color : #FC390F;
+}
+.relance,
+.relance .dashboardColumnTitle i
+{
+    color : #1CDCFF;
+}
+.entretien,
+.entretien .dashboardColumnTitle i
+{
+    color : #00E6A8;
+}
+
+.dashboardColumnTitle i
+{
+    margin-right: 10px;
+}
+
+.dashboardCard
+{
+    border: 1.5px solid #D9E1FF;	
+    border-radius: 4px !important;	
+    background-color: #FFFFFF;	
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.dashboardCardDate
+{
+    float: left;
+    font-size: 11px;	
+    font-weight: bold;
+    padding: 2px 5px;
+    margin-bottom: 10px;
+    margin-top: 3px;
+}
+
+.dashboardCardDate i
+{
+    margin-right: 3px;
+}
+
+.brouillon .dashboardCardDate
+{
+    background-color: #FFF0D1;
+    color: #D0741D;
+}
+.candidature .dashboardCardDate
+{
+    background-color: #FFEAE5;
+    color: #FC390F;
+}
+.relance .dashboardCardDate
+{
+    background-color: #DEFAFF;
+    color: #027C93;
+}
+.entretien .dashboardCardDate
+{
+    background-color: #DAFBF2;
+    color: #1AA07C;
+}
+
+.dashboardCardActions
+{
+    border-top: 1px solid #D9E1FF;
+}
+
+.dashboardCardContent
+{
+    padding: 7px 7px 0 7px;
+}
+
+.dashboardCardContent:hover
+{
+    background-color: #F5F6F7;
+    cursor: pointer;
+}
+
+.dashboardCardFavorite
+{
+    float: right;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    text-align: right;
+    color: #979797;
+}
+
+.dashboardCardName
+{
+    clear:both;
+    color: #414042;	
+    font-size: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 90%;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.dashboardCardInfoLeft
+{
+    padding-left: 0px;
+}
+.dashboardCardInfoRight
+{
+    padding-right: 0px;
+}
+.dashboardCardInfoRight img
+{
+    margin-bottom: 10px;
+}
+
+.dashboardCardInfo
+{
+    color: #979797;	
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+    
+.dashboardCardInfo i
+{
+    margin-right: 10px;
+}
+
+.dashboardCardContent img
+{
+    max-width: 95%;
+    max-height: 128px;
+    float: right;
+
+}
+
+.dashboardCardMenu
+{
+    border-right: 1px solid #D9E1FF;
+    height: 40px;
+}
+
+.dashboardCardAdvisedAction:hover,
+.dashboardCardMenu:hover
+{
+    color: #414042;;
+}
+
+.dashboardCardActions > div
+{
+    padding-right: 0px;
+    padding-left: 0px;
+    text-align: center;
+    font-size: 40px;
+    color: #7D7D7D;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.dashboardCardAdvisedAction
+{
+    font-size: 20px;
+    line-height: 40px;
+    text-transform: uppercase;
+}
+
+.dashboardCardActionMenu
+{
+    background: #fff;
+    background: #fff;
+    border: 1.5px solid #D9E1FF;
+    border-bottom: 0;
+    border-radius: 4px 4px 0 0 !important;    
+}
+
+.dashboardCardActionMenuHeader
+{
+    color: #181818;
+    border-bottom: 1.5px solid #D9E1FF;
+    padding: 7px;
+    text-align: right;
+    cursor: auto;
+}
+
+.dashboardCardActionMenuHeader > div:first-child
+{
+    float: left;
+}
+
+.dashboardCardActionMenuHeader .fa-times
+{
+    cursor: pointer;
+}
+
+.dashboardCardActionMenuAction
+{
+    font-size: 14px;
+    padding: 5px 12px;
+    color: #414042;
+}
+
+.dashboardCardActionMenuAction:hover
+{
+    color: #000;
+}
+
+.dashboardCardActionMenuAction:nth-of-type(odd)
+{
+    background-color: #fff;
+}
+
+.dashboardCardActionMenuAction:nth-of-type(even)
+{
+    background-color: #f8f8f8;
+}
+
+.dashboardCardActionMenuAction > i
+{
+    margin-right: 5px;
+}
+
+.dashboardColumnContainer
+{
+    flex-grow: 1;
+    min-height: 200px;
+    background: #fff;
+}
+
+/* modifications possibles sur une carte en cours de drag*/
+.dashboardCard.dashboardCardBeingDragged
+{
+}
+
+.buttonCardAdvice 
+{
+	width: 100%;
+    background-color: transparent;
+    color: black;
+    border-color: transparent;
+    text-transform: uppercase;
+}
+
+.buttonCardAdvice.isVisitor 
+{
+	cursor:default;
+}
+
+@media screen and (max-width:991px)
+{
+    .dashboardColumnContainer
+    {
+        min-height:auto !important;
+    }
+}
+
+
+
+div.visitorRibbon {
+    height: 35px;
+    width: 180px;
+    background-color: #5371F8;
+    position: absolute;
+    top: 34px;
+    left: -15px;
+    text-align: center;
+    padding-top: 3px;
+    color: #FFF;
+    font-size: 20px;
+    white-space: nowrap;
+    transform: rotate(-35deg);
+    z-index: 1000;
+}
+
+.visitorRibbon:before {
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 37px;
+    border-left-width: 53px;
+    border-right-width: 26px;
+    content: "";
+    display: block;
+    left: -49px;
+    position: absolute;
+    width: 141%;
+    border-top-width: 0px;
+    border-bottom-color: #5371F8;
+    top: -2px;
+    z-index: -1;
+}

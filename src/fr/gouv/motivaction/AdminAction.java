@@ -5,8 +5,10 @@ import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -14,10 +16,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fr.gouv.motivaction.utils.Quartz;
 import org.apache.log4j.Logger;
 
-import fr.gouv.motivaction.job.ExportMaintenance;
+import fr.gouv.motivaction.job.ExtractBO;
 import fr.gouv.motivaction.mails.DailyAlert;
 import fr.gouv.motivaction.mails.MailTools;
 import fr.gouv.motivaction.mails.WeeklyReport;
@@ -28,6 +29,7 @@ import fr.gouv.motivaction.service.AdminService;
 import fr.gouv.motivaction.service.MailService;
 import fr.gouv.motivaction.service.SlackService;
 import fr.gouv.motivaction.service.UserService;
+import fr.gouv.motivaction.utils.Quartz;
 import fr.gouv.motivaction.utils.Utils;
 
 
@@ -331,6 +333,8 @@ public class AdminAction {
             {
             	// Mail du weekly report
             	WeeklyReport weekReport = new WeeklyReport();
+
+                WeeklyReport.initCohortTexts();
             	weekReport.buildAndSendWeeklyTaskReminder(userId);
             	// Mail du daily report
                 DailyAlert dailyAlert = new DailyAlert();
@@ -369,11 +373,11 @@ public class AdminAction {
             try
             {
                 fileName = "extract-userActivities.zip";
-                String aFile = MailTools.pathCSV+fileName;
+                String aFile = Constantes.pathCSV+fileName;
                 if (Files.exists(Paths.get(aFile), LinkOption.NOFOLLOW_LINKS)) {
                 	document = Files.readAllBytes(Paths.get(aFile));
                 } else {
-                	ExportMaintenance.buildAndWriteExport();
+                	ExtractBO.buildAndWriteExtract();
                 	document = Files.readAllBytes(Paths.get(aFile));
                 }
             }
@@ -423,7 +427,7 @@ public class AdminAction {
 	    	// Notification ds Slack
 			SlackService.sendMsg("HealthCheck KO ! " + errorMsg);
 			// Envoie d'un email d'alerte
-			MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Alerte " + MailTools.env + " - HealthCheck KO", "");
+			MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Alerte " + Constantes.env + " - HealthCheck KO", "");
 			res = "{ \"result\" : \"ok\" }";
     	} catch(Exception e) {
     		res = "{ \"result\" : \"error\", \"msg\" : \" " + e + " \" }";
@@ -443,7 +447,7 @@ public class AdminAction {
         {
             try
             {
-                res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"hostQuartzMaster\" : \"" + MailTools.hostQuartzMaster + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\", \"isQuartzMaster\" : \"" + MailTools.isMaster + "\" }";
+            	res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\", \"jobsMails\" : \"" + this.isJobsRunning(Constantes.jobsMails) + "\", \"jobsAdmins\" : \"" + this.isJobsRunning(Constantes.jobsAdmins) + "\", \"jobsCalculs\" : \"" + this.isJobsRunning(Constantes.jobsCalculs) + "\" }";
             }
             catch (Exception e)
             {
@@ -460,9 +464,9 @@ public class AdminAction {
     }
 
     @GET
-    @Path("startQuartzMaster")
+    @Path("startJobs/{jobs}")
     @Produces({ MediaType.APPLICATION_JSON })
-    public String startQuartzMaster(@Context HttpServletRequest servletRequest) {
+    public String startQuartzCalcul(@Context HttpServletRequest servletRequest, @PathParam("jobs") String jobs) {
         String res;
 
         long userId = UserService.checkAdminUserAuth(servletRequest);
@@ -470,13 +474,11 @@ public class AdminAction {
         {
             try
             {
-                //log.info("setQuartzMaster");
-                MailTools.hostQuartzMaster = MailTools.getHostname();
-                Quartz.setMaster(true);
+                log.warn(logCode + "-019 ADMIN Server set to true jobs="+jobs);
+                
+                Quartz.reloadJobs(jobs, true);
 
-                res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"hostQuartzMaster\" : \"" + MailTools.hostQuartzMaster + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\", \"isQuartzMaster\" : \"" + MailTools.isMaster + "\" }";
-
-                log.warn(logCode + "-019 ADMIN Server set to be master. userId="+userId);
+                res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\", \"jobsMails\" : \"" + this.isJobsRunning(Constantes.jobsMails) + "\", \"jobsAdmins\" : \"" + this.isJobsRunning(Constantes.jobsAdmins) + "\", \"jobsCalculs\" : \"" + this.isJobsRunning(Constantes.jobsCalculs) + "\" }";
             }
             catch(Exception e) {
                 res = "{ \"result\" : \"error\", \"msg\" : \" " + e + " \" }";
@@ -492,9 +494,9 @@ public class AdminAction {
     }
 
     @GET
-    @Path("stopQuartzMaster")
+    @Path("stopJobs/{jobs}")
     @Produces({ MediaType.APPLICATION_JSON })
-    public String stopQuartzMaster(@Context HttpServletRequest servletRequest)
+    public String stopQuartzCalcul(@Context HttpServletRequest servletRequest, @PathParam("jobs") String jobs)
     {
         String res;
 
@@ -503,14 +505,11 @@ public class AdminAction {
         {
             try
             {
-                //log.info("stopQuartzMaster");
-                MailTools.hostQuartzMaster = "Stopped from BO";
+            	log.warn(logCode + "-021 ADMIN Server set to false jobs="+jobs);
+            	
+                Quartz.reloadJobs(jobs, false);
 
-                Quartz.setMaster(false);
-
-                res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"hostQuartzMaster\" : \"" + MailTools.hostQuartzMaster + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\", \"isQuartzMaster\" : \"" + MailTools.isMaster + "\" }";
-
-                log.warn(logCode + "-021 ADMIN Server set to be NOT master. userId="+userId);
+                res = "{ \"result\" : \"ok\", \"hostname\" : \"" + MailTools.getHostname() + "\", \"quartzIsRunning\" : \"" + MailTools.getQuartzRunning() + "\", \"jobsMails\" : \"" + this.isJobsRunning(Constantes.jobsMails) + "\", \"jobsAdmins\" : \"" + this.isJobsRunning(Constantes.jobsAdmins) + "\", \"jobsCalculs\" : \"" + this.isJobsRunning(Constantes.jobsCalculs) + "\" }";
             }
             catch(Exception e)
             {
@@ -525,5 +524,104 @@ public class AdminAction {
 
         return res;
     }
+    
+  //Suppression des candidatures 
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("deleteAllCandidatures")
+    //@Produces({ MediaType.APPLICATION_JSON })
+    public String deleteAllCandidatures(@Context HttpServletRequest servletRequest) {
+    	
+    	String res = null;
+    	long userId = UserService.checkAdminUserAuth(servletRequest); 	
+    	if(userId >0)
+    	{
+    		try {    		
+    			AdminService.deleteAllCandidatures(userId);
+    			res = "{ \"result\" : \"ok\"}";
+    		}
 
+    		catch (Exception e)
+    		{
+    			log.error(logCode + "-023 Error deleting candidature . error=" + e);
+    			res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+    		}
+    	}
+    	else {
+    		log.warn(logCode + "-023 User is not admin");
+    		res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+    	}
+    	return res ;
+    }
+    
+    /**
+     * Chargement automatique de tableau de board
+     * @param servletRequest
+     * @throws Exception 
+     */
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("loadTDB/{jobboard}")
+    public String loadTDB(@Context HttpServletRequest servletRequest, @PathParam("jobboard") String jobboard) throws Exception
+    {
+    	String res = null;
+    	long userId = UserService.checkAdminUserAuth(servletRequest); 	
+
+    	if(userId >0)
+    	{
+    		try {  
+    			AdminService.loadTDB(userId, jobboard);	
+    			res = "{ \"result\" : \"ok\",  \"jobboard\" : \"" + jobboard + "\"}";
+    		}
+    		catch (Exception e)
+    		{
+    			log.error(logCode + "-023 Error loading dashboard . error=" + e);
+    			res = "{ \"result\" : \"error\", \"msg\" : \"systemError\",  \"jobboard\" : \"" + jobboard + "\"}";
+    		}
+    	}
+    	else {
+    		log.warn(logCode + "-023 User is not admin");	
+    		res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+    	}
+    	return res ; 
+      }
+    
+    @GET
+    @Path("candidatureCurrentUserCount")
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String getCandidatureCurrentUserCount(@Context HttpServletRequest servletRequest)
+    {
+        String res;
+        long userId = UserService.checkAdminUserAuth(servletRequest);
+
+        if(userId>0)
+        {
+            try
+            {
+                long c = AdminService.getCandidatureCurrentUserCount(userId);
+
+                res = "{ \"result\" : \"ok\", \"candidatureCurrentUserCount\" : " +c+ " }";
+
+            }
+            catch (Exception e)
+            {
+                log.error(logCode + "-024 Error getting candidature current user count. error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+            }
+        }
+        else
+        {   // message de reconnexion
+            log.warn(logCode + "-024 Unauthentified trial to access admin page.");
+            res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+        }
+
+        return res;
+    }
+    
+    private String isJobsRunning(boolean isRunning) {
+    	if (isRunning)
+    		return "RUNNING";
+    	else
+    		return "STOPPED";
+    }
 }

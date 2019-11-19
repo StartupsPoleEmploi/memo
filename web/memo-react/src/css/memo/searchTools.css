@@ -1,0 +1,240 @@
+
+/*.filtered
+{
+    display: none;
+}*/
+
+.resetSearchButton
+{
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    margin-bottom: 10px;
+    padding-top: 3px;
+    border-radius: 5px !important;
+    border: 2px solid;
+    cursor: pointer;
+    background-color: white;
+    text-decoration: underline;
+}
+
+.resetSearchButton i {
+    text-decoration: underline;
+}
+
+.doRemoveSearch,
+.doRemoveSearch:hover,
+.doRemoveSearch i
+{
+    color : red !important;
+}
+.doRemoveSearch:hover
+{
+    text-decoration: none !important;
+}
+
+/*.activeSearch
+{
+    border-color: orange !important;
+    color: orange !important;
+}*/
+
+
+#searchInput
+{
+    float: right;
+}
+
+.memoSearchInput
+{
+    background: #20314E;
+    height: 24px;
+    border-radius: 12px !important;
+    color: #fff;
+    width: 260px;
+    border-color: #fff;
+    border: 0;
+    font-size: 12px !important;
+    padding-top: 4px;
+    padding-left: 3px;
+    float: left;
+}
+
+.memoSearchInput:focus
+{
+    background: #20314E;
+    color: #fff;
+}
+
+.searchInputDeco
+{
+    float: left;
+    border-bottom: 1px solid white
+}
+
+#filterForm .memoSearchInput
+{
+    float: none;
+}
+
+.memoSearchInput ::-moz-placeholder,
+.memoSearchInput :-ms-input-placeholder,
+.memoSearchInput ::-webkit-input-placeholder
+{
+    color: #fff;
+    font-size: 12px;
+    font-style: italic;
+}
+
+
+#searchInput i
+{
+    font-size: 20px;
+    color: #fff;
+    margin-left: 8px;
+}
+
+#searchInput a:hover,
+#searchInput i:hover
+{
+    color: #32c5d2;
+}
+
+#breadcrumb.filterPanel
+{
+    height:155px;
+}
+
+.filterPanel #breadcrumbContent
+{
+    height:140px;
+    color: #fff;
+}
+
+.filterPanel select
+{
+    height: 30px !important;
+    font-size: 14px !important;
+    min-width: 200px;
+    color: #000;
+    width: 90%;
+    max-width: 400px;
+}
+
+.filterPanel #searchInput
+{
+    display: none !important;
+}
+
+#cbFiltreFavoris
+{
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+#filterForm .memoSearchInput {
+    width: 90%;
+    max-width: 400px;
+    min-width: 200px;
+}
+
+#filterForm
+{
+    border-top: 1px solid;
+    margin-top: 10px;
+}
+
+#filterForm label,
+#filterForm .memoSearchInput{
+    margin-top: 10px;
+}
+
+#doSearchFilter
+{
+    margin-top: 15px;
+    display: block;
+    width: 90%;
+    max-width: 400px;
+}
+
+.openFilter,
+.hideFilterForm
+{
+    font-size: 12px;
+    text-decoration: underline;
+}
+
+#filterForm .hideFilterForm
+{
+    float: right;
+    margin-top: 15px;
+}
+
+#filterForm .searchInputDeco .fa-search
+{
+    float:right;
+    margin-top: 15px;
+    margin-right: 3px;
+}
+
+#filterForm .searchInputDeco .memoSearchInput
+{
+    float:left;
+    width: 300px;
+}
+
+#filterForm .searchInputDeco
+{
+    border-bottom: 1px solid white;
+    max-width: 400px;
+    height: 35px;
+    width: 90%;
+    min-width: 320px;
+    float: none;
+}
+
+#doSearch i,
+.openFilter i
+{
+    font-size: 16px !important;
+}
+
+#searchInput .openFilter
+{
+    margin-left: 20px;
+}
+
+#hideFilter
+{
+    float: right;
+    display: none;
+}
+
+.filterPanel #hideFilter
+{
+    display: block;
+}
+
+@media screen and (max-width: 767px) {
+    #breadcrumb.filterPanel
+    {
+        height:465px;
+    }
+
+    .filterPanel #breadcrumbContent
+    {
+        height:450px;
+    }
+}
+
+@media screen and (min-width:768px) and (max-width: 991px) {
+    #breadcrumb.filterPanel
+    {
+        height:320px;
+    }
+
+    .filterPanel #breadcrumbContent
+    {
+        height:305px;
+    }
+}

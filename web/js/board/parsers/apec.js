@@ -74,7 +74,7 @@ ParserApec.prototype = {
 
         v = cont.logoEtablissement;
         if(v)
-            c.logoUrl = "https://cadres.apec.fr/files/live/mounts/images/"+v;
+            c.logoUrl = "https://www.apec.fr/files/live/mounts/images/"+v;
 
         return c;
     }

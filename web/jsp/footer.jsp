@@ -13,6 +13,9 @@
                             <div>
                                 <a class="openCguButton text-center">Conditions générales d'utilisation</a>
                             </div>
+                            <div>
+                                <a class="text-center" href="/conseils">Conseils MEMO</a>
+                            </div>
                         </div>
                     </div>
 

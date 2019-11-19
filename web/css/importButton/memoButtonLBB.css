@@ -7,8 +7,8 @@
     font-size: 14px;
     padding-left: 35px;
     /*width: auto !important;*/
-    width: 31px !important;
-    /*min-width: 215px !important;*/
+    /*width: 31px !important;*/
+    min-width: 215px !important;
 }
 .btn-memo-on
 {

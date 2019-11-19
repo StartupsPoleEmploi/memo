@@ -12,6 +12,7 @@ import org.quartz.JobExecutionException;
 
 import com.codahale.metrics.Timer;
 
+import fr.gouv.motivaction.Constantes;
 import fr.gouv.motivaction.model.UserSummary;
 import fr.gouv.motivaction.service.MailService;
 import fr.gouv.motivaction.service.UserService;
@@ -39,7 +40,7 @@ public class AccountDisabledAlert extends AlertMail {
         String body = this.buildAndSendEmail(0);
         body += "<br/><br/> Moludo du random d'envoie :" + this.moduloFiltreEnvoiMailAdmin;
         // envoi du mail de rapport d'execution aux intras, devs et extra
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Comptes désactivés (6mois d'inactivité)", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Comptes désactivés (6mois d'inactivité)", body);
         // on log l'envoie d'email
         this.updateUserLog(0);
         // désactivation automatique des notifications pour les users
@@ -143,7 +144,7 @@ public class AccountDisabledAlert extends AlertMail {
 
 
         html += MailTools.buildHTMLSignature(source,campaign, "", false);
-        html+= MailTools.buildHTMLFooter(user,source,campaign);
+        html+= MailTools.buildHTMLFooter(user,source,campaign, true);
         
         return html;     
     }
@@ -158,7 +159,7 @@ public class AccountDisabledAlert extends AlertMail {
     		enBCC = true;
     	}
     	
-        if ("PROD".equals(MailTools.env) || test || ("RECETTE".equals(MailTools.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
+        if ("PROD".equals(Constantes.env) || test || ("RECETTE".equals(Constantes.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) { 
         	// PROD ou RECETTE avec modulo OK ou mode TEST depuis le BO
         	isSent = MailService.sendMailWithImage(email, subject, html, test, enBCC);
         }

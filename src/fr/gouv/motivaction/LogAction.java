@@ -41,8 +41,8 @@ public class LogAction {
             try
             {
                 String message = form.getFirst("message");
-                String subject = "Import non géré en " + MailTools.env;
-                if ("RECETTE".equals(MailTools.env))
+                String subject = "Import non géré en " + Constantes.env;
+                if ("RECETTE".equals(Constantes.env))
                 	subject = subject + " - " + userId;
                 	
                 String body = "L'utilisateur #"+userId+" a tenté un import sur l'adresse suivante : \r\n\r\n"+message;

@@ -3,7 +3,7 @@
 <div id="candidatureFormStepProgress" class="formTunnelBloc" style="display:none;">
 
   <div>
-    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1>Quel est l'avancement de votre candidature ?</h1></div>
+    <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h2>Quel est l'avancement de votre candidature ?</h2></div>
     
     <div class="mt-element-step" style="width: 70%;margin: auto; margin-bottom:20px;">
 		<div class="row step-default">

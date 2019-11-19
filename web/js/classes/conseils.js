@@ -31,6 +31,11 @@ Conseils.prototype = {
 
 		$(".conseilsClose").on("click", $.proxy(t.closeConseils, t));
         $(".prioritesFormCancel").on("click", $.proxy(this.cancelPriorites, this));
+        
+        $("#conseilsPage a[rel]").on("click",function(el){
+    		var id = $(el.currentTarget).attr("rel");    		
+    		$goToConseils(id);
+    	})
     },
     
     loadAndShowPrioritesAndNbPriorites : function() {
@@ -377,11 +382,8 @@ Conseils.prototype = {
 			t.lastNudgeReseauDisplay = new moment();
 			localStorage.setItem("lastNudgeReseauDisplay", new Date().getTime());
 		}
-
-		if(!iCRR)
-			$("#conseilButton").hide();
-		else
-			$("#conseilButton").show();
+		
+		$("#conseilButton").show();
 	},
 
 	// @RG - CONSEIL : Détermination des conditions d'affichage des incitations à créer des fiches réseau (pas plus de 1 carte réseau active, au moins 8 candidatures actives ou archivées)

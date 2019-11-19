@@ -8,13 +8,18 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jasypt.commons.CommonUtils;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
@@ -28,8 +33,7 @@ import fr.gouv.motivaction.Constantes.Statut;
 import fr.gouv.motivaction.Constantes.TypeOffre;
 import fr.gouv.motivaction.dao.CandidatureDAO;
 import fr.gouv.motivaction.dao.UserDAO;
-import fr.gouv.motivaction.exception.PeConnectException;
-import fr.gouv.motivaction.mails.MailTools;
+import fr.gouv.motivaction.exception.EmailLoginException;
 import fr.gouv.motivaction.mails.UserAccountMail;
 import fr.gouv.motivaction.model.Candidature;
 import fr.gouv.motivaction.model.User;
@@ -96,6 +100,13 @@ public class UserService {
 
     }
 
+    public static User loadFromLoginOrPeEmail(String login) throws Exception
+    {
+        User user = UserDAO.loadFromLoginOrPeEmail(login.toLowerCase());
+        return user;
+
+    }
+    
     public static User loadUserFromId(long id) throws Exception
     {
         User user = UserDAO.loadFromId(id);
@@ -128,7 +139,9 @@ public class UserService {
         cookie.setMaxAge(maxAge);
         cookie.setPath("/");
         cookie.setSecure(isSecure);    // positionnement secure selon la requête pour permettre la connexion directe en http sur les frontaux
+
         cookie.setDomain(servletRequest.getServerName());
+
         cookie.setHttpOnly(true);
         servletResponse.addCookie(cookie);
 
@@ -137,7 +150,9 @@ public class UserService {
         cookie.setMaxAge(maxAge);
         cookie.setPath("/");
         cookie.setSecure(isSecure);    // positionnement secure selon la requête pour permettre la connexion directe en http sur les frontaux
+
         cookie.setDomain(servletRequest.getServerName());
+
         cookie.setHttpOnly(false);
         servletResponse.addCookie(cookie);
     }
@@ -152,7 +167,9 @@ public class UserService {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         cookie.setSecure(isSecure);    // positionnement secure selon la requête pour permettre la connexion directe en http sur les frontaux
+
         cookie.setDomain(servletRequest.getServerName());
+
         cookie.setHttpOnly(true);
         servletResponse.addCookie(cookie);
 
@@ -160,7 +177,9 @@ public class UserService {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         cookie.setSecure(servletRequest.isSecure());    // positionnement secure selon la requête pour permettre la connexion directe en http sur les frontaux
+
         cookie.setDomain(servletRequest.getServerName());
+
         cookie.setHttpOnly(false);
         servletResponse.addCookie(cookie);
     }
@@ -178,23 +197,6 @@ public class UserService {
 
         return user;
     }
-
-/*
-    public static User createNewUser(String accountLoginEmail, Long facebookId, String userSource) throws Exception
-    {
-        //System.out.println("create new user FB");
-        User user = new User();
-        user.setLogin(accountLoginEmail.toLowerCase());
-        user.setFacebookId(facebookId);
-        user.setPassword(UserService.randomString(12));
-        user.setSource(userSource);
-
-        UserService.save(user);
-        UserAccountMail.sendNewAccountNotification(user, false);
-
-        return user;
-    }
-*/
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();
@@ -218,15 +220,18 @@ public class UserService {
             UserDAO.update(user);
     }
 
-    // sauvegarde d'un utilisateur connecté via PEAM (insert normal et update différent pour ne pas écraser l'éventuel mot de passe)
-    public static void saveFromPEAM(User user) throws Exception
+    // sauvegarde d'un utilisateur connecté via PEAM ou JEPOSTULE (insert normal et update différent pour ne pas écraser l'éventuel mot de passe)
+    public static void saveFrom(User user, String from) throws Exception
     {
-        //System.out.println("save user " + user.getLogin() + " / " + user.getFacebookId());
         if(user.getId()==0)
         {
             UserService.setValidationCode(user);
-            user.setSource("PEAM");
+            user.setSource(from);
+
             UserDAO.insert(user);
+
+            if(from.equals("JEPOSTULE"))
+                UserDAO.setAutoDisableNotification(user.getId(),1);
         }
         else
             UserDAO.updatePEAMUser(user);
@@ -329,6 +334,8 @@ public class UserService {
             context.stop();
         }
 
+        userId = 475509;
+
         return userId;
     }
 
@@ -358,6 +365,8 @@ public class UserService {
             context.stop();
         }
 
+        userId = 475509;
+
         return userId;
     }
 
@@ -374,13 +383,16 @@ public class UserService {
             {
                 try
                 {
-                    userId = getUserIdFromLink(request);
+                    userId = getUserIdFromVisitorLink(visitorLink);
+                    if (userId == 0) {
+                    	userId = getUserIdFromConseillerLink(visitorLink);
+                    }
                 }
                 catch (Exception e)
                 {
                     log.error(logCode + "-002 Error identifying user from link. link=" + visitorLink + " error=" + e);
                 }
-            }
+            } 
             else
                 userId = checkUserAuth(request);
         }
@@ -434,9 +446,11 @@ public class UserService {
                 }
             }
         }
+
         return cookie;
     }
 
+    // format du lien encodé : salt|userId|date
     public static String getVisitorLinkForUser(long userId)
     {
         String visitorLink = "";
@@ -450,32 +464,126 @@ public class UserService {
     }
 
     // format du lien décodé : salt|userId|date
-    public static long getUserIdFromLink(HttpServletRequest request) throws Exception
+    public static long getUserIdFromVisitorLink(String link)
+    {
+    	long userId = 0;
+
+    	try
+    	{
+    		if (link != null)
+    		{
+    			String token = encryptor.decrypt(link);
+
+    			// On décrypt le userId à partir du link
+    			userId = Long.parseLong(token.substring(token.indexOf('|') + 1, token.lastIndexOf('|')));
+
+    			// on vérifie que le lien n'a pas plus de dayslimit jours.
+    			LocalDateTime now = LocalDateTime.now();
+    			LocalDateTime dt = LocalDateTime.parse(token.substring(token.lastIndexOf('|') + 1));
+
+                // @RG - EMAIL : le lien de partage du TDB est valide pendant 30j à compter de la date de génération du lien de partage
+				if(dt.until(now, ChronoUnit.DAYS)>30)
+					userId = 0;
+    		}
+    	}
+    	catch(Exception e)
+    	{
+    		log.error(logCode+"-007 ACCOUNT Error checking key link. userId="+userId+" link="+link+" error="+e);
+    		userId = 0;
+    	}
+
+        return userId;
+    }
+    
+    // format du lien encodé : userId/date/salt
+    public static String getConsentLinkForUser(long userId)
+    {
+        String consentLink = "";
+        LocalDateTime dt = LocalDateTime.now();
+
+        String token = userId+"/"+dt+"/"+salt;
+
+        consentLink = encryptor.encrypt(token);
+
+        return consentLink;
+    }
+
+    // format du lien décodé : userId/date/salt
+    public static long getUserIdFromConsentLink(String link)
     {
         long userId = 0;
-        String visitorLink = "";
 
         try
         {
-            visitorLink = request.getParameter("link");
-
-            if (visitorLink != null)
+            if (link != null)
             {
-                String token = encryptor.decrypt(visitorLink);
-                userId = Long.parseLong(token.substring(token.indexOf('|') + 1, token.lastIndexOf('|')));
+                String token = encryptor.decrypt(link);
+                userId = Long.parseLong(token.substring(0, token.indexOf('/')));
 
                 // on vérifie que le lien n'a pas plus de 30 jours.
                 LocalDateTime now = LocalDateTime.now();
-                LocalDateTime dt = LocalDateTime.parse(token.substring(token.lastIndexOf('|') + 1));
+                LocalDateTime dt = LocalDateTime.parse(token.substring(token.indexOf('/')+1,token.lastIndexOf('/')));
 
-                // @RG - TDB : le lien de partage pour accéder en lecture au TDB est valide pendant 30j à compter de la date de génération du lien de partage
+                // @RG - EMAIL : les liens de demande de consentement (Accepter ou Refuser proposés en fin de mail) sont valides pendant 30j à compter de la date d'envoie du mail 
                 if(dt.until(now, ChronoUnit.DAYS)>30)
                     userId = 0;
             }
         }
         catch(Exception e)
         {
-            log.error(logCode+"-006 ACCOUNT Error checking visitor link. userId="+userId+" visitorLink="+visitorLink+" error="+e);
+            log.error(logCode+"-007 ACCOUNT Error checking unsubscribe link. userId="+userId+" link="+link+" error="+e);
+            userId = 0;
+        }
+
+        return userId;
+    }
+    
+    // format du lien encodé : salt/userId/date
+    public static String getConseillerLinkForUser(long userId)
+    {
+        String conseillerLink = "";
+        LocalDateTime dt = LocalDateTime.now();
+
+        String token = salt+"/"+userId+"/"+dt;
+
+        conseillerLink = encryptor.encrypt(token);
+
+        return conseillerLink;
+    }
+    
+    // format du lien décodé : salt/userId/date
+    public static long getUserIdFromConseillerLink(String link)
+    {
+        long userId = 0;
+        User user = null;
+
+        try
+        {
+            if (link != null)
+            {
+                String token = encryptor.decrypt(link);
+
+                // On décrypt le userId à partir du link
+                userId = Long.parseLong(token.substring(token.indexOf('/') + 1, token.lastIndexOf('/')));
+                user = UserService.loadUserFromId(userId);
+                
+                // on vérifie que le lien n'a pas plus de dayslimit jours.
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime dt = LocalDateTime.parse(token.substring(token.lastIndexOf('/') + 1));
+
+           		// Controle à faire sur les heures
+           		if(dt.until(now, ChronoUnit.HOURS)>1)
+           			userId = 0;
+           		else if (user != null && user.getConsentAccess() == 0) {
+           			// L'utilisateur a refusé l'accès à son TDB en consultation
+           			userId = 0;
+           		}
+            }
+        }
+        catch(Exception e)
+        {
+            log.error(logCode+"-007 ACCOUNT Error checking key link. userId="+userId+" link="+link+" error="+e);
+            userId = 0;
         }
 
         return userId;
@@ -521,7 +629,7 @@ public class UserService {
 
         return userId;
     }
-
+    
     public static String getPasswordRefreshLinkForUser(long userId)
     {
         String refreshLink = "";
@@ -580,6 +688,11 @@ public class UserService {
         Utils.logUserAction(userId, "User", actionLog, 0);
     }
 
+	public static void updateConsentAccess(long userId, int access, boolean withDateAccess) throws Exception {		
+		
+		UserDAO.updateConsentAccess(userId, access, withDateAccess);		
+	}
+	
     public static void resetPassword(User user) throws Exception
     {
         Random random = new Random();
@@ -823,7 +936,7 @@ public class UserService {
         }
         else  {
         	//cas 4 : pas d'email -> pas de création utilisateur MEMO
-        	throw new PeConnectException();
+        	throw new EmailLoginException();
         }
 
         if(user.getPassword()==null)
@@ -833,17 +946,66 @@ public class UserService {
         if(user.getId()==0)
             create=true;
 
-        saveFromPEAM(user);
+        saveFrom(user, "PEAM");
 
         if(create)
         {
-            UserAccountMail.sendNewAccountNotification(user, false);
+            UserAccountMail.sendNewAccountNotificationFrom(user, false, "PEAM");
             Utils.logUserAction(user.getId(), "User", "Création PE Connect", 0);
         }
 
         return user;
     }
 
+    public static User createUserFromAPI(User userAPI) throws Exception {
+        // cas 1 : user inexistant pour cet email -> création utilisateur                                                      OK
+        // cas 2 : user existant pour cet email et pas de peId -> update utilisateur pour ajouter les infos utilisateurs       OK
+        // cas 3 : user existant pour cet email et peId différent -> création utilisateur login null                           OK
+        // cas 4 : pas d'email -> pas de création utilisateur                                                                  OK
+
+    	User userMEMO = null;
+    	String emailJEPOSTULE = null;
+    	
+        // récupération des éléments d'identité
+        if(userAPI != null && !StringUtils.isEmpty(userAPI.getPeEmail())) {   
+        	// L'email de l'utilisateur est valorisé 
+        	emailJEPOSTULE = userAPI.getPeEmail().toLowerCase();
+            userMEMO = loadUserFromLogin(emailJEPOSTULE);
+
+            if(userMEMO != null) {
+            	// un utilisateur existe déjà pour cette adresse email
+                if(userMEMO.getPeId() == null) {   
+                	// cas 2 : email et user existant pour cet email et pas de peId -> update utilisateur pour ajouter les infos utilisateurs
+                	userAPI = copyUserFromAPI(userMEMO,userAPI);
+                }
+                // else cas 3 : user existant pour cet email existant et peId différent -> création utilisateur login null mais peEmail valorisé
+            } else {   
+            	// cas 1 : user inexistant pour cet email -> création utilisateur
+            	userAPI.setLogin(emailJEPOSTULE);
+            }
+
+        } else  {
+        	//cas 4 : pas d'email -> pas de création utilisateur MEMO
+        	throw new EmailLoginException();
+        }
+
+        if(userAPI.getPassword()==null)
+            userAPI.setPassword(UserService.randomString(12));
+
+        boolean create = false;
+        if(userAPI.getId()==0)
+            create=true;
+
+        saveFrom(userAPI, "JEPOSTULE");
+
+        if(create) {
+            UserAccountMail.sendNewAccountNotificationFrom(userAPI, false, "JEPOSTULE");
+            Utils.logUserAction(userAPI.getId(), "User", "Création from JEPOSTULE", 0);
+        }
+
+        return userAPI;
+    }
+    
     // mets à jour user avec les infos disponibles dans userInfo
     public static User updatePEAMUser(User user, User userInfo, boolean updateAddress) throws Exception
     {
@@ -860,7 +1022,7 @@ public class UserService {
 
         copyUserPEAMInfo(user, userInfo, updateAddress);
 
-        saveFromPEAM(user);
+        saveFrom(user, "PEAM");
 
         return user;
     }
@@ -885,6 +1047,17 @@ public class UserService {
 
         return toUser;
     }
+
+    private static User copyUserFromAPI(User toUser, User fromUser)
+    {
+        toUser.setFirstName(fromUser.getFirstName());
+        toUser.setLastName(fromUser.getLastName());
+        toUser.setPeId(fromUser.getPeId());
+        toUser.setAddress(fromUser.getAddress());
+        toUser.setPeEmail(fromUser.getPeEmail());
+
+        return toUser;
+    }
     
     public static UserSummary getUserSummary(long userId) {
     	UserSummary userSum = UserDAO.loadUserSummary(userId);
@@ -897,7 +1070,7 @@ public class UserService {
     	if(userId>0) {
     		try {
     			tabCandidatures = CandidatureDAO.list(userId, true);
-    			UserService.writeCandidaturesInCSV(tabCandidatures, MailTools.pathCSV+"extractTDB-"+userId+".csv");
+    			UserService.writeCandidaturesInCSV(tabCandidatures, Constantes.pathCSV+"extractTDB-"+userId+".csv");
     		} catch(Exception e) {
                 log.error(logCode+"-012 ACCOUNT Error user extractTDB. userId="+userId+" error="+e);
             }
@@ -1072,4 +1245,18 @@ public class UserService {
     {
         UserDAO.deleteDoubleAccounts(destinationId, idsToRemove);
     }
+    
+    public static void saveROME(Long userId, String rome) throws Exception
+    {
+    	Object[] tabROME = UserDAO.getROME(userId, rome);
+    	// On vérifie que le code ROME n'est pas déjà enregistré pour cet utilisateur
+    	if(tabROME == null || !ArrayUtils.contains(tabROME, rome)) {
+    		UserDAO.saveROME(userId, rome);
+    	}
+    }
+    
+	public static void updateLastAccessRefuserDate(long idUser) throws Exception 
+	{
+		  UserDAO.updateLastAccessRefuserDate(idUser);
+	}
 }

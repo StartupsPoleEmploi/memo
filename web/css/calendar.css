@@ -1,0 +1,385 @@
+
+
+.dayBox
+{
+    width: 100%;
+    font-size: 12px;
+    float: left;
+    overflow-x: hidden;
+    /*overflow-y: auto;*/
+    background-color: #fff;
+    border-radius: 3px !important;
+
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-wrap: nowrap;
+}
+
+.dayBox ul
+{
+    overflow-x: hidden;
+}
+
+.dayBoxTitle
+{
+    font-style: 13px;
+    font-weight: bold;
+    padding-left: 4px;
+}
+
+.weekend
+{
+    /*background: #ccc;*/
+}
+
+.otherMonth
+{
+    background-color: #ddd;
+}
+
+.otherMonth .dayBoxTitle
+{
+    font-weight: normal;
+    font-style: italic;
+}
+
+
+.calendarTitle
+{
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.calendarMonthButton
+{
+    margin-bottom: 20px;
+    float: left;
+}
+
+.calClose
+{
+    float: right;
+}
+
+button.calendarMonthButton
+{
+    border-color: #2f353b;
+    color: #000;
+    background-color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 15px;
+    font-size: 14px;
+    border-radius: 50% !important;
+    border: 0;
+    box-shadow: 4px 5px 11px -3px rgba(128,0,128,0.3);
+    height: 25px;
+}
+
+button.calendarMonthButton.thisMonth
+{
+    font-size: 14px;
+    border-radius: 3px !important;
+    padding: 2px 8px;
+}
+
+button.calendarMonthButton:hover {
+    background-color: #2f353b;
+    color: #FFF;
+}
+
+.closeCalendar
+{
+    float: right;
+    /*height: 20px;*/
+}
+
+.calendarGrid
+{
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 120px 120px 120px 120px 120px 120px;
+    grid-gap: 5px;
+    row-gap: 5px;
+    grid-row-gap: 5px;
+}
+
+.calWeek0{grid-row: 1;}
+.calWeek1{grid-row: 2;}
+.calWeek2{grid-row: 3;}
+.calWeek3{grid-row: 4;}
+.calWeek4{grid-row: 5;}
+.calWeek5{grid-row: 6;}
+
+.calDay0{grid-column: 7;}
+.calDay1{grid-column: 1;}
+.calDay2{grid-column: 2;}
+.calDay3{grid-column: 3;}
+.calDay4{grid-column: 4;}
+.calDay5{grid-column: 5;}
+.calDay6{grid-column: 6;}
+
+
+@media screen and (max-width:651px) {
+
+    button.calendarMonthButton
+    {
+        font-size: 16px;
+    }
+
+    .calendarGrid
+    {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px;
+
+        grid-gap: 5px;
+    }
+
+
+    .calWeek0{grid-row: 1;}
+    .calWeek1{grid-row: 3;}
+    .calWeek2{grid-row: 5;}
+    .calWeek3{grid-row: 7;}
+    .calWeek4{grid-row: 9;}
+    .calWeek5{grid-row: 11;}
+
+    .calWeek0.calDay0{grid-column: 5; grid-row: 2}
+    .calWeek0.calDay6{grid-column: 4; grid-row: 2}
+
+    .calWeek1.calDay0{grid-column: 5; grid-row: 4}
+    .calWeek1.calDay6{grid-column: 4; grid-row: 4}
+
+    .calWeek2.calDay0{grid-column: 5; grid-row: 6}
+    .calWeek2.calDay6{grid-column: 4; grid-row: 6}
+
+    .calWeek3.calDay0{grid-column: 5; grid-row: 8}
+    .calWeek3.calDay6{grid-column: 4; grid-row: 8}
+
+    .calWeek4.calDay0{grid-column: 5; grid-row: 10}
+    .calWeek4.calDay6{grid-column: 4; grid-row: 10}
+
+    .calWeek5.calDay0{grid-column: 5; grid-row: 12}
+    .calWeek5.calDay6{grid-column: 4; grid-row: 12}
+
+
+    .closeCalendar
+    {
+        display: none;
+    }
+    
+}
+
+
+
+@media screen and (min-width:1000px)
+{
+    .dayBox
+    {
+        font-size: 14px;
+    }
+}
+
+#calendarPage .conseilsClose
+{
+    margin-top: 20px;
+    
+}
+
+#calendarPage ul
+{
+    list-style-type: none;
+    padding: 0px;
+    overflow-y: auto;
+}
+
+#calendarPage li
+{
+    font-size: 12px;
+    margin-top: 7px;
+}
+#calendarPage li>div
+{
+    cursor: pointer;
+    padding: 2px;
+    padding-left: 5px;
+    margin-left: 1px;
+    margin-right: 3px;
+    background: #fff;
+    color: black;
+    font-weight: bold;
+    border-radius: 3px !important;
+
+    border: 1px solid;
+    border-left: 4px solid;
+    border-color: rgba(128,128,128,0.2);
+}
+
+#calendarPage li > div:focus
+{
+    background: #eee;
+}
+
+#calendarPage li>div.calEntretien {
+    border-left-color: #00C7FC;
+}
+
+#calendarPage li>div.calAPostule {
+    border-left-color: #F2AE43;
+}
+
+#calendarPage li>div.calDoisRelancer {
+    border-left-color: #7AC943;
+}
+
+#calendarPage li>div.calRappel{
+    border-left-color: #ddd;
+}
+
+
+.calAPostule
+{
+    background: #F2AE43;
+    color: #fff;
+}
+.calDoisRelancer
+{
+    background: #7AC943;
+    color: #fff;
+}
+.calEntretien
+{
+    background: #00C7FC;
+    color: #fff;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+.calRappel
+{
+    background: #ddd;
+}
+
+#calendarContent .calendarSpinner {
+    text-align: center;
+    margin-top: 120px;
+    color:#364150;
+    font-size: 32px;
+}
+
+#calendarContent .calendarSpinner > i {
+    font-size: 48px;
+    margin-top: 50px;
+    margin-bottom: 80px;
+}
+
+#calendarPageContainer
+{
+    color: black;
+    font-size: 16px;
+    margin: 15px;
+    margin-top: 130px;
+    width: auto;
+}
+
+.tippy-tooltip {
+    box-shadow: 0px 5px 40px 3px rgba(128, 128, 128, 0.3);
+}
+
+.tippy-popper[x-placement^="right"] .tippy-arrow
+{
+    border-right-color: #fff;
+}
+.tippy-popper[x-placement^="left"] .tippy-arrow
+{
+    border-left-color: #fff;
+}
+
+.calEventTippy-theme
+{
+    border-top: 10px solid;
+    background-color: #fff;
+    color: #000;
+    padding: 0;
+}
+
+.calEntretien-theme
+{
+    border-top-color: #00C7FC;
+}
+
+.calAPostule-theme
+{
+    border-top-color: #F2AE43;
+}
+
+.calDoisRelancer-theme
+{
+    border-top-color: #7AC943;
+}
+
+.calRappel-theme
+{
+    border-top-color: #ddd;
+}
+
+.calEventContent
+{
+    padding: 7px;
+    padding-top: 0;
+}
+
+.tippy-content .calEventTitle
+{
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+}
+
+.calEventContent img
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.calEventContent
+{
+    font-size: 16px;
+    text-align: left;
+    color: #666;
+}
+
+.calEventContent i {
+    font-size: 25px;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+    color: #666;
+    width: 20px;
+    text-align: center;
+}
+
+.calEventTippy-theme .tippy-content
+{
+    text-align: left;
+}
+
+.calEventOpenMsg
+{
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    font-size: 11px;
+}
+
+.tippy-tooltip.calEventTippy-theme .tippy-arrow {
+    transform: scaleY(2.5) scaleX(1.3);
+}

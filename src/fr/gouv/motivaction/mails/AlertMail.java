@@ -17,9 +17,9 @@ public abstract class AlertMail implements Job  {
     public static final DateTimeFormatter formatter = MailTools.formatter;
     
     // compteur pour dénombrer le nombre de mails envoyés
-    protected int cptNbEnvoi = 0;
+    protected static int cptNbEnvoi = 0;
     // pour limiter le nombre de mails envoyés aux admins
-    protected int moduloFiltreEnvoiMailAdmin = MailTools.moduloFiltreAccount;
+    protected static int moduloFiltreEnvoiMailAdmin = MailTools.moduloFiltreAccount;
 
     public abstract void execute(JobExecutionContext context) throws JobExecutionException;
 }

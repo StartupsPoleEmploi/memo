@@ -1,10 +1,12 @@
 package fr.gouv.motivaction.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -43,6 +45,43 @@ public class UserDAO {
             pStmt = con.prepareStatement(sql);
 
             pStmt.setString(1, login);
+
+            rs = pStmt.executeQuery();
+
+            if (rs.next())
+            {   // un compte présent, on vérifie s'il est validé
+                user = UserDAO.initUserFromDB(rs);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(logCode+"-001 Error loading user. login="+login+" error="+e);
+            throw new Exception("DB Error");
+        }
+        finally
+        {
+            DatabaseManager.close(con,pStmt,rs, logCode, "002");
+        }
+
+        return user;
+    }
+
+    public static User loadFromLoginOrPeEmail(String login) throws Exception
+    {
+        User user = null;
+
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pStmt = null;
+
+        try
+        {
+            con = DatabaseManager.getConnection();
+            String sql = "select * from users where login = ? OR (login is null AND peEmail = ?)";
+            pStmt = con.prepareStatement(sql);
+
+            pStmt.setString(1, login);
+            pStmt.setString(2, login);
 
             rs = pStmt.executeQuery();
 
@@ -278,6 +317,7 @@ public class UserDAO {
         user.setChangePasswordToken(rs.getString("changePasswordToken"));
         user.setFacebookId(rs.getLong("facebookId"));
         user.setReceiveNotification(rs.getInt("receiveNotification"));
+        user.setConsentAccess(rs.getInt("consentAccess"));
         user.setLastPasswordChange(rs.getTimestamp("lastPasswordChange"));
         user.setAutoDisableNotification(rs.getInt("autoDisableNotification"));
         user.setLastName(rs.getString("lastName"));
@@ -291,7 +331,9 @@ public class UserDAO {
         user.setZip(rs.getString("zip"));
         user.setCityInsee(rs.getString("cityInsee"));
         user.setSource(rs.getString("source"));
-
+        user.setLastAccessRequestDate(rs.getTimestamp("lastAccessRequestDate"));
+        user.setLastAccessRefuserDate(rs.getTimestamp("lastAccessRefuserDate"));
+        
         return user;
     }
 
@@ -484,6 +526,34 @@ public class UserDAO {
         }
     }
 
+	public static void updateConsentAccess(long userId, int access, boolean withDateAccess) throws Exception {
+		Connection con = null ;
+    	PreparedStatement pStmt = null ;
+    	ResultSet rs = null;
+    	String sql = null;
+    	
+    	try 
+    	{
+    		con = DatabaseManager.getConnection();	
+    		if (withDateAccess)
+    			sql = "UPDATE users SET consentAccess = " + access + ", lastAccessRequestDate = NULL WHERE id ="+userId;
+    		else
+    			sql = "UPDATE users SET consentAccess = " + access + "  WHERE id ="+userId;
+    		
+    		pStmt = con.prepareStatement(sql);
+    		rs = pStmt.executeQuery(); 
+    	}
+    	catch (Exception e)
+    	{
+    		log.error(logCode+"-002 Error updating consentAccess. error="+e);
+    		throw e;
+    	}
+    	finally
+    	{
+    		DatabaseManager.close(con, pStmt, null, logCode, "002");
+    	}
+	}
+	
     /*
     public static User deleteFromId(Long userId) throws Exception
     {
@@ -620,7 +690,7 @@ public class UserDAO {
         try
         {
             con = DatabaseManager.getConnection();
-            //@RG suggestion de changement de mot de passe tous les 6 mois
+            //@RG - UTILISATEUR : suggestion de changement de mot de passe tous les 6 mois
             String sql = "SELECT * FROM users WHERE id=? AND lastPasswordChange < NOW() - INTERVAL 6 MONTH";
             pStmt = con.prepareStatement(sql);
             pStmt.setLong(1, userId);
@@ -906,4 +976,82 @@ public class UserDAO {
             DatabaseManager.close(con, pStmt,null, logCode, "041");
         }
     }
+    
+    public static Object[] getROME(Long userId, String rome) throws Exception {
+    	Connection con = null;
+    	PreparedStatement pStmt = null;
+    	ResultSet rs = null;
+    	ArrayList<String> res = new ArrayList<String>();
+
+    	try
+    	{
+    		con = DatabaseManager.getConnection();
+    		String sql = "SELECT * FROM userROMEs WHERE userId=?";
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+    		rs = pStmt.executeQuery();
+    		
+    		while (rs.next())
+    			res.add(rs.getString("ROME"));
+    			
+    	}
+    	catch (Exception e)
+    	{
+    		log.error(logCode+"-043 Error saveROME. userId="+userId+" rome="+rome+" error="+e);
+    		throw new Exception("DB Error");
+    	}
+    	finally
+    	{
+    		DatabaseManager.close(con, pStmt,null, logCode, "043");
+    	}
+    	return res.toArray();
+    }
+    
+    public static void saveROME(Long userId, String rome) throws Exception {
+    	 Connection con = null;
+         PreparedStatement pStmt = null;
+
+         try
+         {
+             con = DatabaseManager.getConnection();
+             String sql = "INSERT INTO userROMEs (userId, rome) VALUE (?,?)";
+             pStmt = con.prepareStatement(sql);
+             pStmt.setLong(1, userId);
+             pStmt.setString(2, rome);
+             pStmt.executeUpdate();
+         }
+         catch (Exception e)
+         {
+             log.error(logCode+"-042 Error saveROME. userId="+userId+" rome="+rome+" error="+e);
+             throw new Exception("DB Error");
+         }
+         finally
+         {
+             DatabaseManager.close(con, pStmt,null, logCode, "043");
+         }
+    }
+    
+    public static void updateLastAccessRefuserDate(long idUser) throws Exception {
+		Connection con = null ;
+		PreparedStatement pStmt = null ;
+		String sql = null;
+
+		try {
+			con = DatabaseManager.getConnection();	
+			sql = "UPDATE users SET lastAccessRefuserDate = NOW() WHERE id=?";    	    		
+
+			pStmt = con.prepareStatement(sql);
+			pStmt.setLong(1,idUser); 
+			pStmt.executeQuery();     	            
+		}
+		catch (Exception e)
+		{
+			log.error(logCode+"-004 Error updating lastAccessRefuserDate. error="+e);
+			throw e;
+		}
+		finally
+		{
+			DatabaseManager.close(con, pStmt, null, logCode, "002");
+		}
+	}
 }

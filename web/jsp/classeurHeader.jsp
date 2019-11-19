@@ -9,9 +9,7 @@
                 <div class="logoSmall" id="logoSmall"></div>
                 <div class="logoPE hidden-xs"><a href="http://www.pole-emploi.fr" target="_blank"><img src="./pic/logos/pe.png" alt="logo pole emploi" /></a></div>
 
-                <div class="hidden-xs headerFiller">&nbsp;</div>
-
-                <!--<div id="archives">Candidature terminée</div>-->
+                <div class="hidden-xs headerFiller">&nbsp;</div> 
 
                 <div id="quickImportDiv">
                     <input type="text" placeholder="Coller ici le lien Internet de l'offre" id="quickImport" class="form-control" />
@@ -22,6 +20,8 @@
 
                 <!-- BEGIN TOPBAR ACTIONS -->
                 <div class="topbar-actions">
+                	 <button id='buttonRetourConseiller' type="button" style="border-radius:5px !important; height:40px; margin-right:10px;" class="btn btn-outline dark">Retour Espace Conseiller </button>
+                	 
                     <!-- BEGIN USER PROFILE -->
                     <!--<a id="logoutButton"><i class="icon-key"></i> Se déconnecter </a>-->
 					<span id="badgePrioritesB" class="badge badgePriorites"></span>
@@ -41,8 +41,13 @@
   									Vos Priorités
   								</a>
                             </li>
+
+                            <li class="hidden-xs">
+                                <a id="calendarButton"><i class="fa fa-calendar"></i>  Calendrier</a>
+                            </li>
+
                             <li>
-                                <a id="conseilButton"><i class="fa fa-book"></i>  Mes conseils personnalisés</a>
+                                <a id="conseilButton"><i class="fa fa-book"></i>  Mes conseils </a>
                             </li>
                             <li>
                                 <a id="ficheButton"><i class="fa fa-plus"></i>  Ajouter une candidature</a>

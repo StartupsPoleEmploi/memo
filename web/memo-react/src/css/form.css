@@ -1,0 +1,66 @@
+
+input,
+input[type=text],
+input[type=email],
+input[type=password]
+{
+    border: 1px solid #CACACA !important;	
+    border-radius: 4px !important;
+    color: #414042 !important;
+    font-family: Roboto;	
+    font-size: 15px;	
+    line-height: 18px;
+    min-height: 35px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-overflow: ellipsis;
+}
+
+input[type=checkbox]
+{
+	min-height: 15px !important;
+	max-height: 15px  !important;
+	width:15px !important;
+}
+
+.creationAccountBlocCguCheckbox
+{
+	margin-top: 10px
+}
+
+
+.hiddenFileInput
+{
+    position:fixed;
+    top:-100em;
+}
+
+.logoSelector
+{
+    border: 1px solid #414042;    
+    padding: 5px 5px 0;
+}
+
+.logoSelector > div
+{
+    margin-bottom: 5px;
+}
+
+.logoSelector > div > img
+{
+    margin-right: 5px;
+    max-width: 32px;
+    max-height: 32px;
+}
+
+.formLogo 
+{
+    max-width: 100px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.formLogo > img
+{
+    max-width: 64px;
+}

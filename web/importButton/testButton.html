@@ -218,8 +218,8 @@
             js.id=id;
             js.async=true;
 
-            if(window.location.hostname.indexOf('boomerang')>=0)
-                js.src="http://boomerang:8080/js/importButton/memoButton-min.js";
+            if(window.location.hostname.indexOf('localhost')>=0)
+                js.src="http://localhost/js/importButton/memoButton-min.js";
             else if(window.location.hostname.indexOf('beta')>=0)
                 js.src="https://memo.beta.pole-emploi.fr/js/importButton/memoButton-min.js";
             else

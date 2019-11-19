@@ -81,6 +81,9 @@ Constantes.prototype =
     						"adequat", "fed finance", "ergalis", "temporis", "samsic emploi", "apave", "lynx rh", "de graet consulting", "groupe actual",
     							"fed supply", "triangle interim", "kpmg", "actual", "alten", "uptoo", "interaction", "elis", "phone regie",
     								"taylor made recrutement", "domino interim", "in extenso", "jobintree"],
+    
+	JOBBOARD_LIB : [ "Pôle Emploi", "La Bonne Boîte", "Emploi store", "Leboncoin", "Indeed", "Vivastreet", "Monster", "Keljob", "Cadremploi", "LinkedIn", "Envirojob", 
+		"APEC", "MeteoJob", "RegionsJob", "Vitijob", "StepStone", "marketvente", "Adecco", "Manpower", "randstad", "QAPA", "JobiJoba"], 				
 
     MEMO_PARTNERS : ['labonneboite','envirojob','pole-emploi','pe-qvr','jobalim','vitijob']
 }

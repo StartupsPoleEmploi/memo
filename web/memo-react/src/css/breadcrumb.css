@@ -1,0 +1,19 @@
+
+.breadcrumb
+{
+    background-color: #f4f4f4;
+    padding: 20px 30px;
+    margin-bottom: 0;
+}
+
+.breadcrumb .fas
+{
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+.breadcrumb a,
+.breadcrumb a:hover
+{
+    color: rgb(51,51,51);
+}

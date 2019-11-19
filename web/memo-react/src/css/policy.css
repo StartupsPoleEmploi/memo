@@ -1,0 +1,147 @@
+.policyTitleMargin 
+{
+    min-height: 16.43px;
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.policyBody
+{
+    position: relative;
+    padding: 15px;
+}
+
+.policyArticle {
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.policySummary {
+    margin-top: 10px;
+}
+
+.policyTitle3 {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.policyTitle2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 10px;
+}
+
+.policyTitle1 {
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: underline;
+}
+
+.policyMargin
+{
+    margin-top: 20px;
+}
+
+.policyWarning
+{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.policyWarning .btn
+{
+    border-radius: 5px !important;
+}
+
+.policyWarning a
+{
+    font-size: 14px;
+}
+
+.Modal.policy
+{
+	max-height: 700px;
+}
+
+
+.cookie-notice {
+    display:block;
+    top: 0px;
+    position: fixed;
+    left: 0px;
+    z-index: 500 !important;
+    width: 100%;
+    min-height: 66px;
+    background-color: #0B2D3D;
+    color: #fff;
+    font-size: 16px;
+    font-family: Verdana;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.cookie-notice a
+{
+    color: #fff;
+    text-decoration: underline;
+    line-height: 50px;
+}
+.cookie-notice a:hover
+{
+    color: #5371F8 ;
+}
+
+.cookie-notice button
+{
+    margin-right:30px;
+}
+
+.rgpdDeny
+{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rgpdDeny .btn
+{
+    border-radius: 5px !important;
+}
+
+.rgpdDeny a
+{
+    font-size: 14px;
+}
+
+.rgpdDeny button
+{
+    margin-bottom: 15px;
+}
+
+#privacyBadge
+{
+    background-image: url("../pic/rgpd_off.png");
+    cursor: pointer;
+    height: 45px;
+    width: 115px;
+    margin-left: -4px;
+    margin-bottom: 20px;
+}
+
+#privacyBadge.hasConsent
+{
+    background-image: url("../pic/rgpd_on.png");
+}
+
+.privacy .modalActions
+{
+    background: #f4f4f4;
+    margin-top: 0;
+    padding-bottom: 40px;
+}
+.privacyBackground
+{
+    background: #f4f4f4;
+}

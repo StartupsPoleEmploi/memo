@@ -3,9 +3,14 @@ package fr.gouv.motivaction.job;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -28,6 +33,7 @@ import fr.gouv.motivaction.model.Candidature;
 import fr.gouv.motivaction.model.CandidatureEvent;
 import fr.gouv.motivaction.model.UserLog;
 import fr.gouv.motivaction.service.MailService;
+import fr.gouv.motivaction.service.UserService;
 import fr.gouv.motivaction.utils.Utils;
 
 /**
@@ -65,65 +71,102 @@ public class ExportDatalake implements Job {
             in.close();
             
         } catch (Exception e) {
-            log.error(logCode + "-009 ExportDatalake properties error=" + e);
+            log.error(logCode + "-001 ExportDatalake properties error=" + e);
 	    }
     }
     
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
-        log.info(logCode + "-001 JOB Executing ExportDatalake job");
-
+        boolean isOk = false;
+        
+    	log.info(logCode + "-002 JOB Executing ExportDatalake job");
+        
         try {
             // génération de l'export
-            this.buildAndWriteExport();
+        	isOk = this.buildAndWriteExport();
 
             // envoi du mail de rapport d'execution aux intras, devs et extra
             MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport - construction de la liste des utilisateurs", "");
+            
+        	if(!isOk)
+        		log.error(logCode+"-011 JOB Error executing ExportMaintenance job.");
         }
         catch (Exception e)
         {
-            log.error(logCode+"-002 JOB Error executing ExportMaintenance job. error="+e);
+            log.error(logCode+"-003 JOB Error executing ExportMaintenance job. error="+e);
             throw new JobExecutionException(e);
         }
     }
 
-    public static boolean buildAndWriteExport() throws Exception
+    private boolean buildAndWriteExport() throws Exception
     {
         boolean isOk = false;
-    	log.info(logCode+"-003 JOB Started Export Datalake");
+    	log.info(logCode+"-004 JOB Started ExportDatalake");
 
-        long nbUser = AdminDAO.getMaxUserId();
-
-        if(nbUser>0)
+        try
         {
+            // Ecriture des fichiers sur le serveur
+            ExportDatalake.writeUserLogsIntoLog(null);
+            ExportDatalake.writeCandidaturesIntoLog(null);
+            ExportDatalake.writeCandidatureEventsIntoLog(null);
+            ExportDatalake.writeRefEtatCandidatureIntoLog();
+            ExportDatalake.writeRefTypeCandidatureIntoLog();
+            ExportDatalake.writeRefTypeCandidatureEventIntoLog();
+            ExportDatalake.writeRefSubTypeCandidatureEventIntoLog();
+            isOk = true;
+            log.info(logCode+"-005 JOB End Datalake Export");
+
+        } catch (Exception e) {
+            log.error(logCode+"-006 JOB Erreur lors de l'écriture du fichier d'export. error=" + e);
+        } 
+        return isOk;
+    }
+
+    /**
+     * En cas de plantage de l'export automatique, on tente un nouvel export manuel via testMail.jsp
+     * @param request
+     * @param date
+     * @return
+     * @throws Exception
+     */
+    public static void buildAndWriteExportRetry(HttpServletRequest request, String strDate) throws Exception
+    {
+    	log.info(logCode+"-007 JOB Started ExportDatalakeRetry");
+
+        long userId = UserService.checkAdminUserAuth(request);
+        
+        if(userId>0)
+        {
+        	log.info(logCode+"-008 JOB launched by userId=" + userId);
             try
             {
                 // Ecriture des fichiers sur le serveur
-                ExportDatalake.writeUserLogsIntoLog();
-                ExportDatalake.writeCandidaturesIntoLog();
-                ExportDatalake.writeCandidatureEventsIntoLog();
+                ExportDatalake.writeUserLogsIntoLog(strDate);
+                ExportDatalake.writeCandidaturesIntoLog(strDate);
+                ExportDatalake.writeCandidatureEventsIntoLog(strDate);
                 ExportDatalake.writeRefEtatCandidatureIntoLog();
                 ExportDatalake.writeRefTypeCandidatureIntoLog();
                 ExportDatalake.writeRefTypeCandidatureEventIntoLog();
                 ExportDatalake.writeRefSubTypeCandidatureEventIntoLog();
-                isOk = true;
-                log.info(logCode+"-004 JOB User extract built");
+                
+                log.info(logCode+"-009 JOB End ExportDatalakeRetry");
 
             } catch (Exception e) {
-                log.error(logCode+"-005 JOB Erreur lors de l'écriture du fichier d'extract. error=" + e);
+                log.error(logCode+"-010 JOB Erreur lors de l'écriture du fichier d'extract. error=" + e);
             }
+        } else {
+        	log.error(logCode+"-012 JOB User is not admin - userId=" + userId);
         }
-        return isOk;
     }
     
     private static JSONObject convertUserLogIntoJSON(UserLog a_userLog) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_userLog != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_userLog.getId());
         	objJSON.put("userId", a_userLog.getUserId());
@@ -133,7 +176,7 @@ public class ExportDatalake implements Job {
         	objJSON.put("peId", a_userLog.getPeId());
         	objJSON.put("peEmail", a_userLog.getPeEmail());
         	objJSON.put("candidatureId", a_userLog.getCandidatureId());
-        	objJSON.put("creationTime", Utils.getStringFromTimestamp(a_userLog.getCreationTime(), "yyyy-MM-dd hh:mm:ss"));
+        	objJSON.put("creationTime", Utils.getStringFromTimestamp(a_userLog.getCreationTime(), "yyyy-MM-dd kk:mm:ss"));
         	
         }
         return objJSON; 
@@ -142,11 +185,11 @@ public class ExportDatalake implements Job {
     private static JSONObject convertCandidatureIntoJSON(Candidature a_candidature) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_candidature != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_candidature.getId());
         	objJSON.put("userId", a_candidature.getUserId());
@@ -154,23 +197,23 @@ public class ExportDatalake implements Job {
         	objJSON.put("nomSociete", a_candidature.getNomSociete());
         	objJSON.put("description", a_candidature.getDescription());
         	
-        	objJSON.put("lastUpdate", Utils.getStringFromLong(a_candidature.getLastUpdate(), "yyyy-MM-dd hh:mm:ss"));
+        	objJSON.put("lastUpdate", Utils.getStringFromLong(a_candidature.getLastUpdate(), "yyyy-MM-dd kk:mm:ss"));
         	objJSON.put("etat", a_candidature.getEtat());
         	objJSON.put("ville", a_candidature.getVille());
         	objJSON.put("pays", a_candidature.getPays());
         	
         	if(a_candidature.getDateCandidature()!=0)
-        		objJSON.put("dateCandidature", Utils.getStringFromLong(a_candidature.getDateCandidature(), "yyyy-MM-dd hh:mm:ss"));
+        		objJSON.put("dateCandidature", Utils.getStringFromLong(a_candidature.getDateCandidature(), "yyyy-MM-dd kk:mm:ss"));
         	else
         		objJSON.put("dateCandidature", null);
         	
         	if(a_candidature.getDateRelance()!=0)
-        		objJSON.put("dateRelance", Utils.getStringFromLong(a_candidature.getDateRelance(), "yyyy-MM-dd hh:mm:ss"));
+        		objJSON.put("dateRelance", Utils.getStringFromLong(a_candidature.getDateRelance(), "yyyy-MM-dd kk:mm:ss"));
         	else
         		objJSON.put("dateRelance", null);
         	
         	if(a_candidature.getDateEntretien()!=0)
-        		objJSON.put("dateEntretien", Utils.getStringFromLong(a_candidature.getDateEntretien(), "yyyy-MM-dd hh:mm:ss"));
+        		objJSON.put("dateEntretien", Utils.getStringFromLong(a_candidature.getDateEntretien(), "yyyy-MM-dd kk:mm:ss"));
         	else
         		objJSON.put("dateEntretien", null);
         	
@@ -184,7 +227,7 @@ public class ExportDatalake implements Job {
         	objJSON.put("rating", a_candidature.getRating());
         	objJSON.put("sourceId", a_candidature.getSourceId());
         	objJSON.put("expired", a_candidature.getExpired());
-        	objJSON.put("creationDate", Utils.getStringFromLong(a_candidature.getCreationDate(), "yyyy-MM-dd hh:mm:ss"));
+        	objJSON.put("creationDate", Utils.getStringFromLong(a_candidature.getCreationDate(), "yyyy-MM-dd kk:mm:ss"));
         	objJSON.put("logoUrl", a_candidature.getLogoUrl());
         	objJSON.put("jobBoard", a_candidature.getJobBoard());
         	objJSON.put("isButton", a_candidature.getIsButton());
@@ -197,16 +240,16 @@ public class ExportDatalake implements Job {
     private static JSONObject convertCandidatureEvtIntoJSON(CandidatureEvent a_candEvt) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_candEvt != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_candEvt.getId());
         	objJSON.put("candidatureId", a_candEvt.getCandidatureId());
-        	objJSON.put("creationTime", Utils.getStringFromLong(a_candEvt.getCreationTime(), "yyyy-MM-dd hh:mm:ss"));
-        	objJSON.put("eventTime", Utils.getStringFromLong(a_candEvt.getEventTime(), "yyyy-MM-dd hh:mm:ss"));
+        	objJSON.put("creationTime", Utils.getStringFromLong(a_candEvt.getCreationTime(), "yyyy-MM-dd kk:mm:ss"));
+        	objJSON.put("eventTime", Utils.getStringFromLong(a_candEvt.getEventTime(), "yyyy-MM-dd kk:mm:ss"));
         	objJSON.put("eventType", a_candEvt.getEventType());
         	objJSON.put("eventSubType", a_candEvt.getEventSubType());
         	objJSON.put("comment", a_candEvt.getComment());   	
@@ -217,11 +260,11 @@ public class ExportDatalake implements Job {
     private static JSONObject convertRefEtatCandIntoJSON(Etat a_etat) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_etat != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_etat.ordinal());
         	objJSON.put("etat", a_etat.getLibelle());
@@ -232,14 +275,14 @@ public class ExportDatalake implements Job {
     private static JSONObject convertRefTypeCandIntoJSON(TypeOffre a_type) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_type != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_type.ordinal());
-        	objJSON.put("etat", a_type.getLibelle());
+        	objJSON.put("type", a_type.getLibelle());
         }
         return objJSON; 
     }
@@ -247,11 +290,11 @@ public class ExportDatalake implements Job {
     private static JSONObject convertRefTypeCandEvtIntoJSON(TypeEvt a_typeEvt) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_typeEvt != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_typeEvt.ordinal());
         	objJSON.put("type", a_typeEvt.name());
@@ -262,11 +305,11 @@ public class ExportDatalake implements Job {
     private static JSONObject convertRefSubTypeCandEvtIntoJSON(TypeEvt a_subTypeEvt) {
     	JSONObject objJSON = new JSONObject();
         LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss"));
         
         if(a_subTypeEvt != null) {
         	objJSON.put("version", version);
-        	objJSON.put("env", MailTools.env);
+        	objJSON.put("env", Constantes.env);
         	objJSON.put("dateTime", strDateNow);
         	objJSON.put("id", a_subTypeEvt.ordinal());
         	objJSON.put("subtype", a_subTypeEvt.name());
@@ -274,27 +317,49 @@ public class ExportDatalake implements Job {
         return objJSON; 
     }
     
-    private static void writeUserLogsIntoLog() {
+    private static void writeUserLogsIntoLog(String strDate) {
     	File f = null;
     	FileWriter fw = null;
     	Object [] lstUserLog = null;
     	JSONObject b_objectJSON = null;
     	LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern(ExportDatalake.filenamePattern));
+        String strDateNow = null;
+        long nbDaysDiff;
+        LocalDateTime localDate = null;
+        String fileName = null;
+        long count = 0;
         
         try
         {
-        	f = new File (ExportDatalake.pathExportJSON+"/userLogs-"+strDateNow+".json");
+        	if (strDate != null) {
+        		fileName = ExportDatalake.pathExportJSON+"/userLogs-"+strDate+".json";
+        	} else { 
+        		strDateNow = currentTime.format(DateTimeFormatter.ofPattern(ExportDatalake.filenamePattern));
+        		fileName = ExportDatalake.pathExportJSON+"/userLogs-"+strDateNow+".json";
+        	}
+        	f = new File (fileName);       	
         	fw = new FileWriter (f);
             
-            lstUserLog = UserLogDAO.listUserLogsPerPreviousDay(1);
+        	log.debug(logCode+" - FICHIER =" + fileName);
+        	if (strDate != null) {
+        		localDate = LocalDateTime.ofInstant((new SimpleDateFormat("yyyy-MM-dd").parse(strDate)).toInstant(), ZoneId.systemDefault());        		
+        		// +1 car on travaille sur les données de la veille par rapport à la date de l'export
+        		nbDaysDiff = ChronoUnit.DAYS.between(localDate, currentTime)+1;
+        	} else {
+        		// En auto, on fait l'export sur les données de la veille dc J-1
+        		nbDaysDiff = 1;
+        	}
+            lstUserLog = UserLogDAO.listUserLogsPerPreviousDay(nbDaysDiff);
             
 			for(Object b_obj : lstUserLog)
             {
 				b_objectJSON = convertUserLogIntoJSON((UserLog)b_obj);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
+				count++;
             }
             fw.close();
+            log.debug(logCode+" - FICHIER (nb lignes)=" + count);
         }
         catch (Exception exception)
         {
@@ -302,29 +367,51 @@ public class ExportDatalake implements Job {
         }
     }
     
-    private static void writeCandidaturesIntoLog() {
+    private static void writeCandidaturesIntoLog(String strDate) {
     	File f = null;
     	FileWriter fw = null;
-    	Candidature b_cand = null;
     	Object [] lstCandidature = null;
+    	Candidature b_cand = null;
     	JSONObject b_objectJSON = null;
     	LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern(ExportDatalake.filenamePattern));
+        String strDateNow = null;
+        long nbDaysDiff;
+        LocalDateTime localDate = null;
+        String fileName = null;
+        long count = 0;
         
         try
         {
-        	f = new File (ExportDatalake.pathExportJSON+"/candidatures-"+strDateNow+".json");
+        	if (strDate != null) {
+        		fileName = ExportDatalake.pathExportJSON+"/candidatures-"+strDate+".json";
+        	} else { 
+        		strDateNow = currentTime.format(DateTimeFormatter.ofPattern(ExportDatalake.filenamePattern));
+        		fileName = ExportDatalake.pathExportJSON+"/candidatures-"+strDateNow+".json";
+        	}
+        	f = new File (fileName);       	
         	fw = new FileWriter (f);
             
-            lstCandidature = CandidatureDAO.listFromUserLogPerPreviousDay(1);
+        	log.debug(logCode+" - FICHIER =" + fileName);
+        	if (strDate != null) {
+        		localDate = LocalDateTime.ofInstant((new SimpleDateFormat("yyyy-MM-dd").parse(strDate)).toInstant(), ZoneId.systemDefault());        		
+        		// +1 car on travaille sur les données de la veille par rapport à la date de l'export
+        		nbDaysDiff = ChronoUnit.DAYS.between(localDate, currentTime)+1;
+        	} else {
+        		// En auto, on fait l'export sur les données de la veille dc J-1
+        		nbDaysDiff = 1;
+        	}
+            lstCandidature = CandidatureDAO.listFromUserLogPerPreviousDay(nbDaysDiff);
             
 			for(Object b_obj : lstCandidature)
             {
 				b_cand = (Candidature)b_obj;
 				b_objectJSON = convertCandidatureIntoJSON(b_cand);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
+				count++;
             }
             fw.close();
+            log.debug(logCode+" - FICHIER (nb lignes)=" + count);
         }
         catch (Exception exception)
         {
@@ -332,29 +419,51 @@ public class ExportDatalake implements Job {
         }
     }
     
-    private static void writeCandidatureEventsIntoLog() {
+    private static void writeCandidatureEventsIntoLog(String strDate) {
     	File f = null;
     	FileWriter fw = null;
-    	CandidatureEvent b_candEvt = null;
     	Object [] lstCandEvt = null;
+    	CandidatureEvent b_candEvt = null;
     	JSONObject b_objectJSON = null;
     	LocalDateTime currentTime = LocalDateTime.now();
-        String strDateNow = currentTime.format(DateTimeFormatter.ofPattern(ExportDatalake.filenamePattern));
+        String strDateNow = null;
+        long nbDaysDiff;
+        LocalDateTime localDate = null;
+        String fileName = null;
+        long count = 0;
         
         try
         {
-        	f = new File (ExportDatalake.pathExportJSON+"/candidatureEvents-"+strDateNow+".json");
+        	if (strDate != null) {
+        		fileName = ExportDatalake.pathExportJSON+"/candidatureEvents-"+strDate+".json";
+        	} else { 
+        		strDateNow = currentTime.format(DateTimeFormatter.ofPattern(ExportDatalake.filenamePattern));
+        		fileName = ExportDatalake.pathExportJSON+"/candidatureEvents-"+strDateNow+".json";
+        	}
+        	f = new File (fileName);       	
         	fw = new FileWriter (f);
             
-        	lstCandEvt = CandidatureEventDAO.listFromUserLogPerPreviousDay(1);
+        	log.debug(logCode+" - FICHIER =" + fileName);
+        	if (strDate != null) {
+        		localDate = LocalDateTime.ofInstant((new SimpleDateFormat("yyyy-MM-dd").parse(strDate)).toInstant(), ZoneId.systemDefault());        		
+        		// +1 car on travaille sur les données de la veille par rapport à la date de l'export
+        		nbDaysDiff = ChronoUnit.DAYS.between(localDate, currentTime)+1;
+        	} else {
+        		// En auto, on fait l'export sur les données de la veille dc J-1
+        		nbDaysDiff = 1;
+        	}
+        	lstCandEvt = CandidatureEventDAO.listFromUserLogPerPreviousDay(nbDaysDiff);
             
 			for(Object b_obj : lstCandEvt)
             {
 				b_candEvt = (CandidatureEvent)b_obj;
 				b_objectJSON = convertCandidatureEvtIntoJSON(b_candEvt);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
+				count++;
             }
             fw.close();
+            log.debug(logCode+" - FICHIER (nb lignes)=" + count);
         }
         catch (Exception exception)
         {
@@ -376,6 +485,7 @@ public class ExportDatalake implements Job {
             {
 				b_objectJSON = convertRefEtatCandIntoJSON(b_etat);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
             }
             fw.close();
         }
@@ -399,6 +509,7 @@ public class ExportDatalake implements Job {
             {
 				b_objectJSON = convertRefTypeCandIntoJSON(b_type);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
             }
             fw.close();
         }
@@ -422,6 +533,7 @@ public class ExportDatalake implements Job {
             {
 				b_objectJSON = convertRefTypeCandEvtIntoJSON(b_type);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
             }
             fw.close();
         }
@@ -445,6 +557,7 @@ public class ExportDatalake implements Job {
             {
 				b_objectJSON = convertRefSubTypeCandEvtIntoJSON(b_type);
 				fw.write(b_objectJSON.toJSONString());
+				fw.write("\n");
             }
             fw.close();
         }

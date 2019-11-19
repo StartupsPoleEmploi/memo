@@ -6,11 +6,11 @@
 <!DOCTYPE html>
 <html lang="fr">
     <head>
-        <title>MEMO | Visualisez toutes vos candidatures – un service Pôle emploi</title>
+        <title>MEMO | Outil de gestion de candidatures</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta content="Suivez l'ensemble de vos candidatures en un clin d'œil et boostez leur potentiel !" name="description" />
+        <meta content="Découvrez Memo, un service de Pôle emploi qui va vous permettre de gérer vos candidatures facilement" name="description" />
         <meta content="Pôle emploi" name="author" />
         <meta name="google-site-verification" content="neOTrE-YKZ9LbgLlaX8UkYN6MJTPlWpeotPQqbrJ19Q" />
 
@@ -31,6 +31,7 @@
     <%@ include file="./jsp/pages/priorites.jsp"%>
     <%@ include file="./jsp/pages/conseilsPage.jsp"%>
     <%@ include file="./jsp/pages/activites.jsp"%>
+    <%@ include file="./jsp/pages/calendarPage.jsp"%>
     <%@ include file="./jsp/homeLandingFromImport.jsp"%>
     </div>
 

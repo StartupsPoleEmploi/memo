@@ -11,6 +11,7 @@ import org.quartz.JobExecutionException;
 
 import com.codahale.metrics.Timer;
 
+import fr.gouv.motivaction.Constantes;
 import fr.gouv.motivaction.mails.MailTools;
 import fr.gouv.motivaction.model.UserSummary;
 import fr.gouv.motivaction.service.MailService;
@@ -34,7 +35,7 @@ public class AccountRemoval implements Job {
         body += "\r\n"+this.execAskedAccountRemovalJob();
 
         // envoi du mail de rapport d'execution aux intras, devs et extra
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Suppression des comptes inutilisés ?", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Suppression des comptes inutilisés ?", body);
     }
 
     /**

@@ -1,6 +1,7 @@
 package fr.gouv.motivaction.model;
 
 import java.net.URLEncoder;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 
@@ -16,6 +17,7 @@ public class User {
     private long facebookId;
     private int validated;
     private int receiveNotification;
+    private int consentAccess;
     private String source;
     private int autoDisableNotification;
 
@@ -30,9 +32,14 @@ public class User {
     private String zip;
     private String cityInsee;
     private String address;
+    private Timestamp lastAccessRequestDate;
+    private Timestamp lastAccessRefuserDate;
 
 
-    public User() {}
+   
+	
+
+	public User() {}
     		
     public User(long id, String login) {
     	this.id = id;
@@ -99,10 +106,14 @@ public class User {
 
     public void setReceiveNotification(int receiveNotification) { this.receiveNotification = receiveNotification; }
 
+    public int getConsentAccess() { return consentAccess; }
+
+    public void setConsentAccess(int consentAccess) { this.consentAccess= consentAccess; }
+
     public Timestamp getLastPasswordChange() {
         return lastPasswordChange;
     }
-
+    
     public void setLastPasswordChange(Timestamp lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
@@ -198,11 +209,15 @@ public class User {
 
         res += "\"login\":\""+(login==null?"":login)+"\"";
 
+        res += ",\"receiveNotification\":"+receiveNotification;
+        res += ",\"consentAccess\":"+consentAccess;
 
         if(peId!=null)
             res += ",\"isPEAM\":1";
 
-        res += ",\"creationTime\":"+creationTime.getTime();
+        if(creationTime!=null)
+        	res += ",\"creationTime\":"+creationTime.getTime();
+        
         if(source!=null)
             res += ",\"source\":\""+source+"\"";
 
@@ -227,4 +242,43 @@ public class User {
 
         return res;
     }
+
+
+    public String toVisitorJSON()
+    {
+        String res = "{";
+
+        res += "\"login\":\""+(login==null?"":login)+"\"";
+
+        try
+        {
+            if(firstName!=null)
+                res += ",\"firstName\":\""+URLEncoder.encode(firstName,"UTF-8")+"\"";
+            if(lastName!=null)
+                res += ",\"lastName\":\""+URLEncoder.encode(lastName,"UTF-8")+"\"";
+        }
+        catch (Exception e){}
+
+        res += "}";
+
+        return res;
+    }
+
+	public Timestamp getLastAccessRequestDate() {
+		return lastAccessRequestDate;
+	}
+
+	public void setLastAccessRequestDate(Timestamp lastAccessRequestDate) {
+		this.lastAccessRequestDate = lastAccessRequestDate;
+	}
+
+	public Timestamp getLastAccessRefuserDate() {
+		return lastAccessRefuserDate;
+	}
+
+	public void setLastAccessRefuserDate(Timestamp lastAccessRefuserDate) {
+		this.lastAccessRefuserDate = lastAccessRefuserDate;
+	}
+    
+    
 }

@@ -13,40 +13,22 @@ ParserRegionsJob.prototype = {
 
         var t = this,
             c = new Candidature(),
-            cont = document.createElement("div"),
-            el, v = "", tmp;
-
-        cont.innerHTML = html;
-        cont = $(cont);
-        debugCont = cont;
-
+            cont = JSON.parse(html);
 
         c.jobBoard = this.name;
-        if (debugCont.find("#annonce-chartee-detail").length > 0) {
-            throw "annonce-chartee-detail";
-        }
 
-        c.nomCandidature = cont.find(".annonce>div>div>h1>strong").text().trim();
-
-        c.nomSociete = cont.find("section.right-entreprise>div>a").text().trim();
-
-        c.ville = cont.find("div.head>dl>span>dd>a").text().trim();
-        if (!c.ville) {
-            tmp = cont.find("div.head>dl>span>dd");
-            if (tmp.length > 0)
-                c.ville = $(tmp[0]).text().trim();
-        }
-
-        v = cont.find("#annonce-detail").html();
-        if (v && v.indexOf('<p class=\"center') > -1)
-            v = v.substring(0, v.indexOf('<p class=\"center'));
-
-        c.description = v;
-
-        el = cont.find(".lien-entreprise img").attr("data-original");
-        if (el)
-            c.logoUrl = el;
-
+        if(cont) {
+        	c.nomCandidature = cont.title;
+        	c.description = cont.description;
+        	if(cont.hiringOrganization) {
+        		c.nomSociete = cont.hiringOrganization.name;
+        		c.logoUrl = cont.hiringOrganization.logo;
+        	}
+        	if(cont.jobLocation && cont.jobLocation.address) {
+        		c.ville = cont.jobLocation.address.addressLocality;
+        	}
+        }        	
+        
         return c;
     }
 }

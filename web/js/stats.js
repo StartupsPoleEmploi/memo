@@ -17,7 +17,7 @@ Stats.prototype = {
             t.rootURL = rootUrl;
         else
         {
-            if (window.location.host.indexOf("boomerang:8080") > -1)
+            if (window.location.host.indexOf("localhost") > -1)
                 t.rootURL = "http://" + window.location.hostname;
             else
                 t.rootURL = "https://" + window.location.hostname;
@@ -40,10 +40,10 @@ Stats.prototype = {
 
     getNPS : function() {
         var data = {
-            labels: ['11/17', '12/17', '01/18', '02/18', '03/18', '04/18', '05/18', '06/18', '07/18' ,'08/18','09/18','10/18','11/18'],
+            labels: ['05/18', '06/18', '07/18' ,'08/18','09/18','10/18','11/18','12/18','01/19','02/19','03/19','04/19','05/19'],
 
             series: [
-                [23, 24, 11, 2, 15, -4, -1, -6, 7, 8, 1, -2, -1]
+                [-1, -6, 7, 8, 1, -2, -1, 21, 17, 19, 25, 20, 12]
             ]
         };
 

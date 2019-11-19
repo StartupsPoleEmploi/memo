@@ -1,0 +1,145 @@
+.withUser header
+{
+    position: fixed;
+    top: 0;
+    z-index: 1001;
+    right: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0 5px 2px -2px rgba(0,0,0,0.19);
+}
+
+.headerBoundary
+{
+    height: 100%;
+    border-left: 0.5px solid #DBDBDB;
+    margin-left: 20px;
+    margin-right: 20px;
+    flex-grow: 1;
+}
+
+.headerButtons
+{
+    display: flex;
+    flex-wrap: nowrap;
+    padding:0 !important; 
+    height: 100%;
+}
+
+.headerBt
+{
+    border:0;
+    text-decoration:none;
+    color: #7D7D7D;
+    background: none;
+    margin-left: 20px;
+    font-size: 14px;
+    flex-grow: 1;
+}
+.headerBt:hover
+{
+    color: #414042;
+    text-decoration: underline;
+}
+
+.headerMenuBt
+{
+    float:right;
+    text-align:left;
+}
+
+.headerMenuBt > div
+{
+    margin-top: 7px;
+    font-size: 16px;
+}
+
+.headerMenuBt > div > div
+{
+    min-width: 200px !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 16px;
+    padding: 20px !important;
+    background-color: #fff !important;
+    left: -180px !important; /*force l'affichage du menu à la bonne taille*/
+}
+
+.headerMenuLink
+{
+    margin-bottom: 10px;
+}
+.headerMenuLink > button
+{
+    color: #4A4A4A;	
+    font-size: 13px;
+    height: 20px;
+    border: none;
+    background: #fff;
+    width: 100%;
+    text-align: left;
+}
+.headerMenuLink > button:hover
+{
+    color: #414042;
+    background-color: rgba(240,240,240,0.47);
+}
+
+.headerMenuUser i,
+.headerMenuLink i
+{
+    margin-right: 15px;   
+}
+
+
+.selectedHeaderBt
+{
+    color:  #000;
+    text-decoration: underline;
+}
+div.selectedHeaderBt, span.selectedHeaderBt
+{
+    font-size: 15px;
+    padding-top: 19px;
+    padding-right: 6px;
+}
+.headerMenuContainer
+{
+    flex-grow: 10000;
+    /*text-align: right;*/
+    padding-right: 15px;
+}
+
+.headerMenuContainer .headerBoundary
+{
+    flex-grow: unset;
+    float: right;
+    margin-right: 40px; 
+}
+
+.headerMenuContainer .headerConnectButton
+{
+    float: right;
+}
+
+@media screen and (max-width:350px)
+{
+	.headerMyActions 
+	{
+		display: none !important;
+	}
+}
+
+.headerBtMyActions
+{
+	margin-top: 20px;
+}
+
+.headerBadgeActionsCounter 
+{
+	background: red;
+    position: static !important;
+    font-weight: bold !important;
+}
+

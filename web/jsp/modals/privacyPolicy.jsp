@@ -142,12 +142,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-12 col-md-6 privacyTitle3">Partage de votre tableau de bord</div>
+                    <div class="col-xs-12 col-md-6 privacyTitle3">Partage de votre espace Memo avec les conseillers Pôle emploi : </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-12 col-md-6 privacyArticle">Nous vous offrons la possibilité de partager votre tableau de bord à la personne de votre choix. Cette personne pourra visualiser votre tableau de bord de candidatures en cours et terminées, votre liste des priorités et votre journal d'activité.</div>
+                    <div class="col-xs-12 col-md-6 privacyArticle">Si vous le souhaitez vous pouvez autoriser l’accès à votre espace Memo par les conseillers Pôle emploi.Les conseillers peuvent ainsi visualiser votre tableau de bord de candidatures en cours et terminées, votre liste des priorités, votre journal d’activités ainsi que votre calendrier.</div>
                 </div>
+                
+                <div class="row">
+                    <div class="col-xs-12 col-md-6 privacyTitle3">Partage temporaire de votre espace Memo : </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-xs-12 col-md-6 privacyArticle">Nous vous offrons également la possibilité de partager votre espace Memo à la personne de votre choix, par le biais d’un lien valable 30 jours.<br> Ce lien permet d’accéder à votre tableau de bord de candidatures en cours et terminées, votre liste des priorités, votre journal d’activités ainsi que votre calendrier.</div>
+                </div>
+                
+                
 
                 <div class="row privacyMargin">
                     <div class="col-xs-12 col-md-6 privacyTitle2">2.2 Communications</div>
@@ -231,22 +241,33 @@
                 </div>
 
                 <div class="row privacyMargin">
-                    <div class="col-xs-12 col-md-6 privacyTitle2">3.1 Partage du tableau de bord</div>
-                    <div class="col-xs-12 col-md-6 privacySummary">A travers le lien temporaire de partage de votre tableau de bord, vous donnez un accès à votre tableau de bord à la personne de votre choix.</div>
+                    <div class="col-xs-12 col-md-6 privacyTitle2">3.1 Partage de votre espace Memo</div>
+                    <div class="col-xs-12 col-md-6 privacySummary">Vous donnez un accès à votre tableau de bord à la personne de votre choix.</div>
                 </div>
 
                 <div class="row">
                     <div class="col-xs-12 col-md-6 privacyArticle">
-                        La fonction de Partage du tableau de bord vous permet de donner à la personne de votre choix, un accès en lecture seule à votre tableau de bord MEMO.
-                        <br />
-                        L'accès en lecture seule permet de :
-                        <ul>
-                            <li>visualiser le tableau de bord des candidatures en cours et celles terminées</li>
-                            <li>visualiser le contenu de toutes les candidatures</li>
-                            <li>télécharger les pièces jointes,</li>
-                            <li>visualiser la liste des priorités et le journal d'activité</li>
-                        </ul>
-                        Le lien de partage a une durée de validité de 30 jours.
+                     <strong>Accès  à votre espace Memo par les conseillers Pôle emploi : </strong><br>
+	                     Si vous le souhaitez, vous pouvez autoriser les conseillers Pôle emploi à accéder à votre espace Memo. Il s’agit d’un accès en lecture seule que vous pouvez à tout moment désactiver.
+	                     <br>
+	                     L'accès en lecture seule permet de :
+	                        <ul>
+	                            <li>visualiser le tableau de bord des candidatures en cours et celles terminées</li>
+	                            <li>visualiser le contenu de toutes les candidatures</li>
+	                            <li>télécharger les pièces jointes,</li>
+	                            <li>visualiser la liste des priorités et le journal d'activité</li>
+	                        </ul><br>
+                     <strong>Partage temporaire de votre espace Memo</strong><br>
+	                        La fonction de Partage du tableau de bord vous permet de donner à la personne de votre choix, un accès en lecture seule à votre tableau de bord MEMO.
+	                        <br />
+	                        L'accès en lecture seule permet de :
+	                        <ul>
+	                            <li>visualiser le tableau de bord des candidatures en cours et celles terminées</li>
+	                            <li>visualiser le contenu de toutes les candidatures</li>
+	                            <li>télécharger les pièces jointes,</li>
+	                            <li>visualiser la liste des priorités et le journal d'activité</li>
+	                        </ul>
+	                        Le lien de partage a une durée de validité de 30 jours.
                     </div>
                 </div>
 

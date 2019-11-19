@@ -36,6 +36,7 @@ leBonRythme.prototype = {
         t.conseils = new Conseils(t.board);
         t.activites = new Activites(t.board);
         t.onboarding = new Onboarding(t.board);
+        t.calendar = new Calendar(t.board);
 
         $(window).bind('beforeunload', function()
         {
@@ -55,6 +56,10 @@ leBonRythme.prototype = {
         $(".openCguButton").on("click", $.proxy(this.showCGU,this));
 
         $("#logoHomeHeader").on("click", $.proxy(this.showHome,this));
+
+        // Bouton de retour à l'espace conseiller
+        $("#buttonRetourConseiller").on("click",$.proxy(this.redirectToConseiller,this));
+        $("#buttonRetourConseiller").hide();
 
         $(".peConnectButton").on("click", $.proxy(this.showPEConnectPage,this));
         
@@ -88,6 +93,11 @@ leBonRythme.prototype = {
         $("#shareBoardButton").on("click", $.proxy(this.showShareLink,this));
         $("#logoutButton").on("click",$.proxy(this.logoutUser,this));
         $("#conseilButton").on("click",$.proxy(this.showConseils,this));
+
+        if(checkEs6())
+            $("#calendarButton").on("click",$.proxy(this.showCalendar,this));
+        else
+            $("#calendarButton").remove();
 
         $("#renouvelerMotDePasseButton").on("click", $.proxy(this.parametres.openModifierMotDePasse,this.parametres));
 
@@ -296,6 +306,7 @@ leBonRythme.prototype = {
                     {
                         if (id == "openCandidature" || id == "editCandidature") {
                             lBR.board.selectedCandidature = lBR.board.candidatures["" + s.cId];
+                            lBR.board.candidatureOpenedFrom=s.candidatureOpenedFrom;
                             lBR.board.editCandidature(1);
 
                             if (id == "editCandidature")
@@ -305,6 +316,7 @@ leBonRythme.prototype = {
                             lBR.board.form.openCandidatureFormStep(s);
                         }
                         else if (id == "boardPage" || id == "activeCandidatures") {
+                            lBR.board.candidatureOpenedFrom=null;
                             lBR.goToPage("boardPage", 1);
                             lBR.showActives(1);
                         }
@@ -327,6 +339,10 @@ leBonRythme.prototype = {
                         else if (id == "conseils") {
                             lBR.goToPage("boardPage", 1);
                             lBR.showConseils(1);
+                        }
+                        else if (id == "calendar") {
+                            lBR.goToPage("boardPage", 1);
+                            lBR.showCalendar(1);
                         }
                     }
 
@@ -508,6 +524,10 @@ leBonRythme.prototype = {
         this.board.clearBoard();
         this.board.stopRefreshBoardChecking();
         this.board.searchTools.resetSearchForm();
+
+        if(this.calendar)
+            this.calendar.reset();
+
         memoVars.uLI = 0;
 
         $("body").removeClass("loggedIn");
@@ -545,7 +565,7 @@ leBonRythme.prototype = {
     refreshMenu : function(lienDisabled, lien2Disabled)
     {
         // suppression des effets sur tous les boutons
-        $("#ficheButton, #activeButton, #archiveButton, #parametresButton, #prioritesButton, #conseilButton, #activitesButton")
+        $("#ficheButton, #activeButton, #archiveButton, #parametresButton, #prioritesButton, #conseilButton, #activitesButton, #calendarButton")
             .off("click")
             .removeClass("menuDisabled")
             .parent().removeClass("disabled");
@@ -560,6 +580,7 @@ leBonRythme.prototype = {
         $("#prioritesButton").on("click", $.proxy(this.conseils.showPriorites,this));
         $("#conseilButton").on("click", $.proxy(this.showConseils,this));
         $("#activitesButton").on("click", $.proxy(this.activites.showActivites,this));
+        $("#calendarButton").on("click", $.proxy(this.showCalendar,this));
 
         // le lien principal est surligné pour indiquer qu'on est dans la section correspondante
         if (lienDisabled) {
@@ -591,7 +612,7 @@ leBonRythme.prototype = {
 
             b.archiveMode = 1;
 
-            b.form.cancelCandidatureForm(1);
+            b.displayBoard();
 
             if (h != 1)
                 $Hist({id: "archivedCandidatures"});
@@ -629,7 +650,7 @@ leBonRythme.prototype = {
 
             b.archiveMode = 0;
 
-            b.form.cancelCandidatureForm(1);    // masque le formulaire et reconstruit le tableau de bord
+            b.displayBoard();
 
             if (h != 1)
                 $Hist({id: "activeCandidatures"});
@@ -988,7 +1009,7 @@ leBonRythme.prototype = {
                 success: function (response) {
               
                     if(response.result=="ok")
-                        $("#fpResult").html("Un  lien pour renouveler votre mot de passe vous a été envoyé par email à l'adresse "+fpL.getValue()+"<br /><i>note : vérifiez dans vos spams si vous ne trouvez pas cet email dans votre boîte au lettres</i>").show();
+                        $("#fpResult").html("Un  lien pour renouveler votre mot de passe vous a été envoyé par email à l'adresse "+fpL.getValue()+"<br /><i>note : vérifiez dans vos spams si vous ne trouvez pas cet email dans votre boîte aux lettres</i>").show();
                     else
                     {
                         //$.toaster({ priority : "warning", title : "Mauvais mot de passe", message : "Mauvais mot de passe"});
@@ -1063,6 +1084,7 @@ leBonRythme.prototype = {
         $("#conseilsPage").hide();
         $("#prioritesPage").hide();
         $('#activitesPage').hide();
+        $('#calendarPage').hide();
 
         if(pageToShow)
             $(pageToShow).show();
@@ -1118,15 +1140,12 @@ leBonRythme.prototype = {
 
     buildPageName : function()
     {
-        var href = window.location.href.toLowerCase(), v="", l="";
+        var l="";
 
-        v  = "<div>Retrouvez vos candidatures en un clin d'œil</div>";
-        l = '<img src="./pic/logo_memo.png" alt="Logo MEMO"/>';
-        document.title = "MEMO";
+        l = '<a href="/"><img src="./pic/logo_memo.png" alt="Logo MEMO"/></a>';
+        document.title = "MEMO | Outil de gestion de candidatures";
 
         $(".logoSmall").html(l);
-        $("#pageTitle").html(v);
-        $("#serviceName").html(v);
     },
 
     showShareLink : function()
@@ -1167,7 +1186,8 @@ leBonRythme.prototype = {
     },
 
     showConseils : function(h)
-    {
+    {	         	
+        
         if(lBR.board.form.hasChange)
         {
             lBR.board.form.afterChangeSave = "showConseils";
@@ -1184,6 +1204,27 @@ leBonRythme.prototype = {
 
             // On désactive le lien des conseils dans le menu
             this.refreshMenu($("#conseilButton"));
+        }
+    },
+
+    showCalendar : function(h)
+    {
+        if(lBR.board.form.hasChange)
+        {
+            lBR.board.form.afterChangeSave = "showCalendar";
+            lBR.board.form.showUnsavedModal();
+        }
+        else
+        {
+            var t = this;
+
+            if (h != 1)
+                $Hist({id: "calendar"});
+
+            t.calendar.show();
+
+            // On désactive le lien des conseils dans le menu
+            this.refreshMenu($("#calendarButton"));
         }
     },
 
@@ -1294,6 +1335,14 @@ leBonRythme.prototype = {
         }
     },
 
+    buildConseillerDisplay : function()
+    {
+        if(memoVars.isConseiller)
+        {
+            $("#buttonRetourConseiller").show();
+        }
+    },
+    
     buildDisplayAfterLoadingCandidatures : function()
     {
         if (!memoVars.isVisitor && importOnStartup)       // s'il y a une url à importer à la connexion elle sera traitée ici et le buildCandidatures lui sera déféré.
@@ -1385,9 +1434,13 @@ leBonRythme.prototype = {
         {
             links.html(" <i class='fa fa-caret-right'></i> Paramètres");
         }
+        else if(page=="calendar")
+        {
+            links.html(" <i class='fa fa-caret-right'></i> Calendrier");
+        }
         else if(page=="conseils")
         {
-            links.html(" <i class='fa fa-caret-right'></i> Conseils personnalisés");
+            links.html(" <i class='fa fa-caret-right'></i> Conseils");
         }
         else if(page=="activites")
         {
@@ -1513,7 +1566,7 @@ leBonRythme.prototype = {
     {
         var source = memoVars.peamSource;
 
-        //@RG enregistrement de la source de l'utilisateur si Pas de source et PEAMSource connue (cas connexion PE Connect après un click sur bouton MEMO PE ou LBB et connexion dans la popup)
+        //@RG - COMPTE : enregistrement de la source de l'utilisateur si Pas de source et PEAMSource connue (cas connexion PE Connect après un click sur bouton MEMO PE ou LBB et connexion dans la popup)
         //@RG ou si source est PEAM et getAccountSource() n'est pas vide et la date de création de l'utilisateur date de moins de 2 minutes (cas SSO PE Connect)
         if(
             (!memoVars.user.source && memoVars.peamSource)
@@ -1581,5 +1634,9 @@ leBonRythme.prototype = {
         memoVars.user.address = Url.decode(u.address);
         memoVars.user.city = Url.decode(u.city);
         memoVars.user.country = Url.decode(u.country);
+    },
+    
+    redirectToConseiller : function() {
+    	window.location.replace("/conseiller");
     }
 }

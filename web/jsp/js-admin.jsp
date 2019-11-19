@@ -26,6 +26,7 @@
 
     <src>/js/classes/useractivity.js</src>
     <src>/js/classes/userInterview.js</src>
+    <src>/js/constantes.js</src>
     <src>/js/admin.js</src>
     
     

@@ -5,8 +5,10 @@ function Parametres()
 
 Parametres.prototype = {
 
+	
     init : function()
     {
+    		
         var options = {
                 onText : "Oui",
                 offText : "Non",
@@ -17,14 +19,17 @@ Parametres.prototype = {
         this.receiveEmailForm = $("#receiveEmailForm");
         if(this.receiveEmailForm && this.receiveEmailForm.length)
         	this.receiveEmailForm.bootstrapSwitch(options);
-        this.hasChange = 0;
-
-        $("#receiveEmailForm").on("click", $.proxy(this.receiveEmailForm, this));
+        this.consentAccessForm = $("#consentAccessForm");
+        if(this.consentAccessForm && this.consentAccessForm.length)
+        	this.consentAccessForm.bootstrapSwitch(options);
+        
+        //$("#consentAccess").on("click", $.proxy(this.consentParametres,this));
+        
         $("#modifierMotDePasseButton").on("click", $.proxy(this.openModifierMotDePasse, this));
         $("#modifierEmailButton").on("click", $.proxy(this.openModifierEmail, this));
         $("#supprimerCompteButton").on("click", $.proxy(this.openSupprimerCompte,this));
         $(".parametresFormCancel").on("click", $.proxy(this.cancelParametres, this));
-        $(".buttonSaveParametres").on("click",$.proxy(this.saveParametres,this));
+        //$(".buttonSaveParametres").on("click",$.proxy(this.saveParametres,this));
         $("#confirmerSupCompteButton").on("click", $.proxy(this.supprimerCompte,this));
         $("#enregistrerMotDePasseButton").on("click", $.proxy(this.modifierMotDePasse,this));
         $("#enregistrerEmailButton").on("click", $.proxy(this.modifierEmail,this));
@@ -124,7 +129,15 @@ Parametres.prototype = {
 
         this.showPEConnectInfo();
     },
-
+    
+    // le switch doit être appelé après l'initialisation du paramètre 
+    initSwitch : function()
+    {
+    	this.setNotificationValues();
+        this.setConsentValues();     
+        $('input[name="updateConsentState"]').on('switchChange.bootstrapSwitch', $.proxy(this.updateConsentState, this));
+        $('input[name="updateNotificationState"]').on('switchChange.bootstrapSwitch', $.proxy(this.updateNotificationState, this));
+    },
     loadParametres : function()
     {
         $.ajax({
@@ -134,13 +147,13 @@ Parametres.prototype = {
 
             success: function (response)
             {
-
                 if(response.result=="ok")
                 {
                 	lBR.parametres.login = response.login;
                     lBR.parametres.receiveEmail = response.receiveEmail;
-                    lBR.parametres.setValues();
-                }
+                    lBR.parametres.consentAccess = response.consentAccess; 
+                    lBR.parametres.initSwitch();
+                  }
                 else
                 {
                 	lBR.parametres.disabledModifierParametres();
@@ -157,20 +170,28 @@ Parametres.prototype = {
                 Raven.captureException("loadParametres ajax error : ",textStatus,errorThrown);
             }
         });
+
     },
 
     disabledModifierParametres : function() {
     	$("#modifierMotDePasseButton").off("click");
         $("#modifierEmailButton").off("click");
         $("#supprimerCompteButton").off("click");
-        $(".buttonSaveParametres").off("click");
+        //$(".buttonSaveParametres").off("click");
     },
     
-    setValues : function()
-    {
-        this.receiveEmailForm.bootstrapSwitch("state",(this.receiveEmail?true:false));
+    // mise à jour des parametres de notification du checkbox selon les valeurs associées 
+    setNotificationValues : function()
+    {	    	
+    	this.receiveEmailForm.bootstrapSwitch("state",(lBR.parametres.receiveEmail==0?false:true));                
     },
-
+    
+    // mise à jour des parametres de consentement checkbox selon les valeurs associées 
+    setConsentValues : function()
+    {	
+    	this.consentAccessForm.bootstrapSwitch("state",(lBR.parametres.consentAccess==0?false:true)); 
+    },
+    
     resetMotDePasseForm : function()
     {
     	$('.alert-danger', $('.motDePasseForm')).hide();
@@ -378,40 +399,74 @@ Parametres.prototype = {
         });
     },
     
-    saveParametres : function()
+    // Mise à jour du parametres de notifications par email en BDD ( ON : 1 / OFF :0) 
+    updateNotificationState : function()
     {
-
-    	var p = "receiveEmail="+(this.receiveEmailForm.bootstrapSwitch("state")?1:0);
-
+    	var notification = this.receiveEmailForm.bootstrapSwitch("state")?1:0;
+    	var p = "notificationState="+notification;
+        p += "&csrf="+$("#csrf").val();
+        
+		$.ajax({
+	            type: 'POST',
+	            url: lBR.rootURL + '/account/notificationState/',
+	            data: p,
+	            dataType: "json",
+	
+	            success: function (response)
+	            {	            	 
+	                if(response.result=="ok")
+	                {  	
+	                	toastr['success']("Paramètre de notification par email est mis à jour");
+	                	lBR.parametres.receiveEmail = notification; 
+	                }
+	                else
+	                {
+	                	toastr['error']("Erreur lors de la mise à jour du paramètre de notification","Une erreur s'est produite "+response.msg);
+	                }
+	            },
+	            error: function (jqXHR, textStatus, errorThrown)
+	            {
+	                console.log('/account parametres error: ' + textStatus);              
+	            }
+	        });
+    },
+    
+	// Mise à jour du parametres de consentement d'accès au TDB par le conseiller en BDD ( ON : 1 / OFF :0) 
+    updateConsentState : function()
+    {      	
+    	var consentAccess = this.consentAccessForm.bootstrapSwitch("state")?1:0; 
+    	var p = "consentAccess="+consentAccess;
         p += "&csrf="+$("#csrf").val();
 
-        $.ajax({
-            type: 'POST',
-            url: lBR.rootURL + '/account/parametres',
-            data: p,
-            dataType: "json",
-
-            success: function (response)
-            {
-                if(response.result=="ok")
-                {
-                    toastr['success']("Paramètres enregistrés","");
-                }
-                else
-                {
-                    toastr['error']("Erreur lors de l'enregistrement des paramètres","Une erreur s'est produite "+response.msg);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown)
-            {
-                // gestion d'erreur : ajouter un message dans un div sur le formulaire de création de compte
-                toastr['error']("Erreur lors de l'enregistrement des parametres","Une erreur s'est produite "+errorThrown);
-                console.log('/account parametres error: ' + textStatus);
-                console.log("traitement erreur account parametres");
-                Raven.captureException("saveParametres ajax error : ",textStatus,errorThrown);
-            }
-        });
-
+    	
+	    	$.ajax({
+	            type: 'POST',
+	            url: lBR.rootURL + '/account/consentAccessState/',
+	            data: p,
+	            dataType: "json",
+	
+	            success: function (response)
+	            {	            	 
+	                if(response.result=="ok")
+	                {   
+	                	toastr['success']("Paramètre de consentement d'accès est mis à jour");
+	                	if (consentAccess == 1) {
+	                		lBR.logEventToGA('event', 'Utilisateur', 'Accès conseiller', 'autorisé');
+	                	} else {
+	                		lBR.logEventToGA('event', 'Utilisateur', 'Accès conseiller', 'bloqué');
+	                	}
+	                	lBR.parametres.consentAccess = consentAccess; 
+	                }
+	                else
+	                {
+	                	toastr['error']("Erreur lors de la mise à jour du paramètre de consentement","Une erreur s'est produite "+response.msg);
+	                }
+	            },
+	            error: function (jqXHR, textStatus, errorThrown)
+	            {
+	                console.log('/account parametres error: ' + textStatus);              
+	            }
+	        });    	
     },
     
     cancelParametres : function(h)
@@ -518,4 +573,5 @@ Parametres.prototype = {
         element.click();
         document.body.removeChild(element);
     }
+    
 }

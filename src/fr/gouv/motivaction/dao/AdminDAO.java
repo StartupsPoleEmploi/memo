@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import fr.gouv.motivaction.Constantes.JobBoard;
 import fr.gouv.motivaction.model.UserActivity;
 import fr.gouv.motivaction.model.UserInterview;
 import fr.gouv.motivaction.model.UserLog;
@@ -32,7 +33,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT count(*) FROM users WHERE id NOT IN (SELECT userId FROM adminUsers) AND id NOT IN (SELECT userId FROM fakeUsers) ";
             if(cohorte!=null)
                 sql+=" AND cohorte="+cohorte;
@@ -67,7 +68,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT max(id) FROM users";
             
             pStmt = con.prepareStatement(sql);
@@ -100,7 +101,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT count(*) FROM candidatures WHERE userId NOT IN (SELECT userId FROM adminUsers) AND userId NOT IN (SELECT userId FROM fakeUsers)";
 
             if(cohorte!=null)
@@ -136,7 +137,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT COUNT(*)/(SELECT COUNT(*) FROM users WHERE id NOT IN (SELECT userId FROM adminUsers) AND id NOT IN (SELECT userId FROM fakeUsers) ";
 
             if(cohorte!=null)
@@ -176,7 +177,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
 
             String pref1 = "SELECT COUNT(DISTINCT(userId)) ";
             String sqlPart1 = "FROM userLogs WHERE action LIKE 'Connexion%' " + 
@@ -226,7 +227,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM userActivities_m ";
             
             if(cohorte!=null)
@@ -265,7 +266,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM userActivities_m WHERE idUser > "+idMin+" AND idUser < "+idMax;
             
             pStmt = con.prepareStatement(sql);
@@ -298,7 +299,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM userActivities_m " +
                          "WHERE email LIKE '%" + email + "%' " +
                          "ORDER BY lastActivity desc";
@@ -333,7 +334,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT * FROM userLogs WHERE userId = ? ORDER BY id DESC";
             pStmt = con.prepareStatement(sql);
             pStmt.setLong(1,userId);
@@ -366,7 +367,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT candidatures.id, candidatures.userId, candidatures.nomCandidature, users.login, candidatures.archived " +
                     "FROM candidatures LEFT JOIN users ON candidatures.userId = users.id " +
                     "WHERE candidatures.etat = 3 AND candidatures.userId NOT IN (SELECT userId FROM adminUsers) " +
@@ -455,7 +456,7 @@ public class AdminDAO {
         ResultSet rs = null;
         try
         {
-            con = DatabaseManager.getConnection();
+            con = DatabaseManager.getConnectionCalcul();
             String sql = "SELECT 1;";
             pStmt = con.prepareStatement(sql);
             rs = pStmt.executeQuery();
@@ -471,5 +472,113 @@ public class AdminDAO {
             DatabaseManager.close(con, pStmt, rs, logCode, "016");
         }
     }
+    
+    public static void deleteAllCandidatures(long userId) throws Exception {
 
+    	Connection con = null ;
+    	PreparedStatement pStmt = null ;
+
+    	try {
+    		con = DatabaseManager.getConnection();
+
+    		String sql = "DELETE cE FROM candidatures c INNER JOIN candidatureEvents cE ON (c.id = cE.candidatureId) WHERE c.userId = ?";
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+    		pStmt.executeUpdate();
+    		
+    		sql = "DELETE c FROM candidatures c WHERE c.userId = ?";
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+    		pStmt.executeUpdate();
+
+    		sql = "DELETE a FROM users u INNER JOIN attachments a ON (u.id = a.userId) WHERE userId = ?";
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+    		pStmt.executeUpdate();
+
+    		sql = "DELETE aF FROM users u INNER JOIN attachmentFiles aF ON (u.id = aF.userId) WHERE userId = ?";
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+    		pStmt.executeUpdate();
+    	}
+    	catch (Exception e)
+    	{
+    		log.error(logCode+"-016 Error delete all candidatures. error="+e);
+    		throw e;
+
+    	}
+    	finally
+    	{
+    		DatabaseManager.close(con, pStmt, null, logCode, "017");
+    	}
+
+    }
+
+    public static void loadTDB(long userId, String jobboard) throws Exception{
+
+    	Connection con = null ;
+    	PreparedStatement pStmt = null ;
+    	ResultSet rs = null;
+    	String sql = null;
+    	
+    	try {
+    		con = DatabaseManager.getConnection();	
+    	
+			sql = "INSERT INTO candidatures (userId,nomCandidature,nomSociete,description,"+
+    				"lastUpdate,etat,ville,urlSource,type,sourceId,logoUrl,jobBoard)"+ 
+    				" SELECT ?,nomCandidature,nomSociete,description,NOW(),etat,ville,urlSource,type,sourceId,logoUrl,jobBoard"+
+    					" FROM candidatures where userId!=? AND expired = 0 AND archived = 0 AND urlSource IS NOT NULL"+
+    					" AND jobBoard LIKE '" + jobboard + "' ORDER BY creationDate desc limit 1";
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+    		pStmt.setLong(2, userId);
+    		rs = pStmt.executeQuery();
+    	}
+    	catch (Exception e)
+    	{
+    		log.error(logCode+"-017 Error loading candidatures. error="+e);
+    		throw e;
+    	}
+    	finally
+    	{
+    		DatabaseManager.close(con, pStmt, null, logCode, "018");
+    	}
+    }	
+
+
+    public static long getCandidatureCurrentUserCount(long userId) throws Exception
+    {
+    	long candidatureCurrentUserCount = 0;
+
+    	Connection con = null;
+    	PreparedStatement pStmt = null;
+    	ResultSet rs = null;
+    	try
+    	{
+    		con = DatabaseManager.getConnection();
+    		String sql = "select count(*) from candidatures where userId=?";
+
+    		pStmt = con.prepareStatement(sql);
+    		pStmt.setLong(1, userId);
+
+    		rs = pStmt.executeQuery();
+
+    		if(rs.next())
+    			candidatureCurrentUserCount = rs.getLong(1);
+    	}
+    	catch (Exception e)
+    	{
+    		log.error(logCode + "-018 Error loading current user candidature count. error=" + e);
+    		throw new Exception("DB Error");
+    	}
+    	finally
+    	{
+    		DatabaseManager.close(con, pStmt, rs, logCode, "019");
+    	}
+
+    	return candidatureCurrentUserCount;
+
+    }
 }
+ 
+

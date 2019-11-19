@@ -4,7 +4,7 @@
 
     <div id="prioritesPageContainer">
 
-        <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><h1>Votre liste d'actions à mener en priorité :</h1></div>
+        <div class="pageTitle" style='white-space: normal;word-wrap: break-word;'><span>Votre liste d'actions à mener en priorité :</span></div>
 
 		<div class="row">
 	        <div id="prioritesForm">

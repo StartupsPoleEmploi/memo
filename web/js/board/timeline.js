@@ -264,6 +264,10 @@ TimeLine.prototype = {
                     if (!evt.id || evt.id=="0")
                         lBR.board.timeLine.setEventCandidatureId(c.id, response.id);
 
+                    // mets à jour le calendrier
+                    if(lBR.calendar.rendered)
+                        lBR.calendar.updateEvent(evt,response.id);
+
                     if(evt.eventType==CS.TYPES.ENTRETIEN) {
                     	// @RG - EVENEMENT : A l'enregistrement d'un evt de type 'ENTRETIEN', un email est envoyé à l'utilisateur avec un rendez-vous de calendrier correspondant à la date de l'entretien
                         lBR.board.timeLine.sendInterviewCalendar(response.id);
@@ -400,6 +404,11 @@ TimeLine.prototype = {
                         var tl = lBR.board.timeLine;
                         toastr['success']("Evénement enregistré", "");
                         evt.id = response.id;
+
+                        // mise à jour du calendrier
+                        if(lBR.calendar.rendered)
+                            lBR.calendar.addEvent(evt);
+
                         tl.setEventCandidatureId(c.id, evt.id);
 
                         if(evt.eventType==CS.TYPES.AI_POSTULE) {
@@ -841,6 +850,10 @@ TimeLine.prototype = {
                 {
                     toastr['success']("Evénement supprimé","");
 
+                    // mise à jour du calendrier
+                    if(lBR.calendar.rendered)
+                        lBR.calendar.removeEvent({id:id});
+
                     $('#mdRemoveCandidatureEvent').modal('hide');
                 }
                 else
@@ -959,6 +972,11 @@ TimeLine.prototype = {
                 if (response.result == "ok") {
                 	toastr['success']("Evénement de rappel enregistré", "");
                 	evt.id = response.id;
+
+                    // mise à jour du calendrier
+                    if(lBR.calendar.rendered)
+                        lBR.calendar.addEvent(evt);
+
                 	c.events["0"] = evt;
                     lBR.board.timeLine.setEventCandidatureId(c.id, response.id);
                     lBR.board.timeLine.addEventToCandidature(c,evt);
@@ -1033,6 +1051,11 @@ TimeLine.prototype = {
                 if(response.result=="ok")
                 {
                     toastr['success']("Evénement de rappel supprimé","");
+
+                    // mise à jour du calendrier
+                    if(lBR.calendar.rendered)
+                        lBR.calendar.removeEvent(evt);
+
                     c.events[""+evt.id]=null;
                     lBR.board.timeLine.showTimeLine();
                 }

@@ -1,0 +1,1100 @@
+
+
+.candidaturePage
+{
+    background-color: #F4F4F4;
+    padding-bottom: 50px;
+}
+
+.candidaturePageRow
+{
+    margin-bottom: 20px;
+}
+
+.candidatureFlexRow
+{
+    align-items: stretch;
+    display: flex;
+}
+
+.candidaturePageContainer
+{
+    margin: auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.candidaturePageSection>div
+{
+    border: 1px solid #ededed;
+    background-color: #fff;
+    padding: 15px;
+    min-height: 80px;
+}
+
+.candidatureFlexCol
+{
+    height: 100%;
+}
+
+.candidaturePageLeftSection .candidatureFlexCol
+{
+    height: 100%;
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+}
+.candidatureFlexGrow1 
+{
+    flex-grow: 1;
+}
+.candidatureDescription
+{
+    height: 100%;
+}
+.removeCandidatureBt
+{
+    border:0;
+    text-decoration:underline;
+    color: #414042;
+    background: none;
+    margin-left: 10px;
+}
+.removeCandidatureBt:hover
+{
+    color: #000;
+}
+
+.candidatureDate
+{
+    font-style:italic;
+    color: #818082;
+    font-size: 11px;
+    margin-left: 1px;
+    margin-bottom: 10px;
+}
+.candidatureInfoLogo img
+{
+    max-width: 100%;
+    max-height: 256px;
+    vertical-align: middle;
+}
+
+.candidatureInfoLogo
+{
+    border: 1px solid #000;
+    text-align:center;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+
+.candidatureInfoTitle > div:first-child
+{
+    font-size: 26px;
+    font-weight: bold;
+    color: #414042;
+    width: 90%;
+    float: left;
+}
+
+
+.candidatureEditButton
+{
+    border: 0;
+    background: none;
+    padding: 0;
+    padding: 5px;
+    color: #959392;
+    font-size: 19px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.candidatureEditButton:hover
+{
+    color: #000;
+}
+
+.candidatureInfoText,
+.candidatureInfoText a
+{
+    color: #414042;
+    font-size: 16px;
+    line-height: 35px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-decoration: none;
+    clear: both;
+}
+
+.candidatureInfoText a:hover
+{
+    color: #000;
+    text-decoration: underline;
+}
+
+.candidatureInfoText i,
+.candidatureInfoForm i
+{
+    margin-right: 15px;
+    margin-left: 5px;
+    font-size: 20px;
+    width: 3%;
+    min-width: 10px;
+}
+
+.candidatureInfoForm input
+{
+    width: 90%;
+    border: 1px solid #C0BFBF;
+    color: #414042;
+    font-size: 17px;
+}
+
+.candidatureInfoForm input.candidatureTitle
+{
+    width: 100%;
+}
+
+.candidatureInfoForm .blueButton,
+.candidatureDescription .blueButton
+{
+    font-size: 18px;
+    line-height: 20px;
+    padding: 10px 30px;
+    border: none;
+    margin-top: 0;
+    margin-left: 15%;
+}
+
+.candidatureInfoForm .textButton,
+.candidatureDescription .textButton
+{
+    font-size: 14px;
+    background: none;
+    border: none;
+    margin-top: 0;
+    margin-left: 15%;
+    text-decoration: underline;
+    margin-top: 20px;
+    padding: 0;
+}
+.candidatureField
+{
+    margin-bottom: 20px;
+}
+.candidatureInfoForm .formError
+{
+    margin-left: 5px;
+}
+
+.errorMessage{
+    margin-bottom: 30px;
+    text-align: center;
+    color: rgb(169,68,66);
+    font-size: 18px;
+}
+
+.candidatureQuickActions
+{
+    font-size: 17px;
+    color: #414042;
+}
+
+.candidatureQuickActions i
+{
+    font-size: 48px;
+    margin-right: 15px;
+    margin-left: 10px;
+}
+
+.candidatureQuickActions span
+{
+    max-width: 50px;
+}
+
+.candidatureQuickAction td
+{
+    vertical-align: middle;
+    height: 70px;
+    text-align: left;
+}
+
+.candidatureQuickAction tr > td:first-child
+{
+    padding-top: 15px;
+}
+
+.candidatureQuickAction button
+{
+    border: 0;
+    background: none;
+    padding: 0;
+    width: 100%
+}
+
+.candidatureQuickAction button:hover
+{
+    background: #eee;
+}
+
+.candidatureDescriptionTitle
+{
+    font-size: 20px;
+    color: #414042;
+    float: left;
+    width: 90%;
+    max-width: 465px;
+}
+
+.candidatureDescriptionTitle i
+{
+    font-size: 48px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.candidatureDescriptionText
+{
+    clear: both;
+    padding: 15px;
+}
+
+.candidatureDescription textarea
+{
+    width: 100%;
+    height: 500px;
+}
+.candidatureDescription .candidatureField
+{
+    padding: 15px;
+}
+
+/***/
+.candidatureStateStepper  {
+    /*width: 100%;*/
+}
+.candidatureStateStepper .mt-step-col
+{
+    cursor:pointer;
+}
+.candidatureStateStepper .mt-step-col.active
+{
+    cursor:default;
+}
+
+.mt-step-title
+{
+    background:none;
+}
+.mt-step-number
+{
+    color: #fff;
+    border: 0 !important;
+}
+
+.step[step="0"] .mt-step-title
+{
+    color:#F5A623;
+}
+.step[step="1"] .mt-step-title
+{
+    color: #FC390F;
+}
+.step[step="2"] .mt-step-title
+{
+    color: #1CDCFF;
+}
+.step[step="3"] .mt-step-title
+{
+    color: #00E6A8;
+}
+
+.step[step="0"] .mt-step-number
+{
+    background:#F5A623;
+}
+.step[step="0"] .mt-step-title:after
+{
+    background-image: linear-gradient(to right, #F5A623 , #FFEAE5);
+}
+.step[step="0"].past .mt-step-number
+{
+    background: #FFE7B6;
+}
+.step[step="0"].past .mt-step-title:after
+{
+    background-image: linear-gradient(to right, #FFE7B6 , #FFEAE5);
+}
+
+
+.step[step="1"] .mt-step-number
+{
+    background: #FC390F;
+}
+.step[step="1"] .mt-step-title:before
+{
+    background-image: linear-gradient(to right, #FFEAE5 , #FC390F);
+}
+.step[step="1"] .mt-step-title:after
+{
+    background-image: linear-gradient(to right, #FC390F , #DEFAFF);
+}
+.step[step="1"].past .mt-step-number
+{
+    background: #FFEAE5;
+}
+.step[step="1"].past .mt-step-title:before
+{
+    background-image: linear-gradient(to right, #FFEAE5 , #FFEAE5);
+}
+.step[step="1"].past .mt-step-title:after
+{
+    background-image: linear-gradient(to right, #FFEAE5 , #DEFAFF);
+}
+
+
+.step[step="2"] .mt-step-number
+{
+    background: #1CDCFF;
+}
+.step[step="2"] .mt-step-title:before
+{
+    background-image: linear-gradient(to right, #DEFAFF , #1CDCFF);
+}
+.step[step="2"] .mt-step-title:after
+{
+    background-image: linear-gradient(to right, #1CDCFF , #DAFBF2);
+}
+.step[step="2"].past .mt-step-number
+{
+    background: #DEFAFF;
+}
+.step[step="2"].past .mt-step-title:before
+{
+    background-image: linear-gradient(to right, #DEFAFF , #DEFAFF);
+}
+.step[step="2"].past .mt-step-title:after
+{
+    background-image: linear-gradient(to right, #DEFAFF , #DAFBF2);
+}
+
+
+.step[step="3"] .mt-step-number
+{
+    background: #00E6A8;
+}
+.step[step="3"] .mt-step-title:before
+{
+    background-image: linear-gradient(to right, #DAFBF2 , #00E6A8);
+}
+.step[step="3"].past .mt-step-number
+{
+    background: #DAFBF2;
+}
+.step[step="3"].past .mt-step-title:before
+{
+    background-image: linear-gradient(to right, #DAFBF2 , #DAFBF2);
+}
+
+.step.inactive .mt-step-title
+{
+    color: #BDC2C9 !important;
+}
+
+.step.inactive .mt-step-number,
+.step.inactive .mt-step-title:after, 
+.step.inactive .mt-step-title:before
+{
+    background: #BDC2C9 !important;
+}
+
+.candidatureStateStepper i
+{
+    font-size: 20px;
+    margin-top: 13px;
+    color: #fff;
+}
+
+.mt-element-step .row {
+    margin: 0;
+}
+.mt-element-step .step-line .mt-step-col {
+    padding: 10px 0;
+    text-align: center;
+}
+
+
+.mt-element-step .step-line .mt-step-number {
+    font-size: 26px;
+    border-radius: 50%!important;
+    display: inline-block;
+    margin: auto auto 5px;
+    padding: 0;
+    border: 3px solid #bdc2c9;
+    position: relative;
+    z-index: 5;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+.mt-element-step .step-line .mt-step-title {
+    font-size: 20px;
+    font-weight: 400;
+    position: relative;
+}
+
+.mt-element-step .step-line .done .mt-step-title:after, .mt-element-step .step-line .done .mt-step-title:before {
+    background-color: #26C281;
+}
+
+.mt-element-step .step-line .mt-step-title:after {
+    left: 50%;
+}
+
+.mt-element-step .step-line .mt-step-title:before {
+    right: 50%;
+}
+.mt-step-title:after, .mt-step-title:before {
+    content: '';
+    height: 3px;
+    width: 50%;
+    position: absolute;
+    background-color: #bdc2c9;
+    top: -23px;
+    z-index: 4;
+    transform: translateY(-100%);
+}
+
+.mt-element-step .step-line .first .mt-step-title::before, .mt-element-step .step-line .last .mt-step-title::after {
+    content: none;
+}
+
+
+
+/***/
+
+.candidatureDescriptionHeader
+{
+    height: 60px;
+}
+.candidatureShowMore
+{
+    text-align: right;
+    margin-top: 10px;
+}
+.candidatureShowMore i
+{
+    text-decoration: underline;
+}
+.candidatureShowMore button
+{
+    color: #414042;	
+    font-size: 14px;
+    font-style: italic;
+    border: 0;
+    background: transparent;
+    text-decoration: underline;
+}
+
+.candidatureActivity
+{
+    clear: both;
+    margin-top: 10px;
+    border-radius: 8px !important;
+    background-color: #F5F5F5;
+}
+
+.candidatureActivity > div:first-child
+{
+    padding-top: 10px;
+}
+
+.candidatureActivityDate
+{
+    font-size: 12px;
+    color: #939598;
+    font-style: italic;
+    text-align: right;
+}
+.candidatureActivityEdit
+{
+    text-align: right;
+}
+.candidatureActivityIcon
+{
+    color : #FEB235;
+    text-align: center;
+    font-size: 32px;
+}
+.candidatureNote .candidatureActivityIcon,
+.candidatureMessage .candidatureActivityIcon
+{
+    text-align: left;
+}
+
+.candidatureActivityLabel
+{
+    font-size: 15px;
+    padding-top: 10px;
+    color: #4B4A4C;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.candidatureActivityText
+{
+    padding-top: 10px;
+    font-size: 13px;    
+}
+.invertedIcon
+{
+    height: 32px;
+    width: 32px;
+    border-radius: 50% !important;
+    background: #FEB235;
+    padding-top: 2px;
+    font-size: 20px;
+    margin-top: 5px;
+}
+.candidatureActivityIcon .invertedIcon i
+{
+    font-size: 16px;
+    color: #fff;
+}
+
+/* Formulaire Nouvelle candidature */
+
+.newCandidatureForm
+{
+    background: #f4f4f4;
+}
+
+.newCandidatureFormBackground{
+    background: #f4f4f4;
+    padding: 0px 60px 50px 60px;
+}
+
+.newCandidatureFormContainer{
+    background: #fff;
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+    padding: 5px 100px 25px 100px;
+}
+
+.newCandidatureForm h2
+{
+    color: #7D7D7D;	
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.newCandidatureForm h3
+{
+    font-size: 20px;
+    font-weight: 200;
+    margin-bottom: 30px;
+}
+
+.newCandidatureSelect select
+{
+    width: 100%;
+    max-width: 600px;
+    font-size: 15px !important;
+    padding-left: 15px;
+    color: #414042;
+}
+
+.newCandidatureFieldLabel
+{
+    color: #414042;
+    font-size: 15px;	
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.newCandidatureSourceBlocTitle
+{
+    color: #979797;	
+    font-size: 15px;	
+    font-weight: bold;
+    float: left;
+    margin-bottom: 30px;
+}
+
+.newCandidatureSourceBlocCheck
+{
+    float: right;
+    font-size: 24px;
+    color : #979797;
+}
+
+.active .newCandidatureSourceBlocTitle,
+.active .newCandidatureSourceBlocCheck
+{
+    color : #5371F8;
+}
+
+form > div > div.newCandidatureFieldLabel {
+    margin-left: 15px;
+    margin-top: 30px;
+}
+
+.newCandidatureSourceBloc {
+    width: 100%;
+    border: 0.5px solid;
+    margin: 5px 0 30px;
+    padding: 15px 20px;
+    border: 0.5px solid #979797;
+    border-radius: 4px !important;
+}
+
+.newCandidatureSourceBloc.active {
+    border: 2px solid #5371F8;    
+}
+
+.newCandidatureSourceBloc .candidatureField
+{
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+.newCandidatureSourceBloc .candidatureField input
+{
+    width: 100%;
+}
+
+.newCandidatureSourceBloc .formError
+{
+    margin-left: 1px;
+    margin-top: 5px;
+}
+
+/*button.modalClose         ??? pourquoi ici, à nettoyer
+{
+    float: right;
+    border:0;
+    background:none;
+    cursor:pointer;
+    font-size: 24px;
+    margin-right: -20px;
+}*/
+
+.newCandidatureActions
+{
+    text-align: center;
+    margin-top: 40px;
+}
+
+.newCandidatureActions button
+{
+    border-radius: 6px !important;
+    background-color: #5371F8;
+    color: #FFFFFF;
+    font-size: 17px;
+    padding: 5px 50px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #5371F8;
+}
+.newCandidatureActions button:hover
+{
+    background-color: #3749E3;
+    border: 1px solid #3749E3;
+    color: #FFFFFF;
+}
+
+.newCandidatureActions button.back
+{
+    border: 1px solid #979797;
+    float: none;
+    color: #979797;
+    background: #fff;
+}
+
+.newCandidatureActions button.back:hover
+{
+    background-color: #979797;
+    color: #fff;
+}
+
+.newCandidatureSectionTitle
+{
+    color: #414042;
+    font-size: 18px;	
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+.newCandidatureRadio i
+{
+    margin-right: 25px;
+    font-size: 22px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.newCandidatureRadio
+{
+    display: flex;
+    flex-direction: row;
+    margin-top: 12px;
+}
+.newCandidatureRadio div
+{
+    margin-top: -2px;
+}
+
+.newCandidatureFieldLabel i
+{
+    margin-left: 40px;
+    cursor: pointer;
+}
+.newCandidatureRadio .fas.fa-check-circle
+{
+    color: #3749E3;
+}
+
+.newCandidatureHelp
+{
+    padding-top: 10px;
+}
+.newCandidatureHelp span
+{
+    background-color: #FDF4D7;
+    color: #414042;
+    padding: 7px 20px 3px;
+}
+
+.newCandidatureRadio + .newCandidatureFieldLabel,
+.newCandidatureHelp + .newCandidatureFieldLabel
+{
+    margin-top: 40px;
+}
+
+.newCandidatureForm .newCandidatureFieldLabel,
+.newCandidatureForm .formError
+{
+    margin-left: 5px;
+}
+
+.newCandidatureForm .formError
+{
+    margin-top: 6px;
+}
+
+.newCandidatureForm .candidatureField input,
+.newCandidatureForm .candidatureField textarea
+{
+    margin-left: 5px;
+    width: 100%;
+}
+
+.candidatureAddEventButton
+{
+    background: #fff;
+    border: #000 1px solid;
+    border-radius: 6px !important;
+    color: #777;
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 17px;
+}
+
+.candidatureAddEventButton:hover
+{
+    background: #979797;
+    color: #fff;
+}
+
+.candidatureAddEventActionButton
+{
+    background: #fff;
+    border: #000 1px solid;
+    border-radius: 6px !important;
+    color: #777;
+    margin-top: 20px;
+    padding: 5px 25px;
+    font-size: 17px;
+    float: right;
+}
+
+.candidatureAddEventActionButton:hover
+{
+    background: #979797;
+    color: #fff;
+}
+
+.candidatureMessage .candidatureActivityIcon i {
+    color: #4682B4;
+}
+
+/**/
+
+.fal.fa-file
+{
+    color: #555;
+}
+.fal.fa-file-image
+{
+    color: #afc1e3;
+}
+.fal.fa-file-word
+{
+    color: #1cdcff;
+}
+.fal.fa-file-pdf
+{
+    color: #f5696c;
+}
+.fal.fa-file-excel
+{
+    color: #1d6f42;
+}
+.fal.fa-file-audio
+{
+    color: #FF9900;
+}
+.fal.fa-file-video
+{
+    color: #f00;
+}
+
+.candidatureAttachment .fas.fa-trash-alt
+{
+    font-size: 16px;
+}
+
+.fileUploadOverlay
+{
+    background-color: rgba(200,200,200,.7);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0; 
+    right: 0;
+    z-index: 9999;
+}
+
+.fileUploadText
+{
+    border: 4px dashed #CCC;	
+    left:50%;
+    transform: translate(-50%,0);
+    top: 100px;
+    position: fixed;
+    height: 350px;
+    width: 75%;
+    max-width: 400px;
+    background: #fff;
+    z-index: 10000;
+    border-radius: 8px !important;
+    color: #aaa;
+    font-size: 20px;
+    text-align: center;
+    padding: 50px
+}
+.fileUploadText img
+{
+    margin-bottom: 20px;
+}
+
+/**/
+
+
+@media screen and (max-width:991px)
+{
+    .candidatureFlexRow
+    {
+        align-items: unset;
+        display: block;
+    }
+    .candidatureFlexCol
+    {
+        height: 100%;
+    }
+    .candidaturePageLeftSection .candidatureFlexCol
+    {
+        height: 100%;
+        align-items: unset;
+        display: block;
+        flex-direction: unset;
+    }
+    .candidatureFlexGrow1 
+    {
+        flex-grow: unset;
+    }
+
+    .candidatureInfoLogo img
+    {
+        max-height: 128px;
+    }
+    
+    .candidaturePage,
+    .candidaturePage .breadcrumb
+    {
+        background: #fff;
+    }
+
+    .candidaturePageContainer {
+        padding-top: 0px;    
+        padding-bottom: 0px;    
+    }
+
+    .candidaturePageRow {
+        margin-bottom: 5px;
+    }
+
+    .candidaturePageSection > div {
+        padding: 10px 5px;
+        margin-bottom: 5px;
+    }
+
+    .candidatureInfoTitle > div:first-child {
+        font-size: 22px;
+    }
+
+     .candidatureEditButton
+    {
+        padding:0;
+        float: right;
+        font-size: 14px;
+        margin-right: 10px;
+        margin-bottom: 5px;
+    }
+
+    .candidaturePageSection
+    {
+        padding: 5px 0;
+        border-right: 0;
+        border-left: 0;
+    }
+
+    .candidatureDate
+    {
+        clear:both;
+        margin-bottom: 20px;
+    }
+
+    .candidatureInfoText, .candidatureInfoText a {
+        font-size: 14px;
+        line-height: 28px;
+        clear:both;
+    }
+
+    .candidatureQuickActions 
+    {
+        margin-top: -7px;
+    }   
+
+    .candidatureDescriptionTitle
+    {
+        font-size: 18px;
+    }
+
+    .candidatureDescriptionTitle i
+    {
+        font-size: 32px;
+    }
+
+    .candidatureQuickAction
+    {
+        width: 30%;
+        float:left;
+        margin-left: 2%;
+    }
+
+    .candidatureQuickActions i 
+    {
+        font-size: 32px;
+        margin-right: 5px;
+        margin-left: 5px;
+    }    
+    .candidatureQuickActions span 
+    {
+        font-size: 14px;    
+    }
+
+    .mt-step-title::after, .mt-step-title::before {
+        content: none;
+    }
+
+    .mt-element-step .step-line .mt-step-title {
+        font-size: 14px;
+    }
+
+    .candidaturePageLeftSection,
+    .candidaturePageRightSection
+    {
+        padding: 5px 0;
+    }
+
+    .candidatureActivityIcon
+    {
+        font-size: 24px;
+    }
+
+    .candidatureActivityLabel
+    {
+        font-size: 15px;
+        padding-top: 0;
+    }
+    .candidatureActivityText
+    {
+        padding: 0 10px 3px;
+    }
+    .candidatureDescriptionHeader
+    {
+        height: 40px;
+    }
+
+    .candidatureAttachments.candidatureDescriptionHeader
+    {
+        height: 60px;
+    }
+
+    .candidatureAttachment .candidatureActivityLabel
+    {
+        padding-top: 5px;
+    }
+
+    .candidaturePage .candidatureAddEventButton
+    {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+}
+
+
+
+
+@media screen and (max-width:1000px)
+{
+    .newCandidatureFormBackground,
+    .newCandidatureForm .breadcrumb,
+    .newCandidatureForm
+    {
+        background: #fff;
+    }
+
+    
+
+}
+
+@media screen and (max-width:800px)
+{
+    .newCandidatureFormBackground{
+        padding: 0px 10px 50px 10px;
+    }
+
+    .newCandidatureFormContainer
+    {
+        padding:0;
+    }
+
+}

@@ -38,7 +38,7 @@ public class CandidatureDAO {
             rs = pStmt.executeQuery();
 
             while (rs.next())
-                cands.add(CandidatureDAO.initCandidatureFromDB(rs,withDescription));
+                cands.add(CandidatureDAO.initCandidatureFromDB(rs,withDescription, false));
         }
         catch (Exception e)
         {
@@ -53,13 +53,15 @@ public class CandidatureDAO {
         return cands.toArray();
     }
 
-    public static Object [] listFromUserLogPerPreviousDay(int day) throws Exception
+    public static Object [] listFromUserLogPerPreviousDay(long day) throws Exception
     {
         ArrayList<Candidature> lstCandidature = new ArrayList<Candidature>();
 
         Connection con = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
+        long count = 0;
+        
         try
         {
             con = DatabaseManager.getConnection();
@@ -67,11 +69,15 @@ public class CandidatureDAO {
             				"INNER JOIN candidatures c ON uL.candidatureId = c.id " + 
             				"WHERE DATE(uL.creationTime) = DATE( SUBDATE(NOW(), INTERVAL " + day + " DAY) ) " +
             				"AND uL.domaine = 'Candidature'";
+
             pStmt = con.prepareStatement(sql);
             rs = pStmt.executeQuery();
 
-            while (rs.next())
-            	lstCandidature.add(CandidatureDAO.initCandidatureFromDB(rs, true));
+            while (rs.next()) {
+            	lstCandidature.add(CandidatureDAO.initCandidatureFromDB(rs, true, true));
+            	count++;
+            }
+            log.debug(logCode+" - SQL (nb lignes)=" + count + "\n sql="+sql);
         }
         catch (Exception e)
         {
@@ -104,7 +110,7 @@ public class CandidatureDAO {
             rs = pStmt.executeQuery();
 
             if (rs.next())
-                cand = CandidatureDAO.initCandidatureFromDB(rs,true);
+                cand = CandidatureDAO.initCandidatureFromDB(rs,true, false);
         }
         catch (Exception e)
         {
@@ -318,10 +324,16 @@ public class CandidatureDAO {
         }
     }
     
-    public static Candidature initCandidatureFromDB(ResultSet rs, boolean withDescription) throws Exception
+    public static Candidature initCandidatureFromDB(ResultSet rs, boolean withDescription, boolean fromUserLog) throws Exception
     {
         Candidature cand = new Candidature();
-        cand.setId(rs.getLong("id"));
+        
+        if (fromUserLog) {
+        	cand.setId(rs.getLong("candidatureId"));
+        } else {
+        	cand.setId(rs.getLong("id"));
+        }
+        
         cand.setUserId(rs.getLong("userId"));
 
         cand.setEmailContact(rs.getString("emailContact"));
@@ -502,7 +514,7 @@ public class CandidatureDAO {
             rs = pStmt.executeQuery();
 
             if (rs.next())
-                cand = CandidatureDAO.initCandidatureFromDB(rs,true);
+                cand = CandidatureDAO.initCandidatureFromDB(rs,true, false);
         }
         catch (Exception e)
         {

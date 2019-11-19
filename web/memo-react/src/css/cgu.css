@@ -1,0 +1,110 @@
+/*.cgu {
+    margin: auto;
+    max-width: 1440px;
+    height: 100%;
+    }*/
+
+.cguContainer,
+.faqContainer,
+.adviceContainer {
+    padding: 50px;
+    margin: auto;
+    background: #FFFFFF;
+    max-width: 1000px;
+    height: auto;
+ }
+
+ .cguBackground,
+ .faqBackground,
+ .adviceBackground {
+    background: #f4f4f4;
+    padding-bottom: 50px;
+}
+
+
+@media screen and (max-width:1000px)
+{
+    .cguBackground,
+    .faqBackground,
+    .adviceBackground,
+    .privacy .pageBackground,
+    .faq .breadcrumb,
+    .cgu .breadcrumb,
+    .privacy .breadcrumb,
+    .adviceBackground .breadcrumb
+    {
+        background: #fff;
+    }
+
+    .cguContainer,
+    .faqContainer,
+    .adviceContainer,
+    .privacy .pageContainer {
+        padding-top: 0px;    
+        padding-bottom: 0px;    
+    }
+
+}
+
+.pageBackground
+{
+    background: #f4f4f4;
+    padding-bottom: 50px;
+}
+
+.pageContainer
+{
+    background: #FFF;
+    margin: auto;
+    padding: 20px 50px 20px;
+    max-width: 1000px;
+    height: auto;
+}
+
+.policyTitle1
+{
+    font-weight: bold;
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.policyTitle2
+{
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.policyTitle3
+{
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.policySummary
+{
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.faq li a
+{
+    color: #000;
+}
+
+.faq li a:hover {
+    color: #32c5d2;
+}
+
+.linkButton {
+	text-align: center;
+	margin-top: 20px;	
+}
+
+.linkButton a:hover, 
+.linkButton a:visited, 
+.linkButton a:link {
+	text-decoration: none;
+	color: white;
+}
+

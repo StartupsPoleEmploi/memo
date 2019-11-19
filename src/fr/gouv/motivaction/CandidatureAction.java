@@ -235,7 +235,7 @@ public class CandidatureAction {
             }
             catch (Exception e)
             {
-                log.error(logCode + "-012 Error saving candidature state. userId=" + userId + " error=" + e);
+                log.error(logCode + "-012 Error saving candidature state. userId=" + userId + " form=" + form + " error=" + e);
                 res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
             }
         }
@@ -336,10 +336,78 @@ public class CandidatureAction {
         return res;
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/remove/{id}")
+    public String removeCandidaturePOST(@Context HttpServletRequest servletRequest, @PathParam("id")long id, MultivaluedMap<String,String> form) throws IOException
+    {
+        String res;
+        long userId = UserService.checkUserAuthWithCSRF(servletRequest,form);
+
+        if(userId>0)
+        {
+            try
+            {
+                CandidatureService.removeCandidature(id, userId);
+
+                //System.out.println("Candidature supprimée : " + id);
+
+                Utils.logUserAction(userId, "Candidature", "Suppression", id);
+
+                res = "{ \"result\" : \"ok\", \"id\" : \"" + id + "\" }";
+            }
+            catch (Exception e)
+            {
+                log.error(logCode + "-004 Error deleting candidature. userId=" + userId + " candidatureId=" + id + " error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+            }
+        }
+        else
+        {   // message de reconnexion
+            res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+        }
+
+        return res;
+    }
+
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/events/{eventId}")
     public String removeCandidatureEvent(@Context HttpServletRequest servletRequest, @PathParam("id")long id, @PathParam("eventId")long eventId, MultivaluedMap<String,String> form) throws IOException
+    {
+        String res;
+        long userId = UserService.checkUserAuthWithCSRF(servletRequest,form);
+
+        if(userId>0)
+        {
+            try
+            {
+                CandidatureService.removeCandidatureEvent(eventId, id, userId);
+
+                //System.out.println("Candidature supprimée : " + id);
+
+                Utils.logUserAction(userId, "CandidatureEvent", "Suppression", eventId);
+
+                res = "{ \"result\" : \"ok\", \"eventId\" : \"" + eventId + "\" }";
+            }
+            catch (Exception e)
+            {
+                log.error(logCode + "-009 Error deleting candidature event. userId=" + userId + " candidatureId="+ id+" eventId="+eventId+" error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+            }
+        }
+        else
+        {   // message de reconnexion
+            res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+        }
+
+        return res;
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}/events/remove/{eventId}")
+    public String removeCandidatureEventPOST(@Context HttpServletRequest servletRequest, @PathParam("id")long id, @PathParam("eventId")long eventId, MultivaluedMap<String,String> form) throws IOException
     {
         String res;
         long userId = UserService.checkUserAuthWithCSRF(servletRequest,form);
@@ -388,12 +456,22 @@ public class CandidatureAction {
 
             if(form.getFirst("generic")!=null)
                 generic = true;
-
-            if (Utils.isInDomain(url,"pole-emploi") && !Utils.isInDomain(url,"labonneboite")) {
-            	// Pour les offres PE uniquement, le scraping se fait via une API de l'ESD (cet appel ne remplace pas l'existant pr le moment car toutes les données ne sont pas encore disponibles)
-            	res = CandidatureService.getOffrePoleEmploiFromAPI(url);
+                
+            if(url.indexOf("getJobJSONForMemo")>= 0)    // récupération des données pour le bouton générique MEMO en appelant l'API ouverte par le partenaire
+            {
+            	res = CandidatureService.getJSONFromPartnerUrl(url);
             }
-            res = CandidatureService.getHtmlContentFromUrl(url,generic);
+            else 
+            {
+            	 if (Utils.isInDomain(url,"pole-emploi") && !Utils.isInDomain(url,"labonneboite")) 
+            	 {
+                 	// Pour les offres PE uniquement, le scraping se fait via une API de l'ESD (cet appel ne remplace pas l'existant pr le moment car toutes les données ne sont pas encore disponibles)
+                 	res = CandidatureService.getOffrePoleEmploiFromAPI(url);
+                 }
+                 res = CandidatureService.getHtmlContentFromUrl(url,generic);
+            }
+            
+           
 
             if(res.equals("error"))
                 log.error(logCode+"-008 Error parsing url. url="+url);
@@ -720,5 +798,37 @@ public class CandidatureAction {
 
         return res;
     }
+    
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("getJobJSONForMemo/{type}")
+    public String mockMemoButtonSuccess(@Context HttpServletRequest servletRequest ,@PathParam("type") String type  ) throws IOException
+    {
+		String res = null; 
+		
+		if(type.equals("Success"))
+		{
+		res = "{\"jobId\" : \"54873541\","
+				+ "\"jobTitle\" : \"DEVELOPPEUR WEB FULL STACK\","
+				+ "\"jobBoard\" : \"MEMO\" ,"
+				+ "\"logoUrl\" : \"logoMEMO.png\","
+				+ "\"urlSource\" : \"http://localhost/rest/candidatures/getJobJSONForMemo/Success\","
+				+ "\"company\" : \"MEMO\","
+				+ "\"location\" : \"Marseille 13000\","
+				+ "\"description\" : \"text\","
+				+ "\"siretNumber\" : \"872186231647\","
+				+ "\"contactEmail\" : \"login@dns.fr\" ,"
+				+ "\"contactName\" : \"FirstName LastName\","
+				+ "\"contactPhoneNumber\" : \"00 00 00 00 00\" ,"
+				+ "\"expired\" : \"false\"}";
+		}
+		else if (type.equals("Expired")) 
+		{
+			res = "{\"expired\" : \"true\",\"error\" : \"Expired offer\" }";
+		}
+    	return res;  	
+    	
+    }
+    
 
 }

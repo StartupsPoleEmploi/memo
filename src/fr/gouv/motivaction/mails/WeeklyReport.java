@@ -39,10 +39,21 @@ public class WeeklyReport extends AlertMail {
     static Properties prop;
 
 	static {
-		tabConseil = new String[7];
+		tabConseil = new String[8];
 		
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 1er conseil est : la mise en avant du service Maintenant ? 
-		tabConseil[0] = "Trouvez le bon job... en moins de 5 minutes et sans CV ? C’est désormais possible avec le service <a href='https://maintenant.pole-emploi.fr/formulaire-candidat.html#utm_source=DE&utm_medium=email&utm_campaign=priorit%C3%A9_MEMO&utm_term=promotionduservice' style='font-weight: bold; text-decoration:underline'>Maintenant!</a><br/><br/>" +
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 1er conseil est : La mise en avant du service Avril 
+		tabConseil[0] = "Vous avez l’expérience mais on vous demande toujours un diplôme ?<br/>" +
+						"Obtenez ce  diplôme sans aller en formation.<br/>" +
+						"Dès un an d’expérience, cela est possible avec le service <a href='https://goo.gl/Pt1T3D'>\"AVRIL la VAE Facile\"!</a><br/><br/>" +
+						"<table width='100%'>" +
+        				"<tr><td style='width:25%;'></td><td style='font-size:16px; font-weight:bold; background:#2C8995; text-align:center; font-family:verdana; padding: 10px 10px; border-radius: 5px;'><a href='https://goo.gl/Pt1T3D' style='text-decoration:none;color:#fff;'>Trouver mon diplôme</a></td><td style='width:25%;'></td></tr>"+
+        				"</table><br/>" +
+        				"<b>Comment ça marche ?</b><br/>" +
+        				"- Choisissez votre diplôme <br/>" +
+        				"- Trouvez votre contact pour bien démarrer votre VAE <br/>";
+
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 2ème conseil est : la mise en avant du service Maintenant ? 
+		tabConseil[1] = "Trouvez le bon job... en moins de 5 minutes et sans CV ? C’est désormais possible avec le service <a href='https://maintenant.pole-emploi.fr/formulaire-candidat.html#utm_source=DE&utm_medium=email&utm_campaign=priorit%C3%A9_MEMO&utm_term=promotionduservice' style='font-weight: bold; text-decoration:underline'>Maintenant!</a><br/><br/>" +
 						"Le service est ouvert à ce jour sur 46 métiers dans 9 secteurs d’activité :<br/><br/>" +
 						"<table width='100%'>" +
         				"<tr><td style='width:25%;'></td><td style='font-size:16px; font-weight:bold; background:#2C8995; text-align:center; font-family:verdana; padding: 10px 10px; border-radius: 5px;'><a href='https://maintenant.pole-emploi.fr/formulaire-candidat.html#utm_source=DE&utm_medium=email&utm_campaign=priorit%C3%A9_MEMO&utm_term=promotionduservice' style='text-decoration:none;color:#fff;'>JE POSTULE !</a></td><td style='width:25%;'></td></tr>"+
@@ -53,25 +64,25 @@ public class WeeklyReport extends AlertMail {
 						"<li style='margin-left:20px; margin-top:5px;'>Quand les critères correspondent, le service vous met en relation directe par email avec les employeurs.</li>" +
 						"</ul>";
 				
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 2ème conseil est : Pour connaître les pratiques de recrutement dans votre métier sur votre territoire et adapter votre stratégie de recherche d'emploi, consultez IMT (informations sur le marché du travail) : ici. Vous pouvez également essayer de  nouveaux sites de diffusion d'offres d'emploi, afin d'identifier plus d'offres..."
-		tabConseil[1] = "Pour connaître les pratiques de recrutement dans votre métier sur votre territoire et adapter votre stratégie de recherche d'emploi, consultez <a href='http://candidat.pole-emploi.fr/marche-du-travail/accueil' target='IMT'>IMT</a> (informations sur le marché du travail) : <a href='http://candidat.pole-emploi.fr/marche-du-travail/accueil' target='IMT'>ici</a><br/><br/>" +
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 3ème conseil est : Pour connaître les pratiques de recrutement dans votre métier sur votre territoire et adapter votre stratégie de recherche d'emploi, consultez IMT (informations sur le marché du travail) : ici. Vous pouvez également essayer de  nouveaux sites de diffusion d'offres d'emploi, afin d'identifier plus d'offres..."
+		tabConseil[2] = "Pour connaître les pratiques de recrutement dans votre métier sur votre territoire et adapter votre stratégie de recherche d'emploi, consultez <a href='http://candidat.pole-emploi.fr/marche-du-travail/accueil' target='IMT'>IMT</a> (informations sur le marché du travail) : <a href='http://candidat.pole-emploi.fr/marche-du-travail/accueil' target='IMT'>ici</a><br/><br/>" +
 						"Vous pouvez également essayer de  nouveaux sites de diffusion d'offres d'emploi, afin d'identifier plus d'offres.<br/>" +
 						"Pour vous y aider : " +
 						"<ul style='margin:0px 0px 0px 20px;'>" +
 						"<li style='margin-left:20px; margin-top:5px;'><a href='http://www.job2-0.com/article-les-300-acteurs-du-recrutement-online-109501082.html' target='job2'>Job 2.0 : les 300 acteurs de l'emploi en ligne</a></li>" +
 						"<li style='margin-left:20px; margin-top:5px;'><a href='http://www.emploi-store.fr/portail/centredinteret/trouverunemploi/rechercherUneOffre' target='ES jobboard'>Emploi Store : liste des jobboards</a></li>" +
-						"</ul>";
+						"</ul>";		
 		
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 3ème conseil est : Les offres d'emploi ne représentent qu'1/3 des opportunités d'emploi ! Afin de maximiser vos chances de retrouver un emploi, envoyez également des candidatures spontanées..."
-		tabConseil[2] = "Les offres d'emploi ne représentent qu'1/3 des opportunités d'emploi !<br/><br/>" +
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 4ème conseil est : Les offres d'emploi ne représentent qu'1/3 des opportunités d'emploi ! Afin de maximiser vos chances de retrouver un emploi, envoyez également des candidatures spontanées..."
+		tabConseil[3] = "Les offres d'emploi ne représentent qu'1/3 des opportunités d'emploi !<br/><br/>" +
 						"Afin de maximiser vos chances de retrouver un emploi, envoyez également des candidatures spontanées.<br/>" +
 						"Pour identifier les entreprises à contacter, rien de plus simple ! " +
 						"Rendez-vous sur <a href='https://labonneboite.pole-emploi.fr?utm_campaign=memo&utm_medium=email&utm_source=weekly' target'LBB'>la bonne boite</a>, qui vous donnera la liste des entreprises ayant le plus de chances de recruter dans votre métier et sur votre territoire ! " +
 						"Vous pouvez enregistrer sur MEMO toutes les entreprises qui vous intéressent en un clic : c'est facile, il vous suffit de cliquer sur le bouton \"Enregistrer dans MEMO\" disponible sur chaque entreprise.<br/><br/>" +
 						"Afin de vous aider à préparer vos candidatures spontanées, regardez <a href='http://www.academyk.org/la-candidature-spontanee-comment-s-y-prendre-mc37.html' target='academy spont'>cette vidéo</a> de 5 minutes sur le sujet ;-)"; 
 		
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 4ème conseil est : Le réseau professionnel est le principal levier de retour à l'emploi. Avez-vous mobilisé le vôtre ? Voici quelques conseils pour bien utiliser votre réseau dans le cadre de votre recherche d'emploi : ..."
-		tabConseil[3] = "Le réseau professionnel est le principal levier de retour à l'emploi. Avez-vous mobilisé le vôtre ?<br/>" +
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 5ème conseil est : Le réseau professionnel est le principal levier de retour à l'emploi. Avez-vous mobilisé le vôtre ? Voici quelques conseils pour bien utiliser votre réseau dans le cadre de votre recherche d'emploi : ..."
+		tabConseil[4] = "Le réseau professionnel est le principal levier de retour à l'emploi. Avez-vous mobilisé le vôtre ?<br/>" +
 						"Voici quelques conseils pour bien utiliser votre réseau dans le cadre de votre recherche d'emploi :" +
 						"<ul style='margin:0px 0px 0px 20px;'>" +
 						"<li style='margin-left:20px; margin-top:5px;'><a href='http://www.pole-emploi.fr/actualites/developper-son-reseau-@/article.jspz?id=61502' target='batirdevelopper'>pole-emploi.fr : bâtir et développer son réseau</a></li>" +
@@ -88,8 +99,8 @@ public class WeeklyReport extends AlertMail {
 						"</ul>" +
 						"Vous pourrez ensuite enregistrer ces démarches dans votre tableau de bord MEMO pour recevoir des conseils et des rappels.";
 		
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 5ème conseil est : Connaissez-vous les différents événements pour l'emploi près de chez vous ? Ces événements peuvent être l'occasion de rencontrer des employeurs qui ont des besoins, mais aussi de développer votre réseau. ..."
-		tabConseil[4] = "Connaissez-vous les différents événements pour l'emploi près de chez vous ?<br/>" +
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 6ème conseil est : Connaissez-vous les différents événements pour l'emploi près de chez vous ? Ces événements peuvent être l'occasion de rencontrer des employeurs qui ont des besoins, mais aussi de développer votre réseau. ..."
+		tabConseil[5] = "Connaissez-vous les différents événements pour l'emploi près de chez vous ?<br/>" +
 						"Ces événements peuvent être l'occasion de rencontrer des employeurs qui ont des besoins, mais aussi de développer votre réseau.<br/><br/>" +
 						"Pour ne manquer aucun événement pour l'emploi :<br/>" +
 						"<ul style='margin:0px 0px 0px 20px;'>" +
@@ -105,11 +116,11 @@ public class WeeklyReport extends AlertMail {
 						"<li style='margin-left:20px; margin-top:5px;'><a href='http://www.emploi-store.fr/portail/services/seekube' target='seekube'>seekube</a></li>" +
 						"</ul>";
 		
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 6ème conseil est : Sur MEMO, les offres d'emploi qui ne sont plus en ligne sont tout de même conservées dans votre tableau de bord et automatiquement signalées.  ..."
-		tabConseil[5] = "Sur MEMO, les offres d'emploi qui ne sont plus en ligne sont tout de même conservées dans votre tableau de bord et automatiquement signalées. C'est peut-être le bon moment pour effectuer une dernière relance ou bien pour les archiver !<br/><br/>";
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 7ème conseil est : Sur MEMO, les offres d'emploi qui ne sont plus en ligne sont tout de même conservées dans votre tableau de bord et automatiquement signalées.  ..."
+		tabConseil[6] = "Sur MEMO, les offres d'emploi qui ne sont plus en ligne sont tout de même conservées dans votre tableau de bord et automatiquement signalées. C'est peut-être le bon moment pour effectuer une dernière relance ou bien pour les archiver !<br/><br/>";
 		
-		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 7ème conseil est : Avez-vous mis votre CV en ligne ? Diffuser votre CV en ligne sur des sites d'offres d'emploi vous permet de rester visible des recruteurs, qui peuvent ensuite vous contacter ! ..."
-		tabConseil[6] = "Avez-vous mis votre CV en ligne ?<br/>" +
+		// @RG - EMAIL : Dans la campagne de mail "Vos priorités cette semaine", pour l'action de proposition de conseil, le 8ème conseil est : Avez-vous mis votre CV en ligne ? Diffuser votre CV en ligne sur des sites d'offres d'emploi vous permet de rester visible des recruteurs, qui peuvent ensuite vous contacter ! ..."
+		tabConseil[7] = "Avez-vous mis votre CV en ligne ?<br/>" +
 						"Diffuser votre CV en ligne sur des sites d'offres d'emploi vous permet de rester visible des recruteurs, qui peuvent ensuite vous contacter !<br/><br/>" +
 						"Depuis pole-emploi.fr, vous pouvez également exporter votre CV directement sur nos sites partenaires pour encore plus de visibilité !<br/><br/>" + 
 						"Découvrez grâce à <a href='http://www.academyk.org/optimiser-son-cv-pour-les-cvtheques-de-sites-d-emploi-mc45.html' target='cvtheque'>cette vidéo</a> de 3 minutes comment optimiser votre CV pour les banques de CV.<br/>" +
@@ -132,10 +143,10 @@ public class WeeklyReport extends AlertMail {
         body += "<br/><br/> Moludo du random d'envoie :" + this.moduloFiltreEnvoiMailAdmin;
 
         // envoi du mail de rapport d'execution aux intras, devs et extra
-        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + MailTools.env + " - Vos priorités cette semaine", body);
+        MailService.sendMailReport(Utils.concatArrayString(MailTools.tabEmailIntra, MailTools.tabEmailDev, MailTools.tabEmailExtra), "Rapport " + Constantes.env + " - Vos priorités cette semaine", body);
     }
 
-    private void initCohortTexts()
+    public static void initCohortTexts()
     {
         prop = new Properties();
         InputStream in = null;
@@ -365,7 +376,7 @@ public class WeeklyReport extends AlertMail {
         return res;
     }
 
-    private void sendWeeklyReport(UserSummary user, boolean test)
+    public static void sendWeeklyReport(UserSummary user, boolean test)
     {
         String subject = "Vos priorités cette semaine";
     	String html = MailTools.buildHtmlHeader(user);
@@ -438,25 +449,24 @@ public class WeeklyReport extends AlertMail {
         html += MailTools.getGotAJobButton(user, source, campaign);
 
         html += MailTools.buildHTMLSignature(source, campaign, "", false);
-        html+= MailTools.buildHTMLFooter(user, source,campaign);
+        html+= MailTools.buildHTMLFooter(user, source,campaign, true);
 
         boolean enBCC = false;
         // pour limiter l'envoi de mails aux admins
-    	if (this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0) {
+    	if (cptNbEnvoi%moduloFiltreEnvoiMailAdmin == 0) {
     		enBCC = true;
     	}
 
-        if ("PROD".equals(MailTools.env) || test || ("RECETTE".equals(MailTools.env) && this.cptNbEnvoi%this.moduloFiltreEnvoiMailAdmin == 0)) {
+        if ("PROD".equals(Constantes.env) || test || ("RECETTE".equals(Constantes.env) && cptNbEnvoi%moduloFiltreEnvoiMailAdmin == 0)) {
         	// PROD ou RECETTE avec modulo OK ou mode TEST depuis le BO
             if(MailService.sendMailWithImage(user.getEmail(), subject, html, test, enBCC))
                 ctSentForIteration++;
             //log.info("weeklyReport mail sent "+user.getEmail());
         }
-
-        this.cptNbEnvoi++;
+        cptNbEnvoi++;
     }
 
-    private String buildCohortMessagePart(UserSummary user, String source, String campaign) throws Exception
+    private static String buildCohortMessagePart(UserSummary user, String source, String campaign) throws Exception
     {
         String params = "&utm_campaign="+campaign+"&utm_medium=email&utm_source="+source+"&utm_content=";
 
@@ -480,7 +490,7 @@ public class WeeklyReport extends AlertMail {
         return res;
     }
 
-    private String buildPriorityLink(String source, String campaign) {
+    private static String buildPriorityLink(String source, String campaign) {
         String params = "&utm_campaign="+campaign+"&utm_medium=email&utm_source="+source;
 
         String res = "<tr><td style='border-left:1px solid #c1c1c1;border-right:1px solid #c1c1c1; padding:15px 10px; text-align:justify'>" +
@@ -717,7 +727,7 @@ public class WeeklyReport extends AlertMail {
         return res;
     }
 
-    public static String buildWeeklyReportCandidature(UserSummary user)
+    private static String buildWeeklyReportCandidature(UserSummary user)
     {
     	int nbCandidatureActive = 0;
         String res = "<tr><td style='border-left:1px solid #c1c1c1;border-right:1px solid #c1c1c1; padding:15px 10px; text-align:justify'>";

@@ -80,11 +80,17 @@ public class CandidatureEventDAO {
         return eventId;
     }
 
-    public static CandidatureEvent initEventFromDB(ResultSet rs) throws Exception
+    public static CandidatureEvent initEventFromDB(ResultSet rs, boolean fromUserLog) throws Exception
     {
         CandidatureEvent event = new CandidatureEvent();
-        event.setId(rs.getLong("id"));
-        event.setCandidatureId(rs.getLong("candidatureId"));
+        
+        if(fromUserLog) {
+        	event.setId(rs.getLong("cE.id"));
+            event.setCandidatureId(rs.getLong("cE.candidatureId"));
+        } else {
+        	event.setId(rs.getLong("id"));
+            event.setCandidatureId(rs.getLong("candidatureId"));
+        }
 
         if(rs.getTimestamp("creationTime")!=null)
             event.setCreationTime(rs.getTimestamp("creationTime").getTime());
@@ -148,7 +154,7 @@ public class CandidatureEventDAO {
             rs = pStmt.executeQuery();
 
             while (rs.next())
-                events.add(CandidatureEventDAO.initEventFromDB(rs));
+                events.add(CandidatureEventDAO.initEventFromDB(rs, false));
         }
         catch (Exception e)
         {
@@ -163,13 +169,15 @@ public class CandidatureEventDAO {
         return events.toArray();
     }
 
-    public static Object [] listFromUserLogPerPreviousDay(int day) throws Exception
+    public static Object [] listFromUserLogPerPreviousDay(long day) throws Exception
     {
         ArrayList<CandidatureEvent> lstCandEvt = new ArrayList<CandidatureEvent>();
 
         Connection con = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
+        long count = 0;
+        
         try
         {
             con = DatabaseManager.getConnection();
@@ -177,11 +185,15 @@ public class CandidatureEventDAO {
             				"INNER JOIN candidatureEvents cE ON uL.candidatureId = cE.id " + 
             				"WHERE DATE(uL.creationTime) = DATE( SUBDATE(NOW(), INTERVAL " + day + " DAY) ) " +
             				"AND uL.domaine = 'CandidatureEvent'";
+
             pStmt = con.prepareStatement(sql);
             rs = pStmt.executeQuery();
 
-            while (rs.next())
-            	lstCandEvt.add(CandidatureEventDAO.initEventFromDB(rs));
+            while (rs.next()) {
+            	lstCandEvt.add(CandidatureEventDAO.initEventFromDB(rs, true));
+            	count++;
+        	}
+            log.debug(logCode+" - SQL (nb lignes)=" + count + "\n sql="+sql);
         }
         catch (Exception e)
         {
@@ -244,7 +256,7 @@ public class CandidatureEventDAO {
             rs = pStmt.executeQuery();
 
             if(rs.next())
-                event = CandidatureEventDAO.initEventFromDB(rs);
+                event = CandidatureEventDAO.initEventFromDB(rs, false);
         }
         catch (Exception e)
         {

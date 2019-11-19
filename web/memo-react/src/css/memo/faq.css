@@ -1,0 +1,91 @@
+
+.openFaqButton,
+.openFaqButton:hover,
+.openFaqButton:focus
+{
+    font-size: 12px;
+    clear: both;
+    color: #000;
+    text-decoration: underline;
+}
+
+.faqSpinner
+{
+    font-size: 20px;
+    text-align: center;
+}
+
+.faqSpinner .fa
+{
+    font-size: 32px;
+    margin-top: 25px;
+}
+
+#mdFAQ .modal-dialog
+{
+    max-width: 900px;
+}
+
+
+@media screen and (min-width:801px) {
+    #mdFAQ .modal-dialog
+    {
+        width: 75%;
+    }
+}
+
+@media screen and (max-width:800px) {
+    #mdFAQ .modal-dialog
+    {
+        width: 90%;
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+    }
+}
+
+
+
+.faqBackToIndex
+{
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #32c5d2;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.faqBackToIndex:hover
+{
+    text-decoration: underline;
+}
+
+#faqIndex li
+{
+    cursor: pointer;
+    list-style-type: none;
+    text-decoration: underline;
+}
+#faqIndex li:hover
+{
+    color: #32c5d2;
+}
+
+#faqQuestions h3
+{
+    margin-top: 40px;
+}
+
+#faqQuestions img
+{
+    max-width: 100%;
+}
+
+#faqOpenDoorbell2
+{
+    font-size: 28px;
+    text-decoration: underline;
+}

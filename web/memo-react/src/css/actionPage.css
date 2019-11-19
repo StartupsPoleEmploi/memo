@@ -1,0 +1,146 @@
+
+
+
+.actionPage
+{
+    background:#f4f4f4;
+}
+
+.actionContent
+{
+    max-width: 900px;
+    margin: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.actionContent .candidatureActivity
+{
+    background: #fff;
+    box-shadow: 0 0 6px 0 rgba(186,189,199,0.47);
+    border-radius: 8px !important;
+    margin-bottom: 20px;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.actionTitle
+{
+    color: #4B4A4C;	
+    font-size: 29px;
+}
+
+.actionContent .candidatureDescription
+{
+    margin-top:30px;
+}
+
+.actionContent .candidatureDescriptionHeader
+{
+    height:auto;
+}
+
+.actionContent .candidatureDescriptionTitle
+{
+    color: #4B4A4C;	
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.actionContent .candidatureActivityLabel
+{
+    color: #959595;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.actionContent .candidatureActivityJob 
+{
+    color: #7D7D7D;	
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.pastActivity .candidatureActivityIcon
+{
+    filter: blur(0.7px);
+}
+
+.pastActivity
+{
+    padding-bottom: 30px;
+}
+
+
+.eventYellow
+{
+    background-color: #FFEC00;
+}
+.eventGold
+{
+	background-color: #FFCC63;
+}
+.eventOrange
+{
+    background-color: #F5A623;
+}
+.eventAzure
+{
+    background-color: #1CDCFF;
+}
+.eventBlue
+{
+    background-color: #4682B4;
+}
+.eventGreen
+{
+    background-color: #00E6A8;
+}
+.eventRed
+{
+    background-color: #FC390F;
+}
+.eventGrey
+{
+    background-color: #808080;
+}
+
+@media screen and (max-width:520px)
+{
+    .actionContent
+    {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .actionContent .candidatureActivity
+    {
+        margin-bottom: 10px;
+        padding: 5px;
+        padding-bottom: 10px;
+    }
+
+    .col-xs-2.candidatureActivityIcon
+    {
+        padding-left:5px;
+        padding-right:5px;
+    }
+
+    .candidatureActivity > div:first-child 
+    {
+        padding-top: 0px;    
+    }
+
+    .candidatureActivityLabel
+    {
+        padding-top:0px;
+        padding-left:0px;
+        padding-right:0px;
+    }
+
+    .candidatureActivity .col-xs-4
+    {
+        padding-left:0px;
+        padding-right: 5px;
+    }
+}

@@ -15,8 +15,7 @@
 
     <div class="jumbotron bloc1">
         <div class="logo">
-            <h1 class="text-center" id="pageTitle">&nbsp;</h1>
-            <!--<h3 class="text-center" id="pageTagline"></h3>-->
+            <h1 class="text-center" id="pageTitle">Gérer vos candidatures en un clin d'oeil</h1>
         </div>
 
         <div class="text-center startButton">

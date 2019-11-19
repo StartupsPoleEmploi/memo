@@ -9,6 +9,7 @@
 
     memoVars.user = JSON.parse('<%=(user==null)?"{}":user.toJSON()%>');
     memoVars.isVisitor = <%=(isVisitor)?1:0%>;
+    memoVars.isConseiller = <%=(isConseiller)?1:0%>;
     memoVars.visitorLink = '<%=(visitorLink!=null)?visitorLink:""%>';
     memoVars.rootURL = (window.location.origin+window.location.pathname).match(/^.*\//)[0];
 

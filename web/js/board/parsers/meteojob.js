@@ -32,7 +32,12 @@ ParserMeteoJob.prototype = {
         el = cont.find("section>h3>span");
         if (el && el.length)
             c.nomSociete = el.text().trim();
-
+		
+		// Ville
+		el = cont.find(".matching-criterion-wrapper>span>span");
+		if (el && el.length)
+			c.ville = el.html().trim();
+			
         // Description
         tmp = cont.find("section");
         if(tmp.find(".company-links")) {

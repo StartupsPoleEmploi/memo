@@ -11,6 +11,16 @@
     Raven.config('https://98e791113a174c58a1f14d033e882b9e@sentry.io/1208400').install();
 </script>
 
+<!--<script src="../js/react/source/react.development.js"></script>-->
+<!--<script src="../js/react/source/react-dom.development.js"></script>-->
+<!--<script src="./js/react/expect.min.js"></script>-->
+<!--<script src="./js/react/deepfreeze.min.js"></script>-->
+<!--<script src="../js/react/source/redux.js"></script>-->
+<!--<script src="https://unpkg.com/prop-types@15.6/prop-types.min.js"></script>-->
+<!--<script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>-->
+<!--<script src="https://unpkg.com/@tippy.js/react@1.1.1/dist/Tippy.js"></script>-->
+
+
 <!---->
 <!--<src>/assets/global/plugins/uniform/jquery.uniform.min.js</src>-->
 <pack:script>
@@ -45,6 +55,7 @@
     <src>/js/classes/conseils.js</src>
     <src>/js/classes/activites.js</src>
     <src>/js/classes/onboarding.js</src>
+    <src>/js/classes/calendar.js</src>
     <src>/js/board/parser.js</src>
     <src>/js/board/nextevents.js</src>
     <src>/js/board/form.js</src>
@@ -77,6 +88,8 @@
     <src>/js/board/parsers/regionsjob.js</src>
     <src>/js/board/parsers/vivastreet.js</src>
     <src>/js/board/parsers/generic.js</src>
+    <src>/js/board/parsers/jobijoba.js</src>
+    <src>/js/board/parsers/memo.js</src>
 </pack:script>
 
 <pack:script src="/assets/global/plugins/jquery-validation/js/additional-methods.min.js" enabled="false" />

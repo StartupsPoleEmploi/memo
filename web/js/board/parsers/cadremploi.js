@@ -25,14 +25,14 @@ ParserCadremploi.prototype = {
         c.jobBoard = this.name;
 
         // récupération du nomCandidature dans h1.position
-        c.nomCandidature = cont.find(".position").text().trim();
+        c.nomCandidature = cont.find(".position:first").text().trim();
 
         // récupération nomSociete dans <a id="js-offres-entreprise"...
-        tmp = cont.find("#js-offres-entreprise");
+        tmp = cont.find("#js-nom-entreprise");
         if (tmp.length > 0)
             c.nomSociete = tmp.text().trim();
 
-        c.ville = cont.find("#js-offres-localisation").text().trim();
+        c.ville = cont.find("#js-offres-localisation:first").text().trim();
 
         el = cont.find("#js-logo-entreprise img");
         if(el.length>0)

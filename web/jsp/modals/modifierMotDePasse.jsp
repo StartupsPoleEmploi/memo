@@ -28,7 +28,8 @@
                		<div id="newConfirmPasswordInput"></div>
                	</div>
 
-                <b>Le saviez-vous ?</b> Les phrases secrètes font d'excellents mots de passe (ex :  "La nuit les chats miaulent").
+                Si vous souhaitez renforcer la sécurité de votre mot de passe, nous vous conseillons d'utiliser au minimum une lettre, un chiffre et un caractère spécial<br />
+                <b>Le saviez-vous ?</b> Les phrases secrètes font d'excellents mots de passe (ex :  "J'ai acheté 5 CDs aujourd'hui").
 
 			</div>
 		</form>

@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,18 +20,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import fr.gouv.motivaction.service.CandidatureService;
 import org.apache.log4j.Logger;
 
 import com.codahale.metrics.Timer;
 
-import fr.gouv.motivaction.exception.PeConnectException;
+import fr.gouv.motivaction.exception.EmailLoginException;
 import fr.gouv.motivaction.mails.MailTools;
 import fr.gouv.motivaction.mails.UserAccountMail;
 import fr.gouv.motivaction.model.User;
 import fr.gouv.motivaction.service.APIService;
+import fr.gouv.motivaction.service.CandidatureService;
 import fr.gouv.motivaction.service.UserService;
 import fr.gouv.motivaction.utils.Utils;
+
+import static fr.gouv.motivaction.service.UserService.getUserIdFromVisitorLink;
 
 @Path("/account")
 public class AccountAction {
@@ -73,7 +74,7 @@ public class AccountAction {
                 Utils.logUserAction(user.getId(), "User", "Création", 0);
                 Utils.logUserAction(user.getId(), "User", "Connexion", 0);
 
-                res = "{ \"result\" : \"ok\", \"msg\" : \"userCreated\", \"csrf\" : \""+csrf+"\"  }";
+                res = "{ \"result\" : \"ok\", \"msg\" : \"userCreated\", \"user\" : "+user.toJSON()+", \"csrf\" : \""+csrf+"\"  }";
             }
             else
             {
@@ -93,21 +94,6 @@ public class AccountAction {
                 {
                 	res = "{ \"result\" : \"error\", \"msg\" : \"userExists\" }";
                 }
-                // Dans l'attente d'un système de validation
-                /*if(user.getValidated()==0)
-                {
-                    user.setPassword(accountLoginPassword);
-                    UserService.save(user);
-                    UserService.sendNewAccountNotification(user);
-                    UserService.setUserAuthenticationToken(user, servletRequest, servletResponse);
-                    Utils.logUserAction(user.getId(), "User", "Connexion", 0);
-
-                    res = "{ \"result\" : \"ok\", \"msg\" : \"userRefreshed\" }";
-                }
-                else
-                {*/
-                    //res = "{ \"result\" : \"error\", \"msg\" : \"userExists\" }";
-                //}
             }
         }
         catch(Exception e)
@@ -119,81 +105,6 @@ public class AccountAction {
         return res;
     }
 
-/*
-    @POST
-    @Path("facebookLogin")
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String facebookAuthentication(@FormParam("loginEmail") String loginEmail,
-                                @FormParam("facebookId") Long facebookId,
-                                 @Context HttpServletResponse servletResponse,
-                                 @Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
-    {
-        String res = "";
-        long userId = 0;
-        
-        final Timer.Context context = facebookLoginTimer.time();
-
-        try
-        {
-            User user = UserService.loadUserFromFacebook(facebookId);
-            boolean authOK = true;
-            if(user==null)
-            {
-                User user2 = UserService.loadUserFromLogin(loginEmail);
-                if(user2!=null)
-                {
-                    userId = user2.getId();
-                	// cas où un compte utilisateur existe déjà pour cet email sans facebookId enrgistré. on mets à jour
-                    if(user2.getFacebookId()==0)
-                    {
-                        user2.setFacebookId(facebookId);
-                        UserService.save(user2);
-                        user = user2;
-                        String csrf = UserService.getEncryptedToken(user);
-                        res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : "+user.toJSON()+", \"csrf\" : \""+csrf+"\" }";
-                    }
-                    else
-                    {
-                        // cas où un utilisateur existe déjà avec un autre compte facebookId
-                        res = "{ \"result\" : \"error\", \"msg\" : \"wrongFacebookAccount\" }";
-                        authOK = false;
-                    }
-                }
-                else
-                {
-                    //pas de user, on peut donc en créer un
-                    String source = form.getFirst("source");
-                    user = UserService.createNewUser(loginEmail,facebookId,source);
-                    userId = user.getId();
-                    Utils.logUserAction(user.getId(),"User","Création Facebook",0);
-                    String csrf = UserService.getEncryptedToken(user);
-                    res = "{ \"result\" : \"ok\", \"msg\" : \"userCreated\", \"csrf\" : \""+csrf+"\" }";
-                }
-            }
-            else
-            {
-            	userId = user.getId();
-                Utils.logUserAction(user.getId(),"User","Connexion Facebook",0);
-                String csrf = UserService.getEncryptedToken(user);
-                res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : "+user.toJSON()+", \"csrf\" : \""+csrf+"\" }";
-            }
-
-            if(authOK)
-                UserService.setUserAuthenticationToken(user,servletRequest,servletResponse);
-        }
-        catch(Exception e)
-        {
-            log.error(logCode + "-002 ACCOUNT Facebook auth error. userId="+userId+" facebookId=" + facebookId + " error=" + e);
-            res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
-        }
-        finally {
-            context.stop();
-        }
-
-        return res;
-    }
-*/
 
     @POST
     @Path("accountLogin")
@@ -240,7 +151,131 @@ public class AccountAction {
 
         return res;
     }
-    
+
+    @GET
+    @Path("user")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String getUserFromCookie(    @Context HttpServletResponse servletResponse,
+                                        @Context HttpServletRequest servletRequest) {
+        String res = "";
+
+        long userId = UserService.checkUserAuth(servletRequest);
+
+        if (userId > 0)
+        {
+            try
+            {
+                User user = UserService.loadUserFromId(userId);
+
+                if(user!=null)
+                {
+                    Utils.logUserAction(user.getId(), "User", "Connexion implicite", 0);
+                    String csrf = UserService.getEncryptedToken(user);
+                    // On réactive les notifications pour les utilisateurs désactivés automatiquement
+                    UserService.reactivateNotification(user);
+                    res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : " + user.toJSON() + ", \"csrf\" : \"" + csrf + "\" }";
+                }
+                else
+                {   // utilisateur inconnu
+                    res = "{ \"result\" : \"error\", \"msg\" : \"tokenExpired\" }";
+                }
+
+            } catch (Exception e) {
+                log.error(logCode + "-035 ACCOUNT Error loading user from cookie. userId=" + userId + " error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+            }
+        } else {   // message de reconnexion
+            res = "{ \"result\" : \"error\", \"msg\" : \"tokenExpired\" }";
+        }
+
+        return res;
+    }
+
+    @GET
+    @Path("user/link/{link}")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String getUserFromLink(    @Context HttpServletRequest servletRequest, @PathParam("link")String link) {
+        String res = "";
+        long userId = getUserIdFromVisitorLink(link);
+
+        if (userId > 0)
+        {
+            try
+            {
+                User user = UserService.loadUserFromId(userId);
+
+                if(user!=null)
+                {
+                    Utils.logUserAction(user.getId(), "User", "Visite par lien", 0);
+                    String csrf = UserService.getEncryptedToken(user);
+
+                    res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : " + user.toVisitorJSON() + ", \"csrf\" : \"" + csrf + "\" }";
+                }
+                else
+                {
+                    // utilisateur inconnu
+                    res = "{ \"result\" : \"error\", \"msg\" : \"tokenExpired\" }";
+                }
+
+            } catch (Exception e) {
+                log.error(logCode + "-039 ACCOUNT Error loading user from visitor link. userId=" + userId + " error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+            }
+        } else {   // message de reconnexion
+            res = "{ \"result\" : \"error\", \"msg\" : \"tokenExpired\" }";
+        }
+
+        return res;
+    }
+
+    @GET
+    @Path("user/linkConseiller/{link}")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public String getUserFromLinkConseiller(    @Context HttpServletRequest servletRequest, @PathParam("link")String link) {
+        String res = "";
+
+        boolean isIpConseiller = Utils.isIpConseiller(servletRequest);
+
+        long userId = getUserIdFromVisitorLink(link);
+
+        if(isIpConseiller)
+        {
+            if (userId > 0)
+            {
+                try
+                {
+                    User user = UserService.loadUserFromId(userId);
+
+                    if(user!=null)
+                    {
+                        Utils.logUserAction(user.getId(), "User", "Visite par conseiller", 0);
+                        String csrf = UserService.getEncryptedToken(user);
+
+                        res = "{ \"result\" : \"ok\", \"msg\" : \"userAuthentified\", \"user\" : " + user.toVisitorJSON() + ", \"csrf\" : \"" + csrf + "\" }";
+                    }
+                    else
+                    {   // utilisateur inconnu
+                        res = "{ \"result\" : \"error\", \"msg\" : \"tokenExpired\" }";
+                    }
+
+                } catch (Exception e) {
+                    log.error(logCode + "-040 ACCOUNT Error loading user from conseiller link. userId=" + userId + " error=" + e);
+                    res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+                }
+            } else {   // message de reconnexion
+                res = "{ \"result\" : \"error\", \"msg\" : \"tokenExpired\" }";
+            }
+        }
+        else {   // message de reconnexion
+            res = "{ \"result\" : \"error\", \"msg\" : \"accessNotAllowed\" }";
+        }
+
+        return res;
+    }
+
     @POST
     @Path("logout")
     @Produces(MediaType.TEXT_PLAIN)
@@ -300,6 +335,50 @@ public class AccountAction {
                 	res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
                 
                 //UserAccountMail
+                log.info(logCode + "-004 ACCOUNT Forgotten password refresh link sent. userId="+userId+" login=" + loginEmail);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(logCode+"-005 ACCOUNT Error getting forgotten password refresh link. userId="+userId+" login="+loginEmail+" error="+e);
+            res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+        }
+
+        return res;
+    }
+
+    @POST
+    @Path("passwordREACT")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String resetPasswordREACT(@FormParam("loginEmail") String loginEmail)     // MOT DE PASSE OUBLIE, duplication temporaire pour la beta REACT
+    {
+        String res = "";
+        boolean isSent = false;
+        long userId= 0;
+
+        try
+        {
+            User user = UserService.loadUserFromLogin(loginEmail);
+
+            if (user == null)
+            {
+                res = "{ \"result\" : \"error\", \"msg\" : \"wrongCredentials\" }";
+            }
+            else
+            {
+                userId = user.getId();
+                String token = UserService.getPasswordRefreshLinkForUser(userId);
+                UserService.saveUserRefreshLink(userId,token);
+
+                // Envoi du mail à l'utilisateur
+                isSent = UserAccountMail.sendPasswordRefreshLinkMailREACT(user, token);
+
+                if (isSent)
+                    res = "{ \"result\" : \"ok\" }";
+                else
+                    res = "{ \"result\" : \"error\", \"msg\" : \"systemError\" }";
+
                 log.info(logCode + "-004 ACCOUNT Forgotten password refresh link sent. userId="+userId+" login=" + loginEmail);
             }
         }
@@ -461,7 +540,7 @@ public class AccountAction {
             try
             {
                 User user = UserService.loadUserFromId(userId);
-                res = "{ \"result\" : \"ok\", \"receiveEmail\" : "+user.getReceiveNotification()+", \"login\" : \""+user.getLogin()+"\" }";
+                res = "{ \"result\" : \"ok\", \"receiveEmail\" : "+user.getReceiveNotification()+", \"consentAccess\" : "+user.getConsentAccess()+",\"login\" : \""+user.getLogin()+"\" }";
             }
             catch (Exception e)
             {
@@ -638,9 +717,10 @@ public class AccountAction {
     }
     
     // envoie du mail de suppression de compte
-    @DELETE
+    @POST
     @Path("mailSupprimerCompte")
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.TEXT_PLAIN })
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String sendMailSupprimerCompte(@Context HttpServletRequest servletRequest, MultivaluedMap<String,String> form)
     {
         String res;
@@ -759,6 +839,23 @@ public class AccountAction {
         return javax.ws.rs.core.Response.temporaryRedirect(uri).build();
     }
 
+    // redirection vers la mire PEConnect duplication version react
+    @GET
+    @Path("peConnect/react")
+    public javax.ws.rs.core.Response showPeConnectFormREACT(@Context HttpServletRequest request) throws Exception
+    {
+        String noPrompt = request.getParameter("noPrompt");
+
+        boolean noPromptBoolean = false;
+
+        if(noPrompt!=null)
+            noPromptBoolean = true;
+
+        URI uri = APIService.getPEConnectFormURIREACT(noPromptBoolean);
+
+        return javax.ws.rs.core.Response.temporaryRedirect(uri).build();
+    }
+
     // redirection depuis la mire PE après une authentification correcte
     @GET
     @Path("/peConnect/openidconnectok")
@@ -777,12 +874,13 @@ public class AccountAction {
                 // On réactive les notifications pour les utilisateurs désactivés automatiquement
                 UserService.reactivateNotification(user);
             }
-            else
+            else {
                 throw new Exception("Could not get MEMO user");
+            }
         }
         catch (Exception e)
         {
-            if (e.getClass() == PeConnectException.class)
+            if (e.getClass() == EmailLoginException.class)
             	errorCode="&PEAMError=2"; // cas d'erreur d'un utilisateur sans adresse email valide de PE.FR
             else
             	errorCode="&PEAMError=1";
@@ -790,6 +888,40 @@ public class AccountAction {
         }
 
         URI uri = new URI(APIService.memoHost+"/?PEAMConnect=1"+errorCode);
+        return javax.ws.rs.core.Response.temporaryRedirect(uri).build();
+    }
+
+    // redirection depuis la mire PE après une authentification correcte duplication REACT
+    @GET
+    @Path("/peConnect/react/openidconnectok")
+    public javax.ws.rs.core.Response getPeConnectUserREACT(@Context HttpServletResponse servletResponse, @Context HttpServletRequest servletRequest) throws Exception
+    {
+        String errorCode="";
+        try
+        {
+            User user = APIService.getUserFromPEConnectREACT(servletRequest);
+
+            if(user!=null)
+            {
+                UserService.setUserAuthenticationToken(user, servletRequest, servletResponse);
+                Utils.logUserAction(user.getId(), "User", "Connexion PE Connect", 0);
+
+                // On réactive les notifications pour les utilisateurs désactivés automatiquement
+                UserService.reactivateNotification(user);
+            }
+            else
+                throw new Exception("Could not get MEMO user");
+        }
+        catch (Exception e)
+        {
+            if (e.getClass() == EmailLoginException.class)
+                errorCode="&PEAMError=2"; // cas d'erreur d'un utilisateur sans adresse email valide de PE.FR
+            else
+                errorCode="&PEAMError=1";
+            log.error(logCode+"-025 ACCOUNT Error connecting user with PEAM ("+errorCode+"). error="+e);
+        }
+
+        URI uri = new URI(APIService.memoHost+"/react?PEAMConnect=1"+errorCode);
         return javax.ws.rs.core.Response.temporaryRedirect(uri).build();
     }
 
@@ -874,7 +1006,7 @@ public class AccountAction {
             try
             {
                 fileName = "extractTDB-"+userId+".csv";
-                String aFile = MailTools.pathCSV+fileName;
+                String aFile = Constantes.pathCSV+fileName;
                 document = Files.readAllBytes(Paths.get(aFile));
             }
             catch (Exception e)
@@ -928,5 +1060,114 @@ public class AccountAction {
         res+="<br /><br />Vous allez être redirigé sur le site de MEMO</body></html>";
         return res;
     }
+
+    // update du parametre de consentement d'accès à son TDB par un conseiller depuis MEMO
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("consentAccessState")
+    public String updateConsentAccess(@Context HttpServletRequest servletRequest, @FormParam("consentAccess") int consentAccess, MultivaluedMap<String,String> form) throws Exception
+    {
+    	String res = null;
+    	long c = 0 ;
+    	long userId = UserService.checkUserAuthWithCSRF(servletRequest, form);
+
+    	if(userId >0) {
+    		try {
+    			UserService.updateConsentAccess(userId, consentAccess, false);
+    			res = "{ \"result\" : \"ok\"}";
+    		}
+
+    		catch (Exception e)
+    		{
+    			log.error(logCode + "-036 Error  . error=" + e);
+    			res = "{ \"result\" : \"error\", \"msg\" : \"systemError\"}";
+    		}
+    	}
+    	else {
+    		log.warn(logCode + "-037 User  not authentified");
+    		res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+    	}
+    	return res ;
+    }
+
+    // update du parametre de consentement d'accès à son TDB par un conseiller depuis un email de demande d'accès
+    @GET
+    @Path("updateConsentAndDateAccess/{consentLink}/{consentAccess}")
+    @Produces({ MediaType.TEXT_HTML })
+    public String updateConsentAndDateAccess(@Context HttpServletRequest servletRequest, @PathParam("consentLink")String consentLink,  @PathParam("consentAccess")int consentAccess)
+    {
+    	String res = "<html><head><title>MEMO</title>" +
+                "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
+                "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /> " +
+                "<meta http-equiv='X-UA-Compatible' content='IE=edge'>" +
+                "<script>setTimeout('window.location.replace(\""+MailTools.url+"\")',10000);</script>" +
+                "</head><body style='margin:auto; text-align:center; margin-top:150px'><div style='margin:auto; text-align:center; font-weight: bold; font-family:verdana; font-size:24px'>";
+
+        boolean withDate = false;
+        long userId = UserService.getUserIdFromConsentLink(consentLink);
+
+        if(userId >0) {
+    		try {
+    			if (consentAccess == 1)
+    				withDate = true;
+    			UserService.updateConsentAccess(userId, consentAccess, withDate);
+    			if (consentAccess == 0) {
+    				// On enregistre la date du refus
+    				UserService.updateLastAccessRefuserDate(userId);
+    			}
+                res += "Merci pour votre réponse !";
+    		}
+
+    		catch (Exception e)
+    		{
+    			log.error(logCode + "-032 Error  . error=" + e);
+    			res += "Un problème technique est survenu, veuillez renouveler votre réponse !";
+    		}
+    	}
+    	else {
+    		log.warn(logCode + "-033 User  not authentified");
+    		res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+    	}
+        res+="<br /><br />Vous allez être redirigé sur le site de MEMO</body></html>";
+
+    	return res ;
+    }
+
+    // update du parametre de notifications par email
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("notificationState")
+    public String updateNotificationState(@Context HttpServletRequest servletRequest, @FormParam("notificationState") int notificationState, MultivaluedMap<String,String> form) throws Exception
+    {
+    	String res = null;
+    	long userId = UserService.checkUserAuthWithCSRF(servletRequest, form);
+
+    	if(userId >0)
+    	{
+			try
+			{
+            	if(notificationState==0)
+            	{
+            		UserService.setUserSubscription(userId, notificationState, "Désabonnement depuis Param");
+            	}
+            	else
+            	{
+            		UserService.setUserSubscription(userId, notificationState, "Abonnement depuis Param");
+            	}
+
+                res = "{ \"result\" : \"ok\" }";
+            }
+            catch (Exception e)
+            {
+                log.error(logCode + "-038 ACCOUNT Error updating user email subscriptions. userId=" + userId + " error=" + e);
+                res = "{ \"result\" : \"error\", \"msg\" : \"sysError\" }";
+            }
+    	}
+    	else {
+    		log.warn(logCode + "-034 User  not authentified");
+    		res = "{ \"result\" : \"error\", \"msg\" : \"userAuth\" }";
+    	}
+    	return res ;
+      }
 
 }
