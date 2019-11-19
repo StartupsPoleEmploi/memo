@@ -52,10 +52,10 @@ http://localhost and start browsing.
 
 ## Parameters
 
-Modify mandatory values in .properties files in /src/fr/gouv/motivaction/properties/*
+Main parameters of properties files are set in .env file, but some are directly defined in properties files in /src/fr/gouv/motivaction/properties/*
 
-- secret.properties : 
-    salt = a random alphanumeric value 
+- secret.properties :  
+	salt = a random alphanumeric value 
     encryptorSecret = a random alphanumeric value
     pwdSql = a string containing two question mark '?' characters
    
